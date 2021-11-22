@@ -1,5 +1,7 @@
 package com.moresby.ed.stockportfolio;
 
+import com.github.javafaker.Faker;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -30,6 +32,11 @@ public class StockPortfolioApplication {
 		urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
 
 		return new CorsFilter(urlBasedCorsConfigurationSource);
+	}
+
+	@Bean
+	public Faker faker(){
+		return new Faker();
 	}
 
 }

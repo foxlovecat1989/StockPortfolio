@@ -1,0 +1,56 @@
+package com.moresby.ed.stockportfolio.User;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
+@Service
+@RequiredArgsConstructor
+public class UserServiceImpl implements UserService{
+
+    private final UserRepository userRepository;
+
+    @Override
+    public Optional<User> findUserById(Long id) {
+        return userRepository.findById(id);
+    }
+
+    @Override
+    public Iterable<User> findAllUsers() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public User createUser(User user) {
+        return userRepository.save(user);
+    }
+
+    @Override
+    public Iterable<User> createUsers(Iterable<User> users) {
+        return userRepository.saveAll(users);
+    }
+
+    @Override
+    public User updateUser(User user) {
+        User originUser = userRepository.findById(user.getId()).orElseThrow(()-> new IllegalStateException("update user fail Exception"));
+        originUser.setEmail(
+                user.getEmail() != null ? user.getEmail() : originUser.getEmail()
+        );
+        originUser.setPassword(
+                user.getPassword() != null ? user.getPassword() : originUser.getPassword()
+        );
+
+        return userRepository.save(originUser);
+    }
+
+    @Override
+    public void deleteUserById(Long id) {
+        try{
+            userRepository.deleteById(id);
+        } catch(EmptyResultDataAccessException e){
+            e.printStackTrace();
+        }
+    }
+}
