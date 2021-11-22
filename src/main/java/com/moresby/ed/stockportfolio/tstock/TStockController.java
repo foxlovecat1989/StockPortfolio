@@ -1,15 +1,11 @@
 package com.moresby.ed.stockportfolio.tstock;
 
-import com.moresby.ed.stockportfolio.model.Response;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -38,6 +34,7 @@ public class TStockController {
     }
 
     @PostMapping(consumes = "application/json")
+    @ResponseStatus(HttpStatus.CREATED)
     public TStock createStock(@RequestBody TStock TStock) throws InterruptedException {
         Thread.sleep(3000); // TODO: remove this line when production
 
@@ -52,6 +49,7 @@ public class TStockController {
     }
 
     @DeleteMapping(path = "{id}")
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void deleteStock(@PathVariable Long id) throws InterruptedException {
         Thread.sleep(3000); // TODO: remove this line when production
 

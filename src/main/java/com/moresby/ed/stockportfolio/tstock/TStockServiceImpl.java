@@ -91,7 +91,7 @@ public class TStockServiceImpl implements TStockService {
                 var date = stock.getQuote().getLastTradeTime().getTime();
                 var instant = Instant.ofEpochMilli(date.getTime());
                 LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneOffset.UTC);
-                tStock.setTransactionDate(localDateTime);
+                tStock.setLastUpDateTime(localDateTime);
                 tStock.setVolume(stock.getQuote().getVolume());
                 // Update price
                 Thread.sleep(1000);
@@ -101,7 +101,7 @@ public class TStockServiceImpl implements TStockService {
                         tStock.getChangeInPercent(),
                         tStock.getPreviousClosed(),
                         tStock.getPrice(),
-                        tStock.getTransactionDate(),
+                        tStock.getLastUpDateTime(),
                         tStock.getVolume()
                 );
 

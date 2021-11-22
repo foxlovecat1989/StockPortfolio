@@ -30,7 +30,7 @@ public interface TStockRepository extends CrudRepository<TStock, Long> {
                 "s.changeInPercent=?3, " +
                 "s.previousClosed=?4, " +
                 "s.price=?5, " +
-                "s.transactionDate=?6, " +
+                "s.lastUpDateTime=?6, " +
                 "s.volume=?7 " +
             "WHERE s.id=?1")
     void updatePrice(
@@ -39,7 +39,7 @@ public interface TStockRepository extends CrudRepository<TStock, Long> {
             @Param("changeInPercent") BigDecimal changeInPercent,
             @Param("previousClosed") BigDecimal previousClosed,
             @Param("price") BigDecimal price,
-            @Param("transactionDate") LocalDateTime transactionDate,
+            @Param("lastUpDateTime") LocalDateTime lastUpDateTime,
             @Param("volume") Long volume
     );
 }

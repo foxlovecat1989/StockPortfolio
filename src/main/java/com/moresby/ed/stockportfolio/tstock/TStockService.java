@@ -18,7 +18,7 @@ public interface TStockService {
             BigDecimal changeInPercent,
             BigDecimal preClosed,
             BigDecimal price,
-            LocalDateTime transactionDate,
+            LocalDateTime lastUpDateTime,
             Long volume
     );
 }

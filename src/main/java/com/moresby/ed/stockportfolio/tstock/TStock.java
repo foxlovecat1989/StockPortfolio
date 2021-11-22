@@ -72,10 +72,10 @@ public class TStock {
     private Long volume;
 
     @Column(
-            name = "transaction_date",
+            name = "lastUpDateTime",
             columnDefinition = "TIMESTAMP WITHOUT TIME ZONE"
     )
-    private LocalDateTime transactionDate;
+    private LocalDateTime lastUpDateTime;
 
     @ManyToOne
     @JoinColumn(
