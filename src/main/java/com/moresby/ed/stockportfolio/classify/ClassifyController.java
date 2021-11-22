@@ -1,14 +1,17 @@
 package com.moresby.ed.stockportfolio.classify;
 
+import com.moresby.ed.stockportfolio.tstock.TStock;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import yahoofinance.Stock;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(path = "api/v1/classify")
+@RequestMapping(path = "api/v1/classifies")
 @CrossOrigin(origins = "*")
 @AllArgsConstructor
 public class ClassifyController {
@@ -16,18 +19,17 @@ public class ClassifyController {
     private final ClassifyService classifyService;
 
     @GetMapping(path = "/findAll", produces = "application/json")
-    public Iterable<Classify> findAllClassify(){
+    public Iterable<Classify> findAllClassify() throws InterruptedException {
+        Thread.sleep(3000); // TODO: remove this line when production
+
         return classifyService.findAllClassify();
     }
 
-    @GetMapping(path = "{id}", produces = "application/json")
-    public ResponseEntity<Classify> findClassifyById(@PathVariable(value = "id") Integer classifyId){
-        Optional<Classify> optClassify =  classifyService.findClassifyById(classifyId);
-        if (optClassify.isEmpty())
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-
-        return new ResponseEntity<>(optClassify.get(), HttpStatus.OK);
+    @GetMapping(path = "/{classifyId}")
+    public List<TStock> findStocksByClassifyId(@PathVariable("classifyId") Integer classifyId){
+        return classifyService.findStocksByClassifyId(classifyId);
     }
+
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)

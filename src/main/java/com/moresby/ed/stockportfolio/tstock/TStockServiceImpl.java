@@ -48,15 +48,21 @@ public class TStockServiceImpl implements TStockService {
 
     @Override
     public TStock updateStock(TStock tStock) {
-        TStock originTStock = tStockRepository.findById(tStock.getId())
+        TStock originTStock =
+                tStockRepository.findById(tStock.getId())
                 .orElseThrow(() -> new IllegalStateException("Stock Id:" + tStock.getId() + "Not Found!" ));
+
         originTStock.setName(
                 tStock.getName() != null ? tStock.getName() : originTStock.getName()
         );
         originTStock.setSymbol(
                 tStock.getSymbol()!= null ? tStock.getSymbol() : originTStock.getSymbol()
         );
+        originTStock.setClassify(
+                tStock.getClassify()!= null ? tStock.getClassify() : originTStock.getClassify()
+        );
         tStockRepository.save(originTStock);
+
         return originTStock;
     }
 

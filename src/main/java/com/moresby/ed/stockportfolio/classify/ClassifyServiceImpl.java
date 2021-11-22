@@ -1,9 +1,12 @@
 package com.moresby.ed.stockportfolio.classify;
 
+import com.moresby.ed.stockportfolio.tstock.TStock;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import yahoofinance.Stock;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,18 +26,20 @@ public class ClassifyServiceImpl implements ClassifyService{
 
         return classifyRepository.save(classify);
     }
+
     @Override
-    public Optional<Classify> findClassifyById(Integer classifyId) {
-        return classifyRepository.findById(classifyId);
+    public Classify findClassifyByName(String name) {
+        return classifyRepository.findClassifyByNameEquals(name);
     }
 
     @Override
-    public Classify findClassifyByName(String classifyName) {
-        return classifyRepository.findClassifyByNameEquals(classifyName);
+    public List<TStock> findStocksByClassifyId(Integer classifyId) {
+        return classifyRepository.findStocksByClassifyId(classifyId);
     }
 
     @Override
     public Iterable<Classify> findAllClassify() {
+
         return classifyRepository.findAll();
     }
 

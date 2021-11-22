@@ -29,16 +29,18 @@ public class TStock {
 
     @Column(
             name = "symbol",
-            // nullable = false,
-            // updatable = false,
+            nullable = false,
+            updatable = false,
+            unique = true,
             columnDefinition = "TEXT"
     )
     private String symbol;
 
     @Column(
             name = "name",
-            // nullable = false,
-            // updatable = false,
+            nullable = false,
+            updatable = false,
+            unique = true,
             columnDefinition = "TEXT"
     )
     private String name;
