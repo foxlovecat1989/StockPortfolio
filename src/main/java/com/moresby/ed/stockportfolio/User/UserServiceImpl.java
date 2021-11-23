@@ -34,12 +34,12 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User updateUser(User user) {
-        User originUser = userRepository.findById(user.getId()).orElseThrow(()-> new IllegalStateException("update user fail Exception"));
-        originUser.setEmail(
-                user.getEmail() != null ? user.getEmail() : originUser.getEmail()
-        );
-        originUser.setPassword(
-                user.getPassword() != null ? user.getPassword() : originUser.getPassword()
+        User originUser = userRepository.findById(user.getId())
+                    .orElseThrow(
+                            ()-> new IllegalStateException("update user fail Exception")
+                    );
+        originUser.setUsername(
+                user.getUsername() != null ? user.getUsername() : originUser.getUsername()
         );
 
         return userRepository.save(originUser);

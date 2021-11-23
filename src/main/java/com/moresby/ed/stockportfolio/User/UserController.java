@@ -14,12 +14,15 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping(path = "/findAll", produces = "application/json")
-    public Iterable<User> findAllUsers(){
+    public Iterable<User> findAllUsers() throws InterruptedException {
+        Thread.sleep(3000); // TODO: remove when production
+
         return userService.findAllUsers();
     }
 
     @GetMapping(path = "/{id}", produces = "application/json")
-    public ResponseEntity<User> findOneById(@PathVariable Long id){
+    public ResponseEntity<User> findOneById(@PathVariable Long id) throws InterruptedException {
+        Thread.sleep(3000); // TODO: remove when production
         Optional<User> optUser = userService.findUserById(id);
 
         return optUser.map(
@@ -31,18 +34,23 @@ public class UserController {
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public User createUser(@RequestBody User user){
+    public User createUser(@RequestBody User user) throws InterruptedException {
+        Thread.sleep(3000); // TODO: remove when production
+
         return userService.createUser(user);
     }
 
-    @PutMapping
-    public User updateUser(@RequestBody User user){
+    @PatchMapping
+    public User updateUser(@RequestBody User user) throws InterruptedException {
+        Thread.sleep(3000); // TODO: remove when production
+
         return userService.updateUser(user);
     }
 
     @DeleteMapping(path = "/{id}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
-    public void deleteUser(@PathVariable Long id){
+    public void deleteUser(@PathVariable Long id) throws InterruptedException {
+        Thread.sleep(3000); // TODO: remove when production
         userService.deleteUserById(id);
     }
 }

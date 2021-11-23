@@ -27,15 +27,16 @@ public class User {
             name = "username",
             nullable = false,
             columnDefinition = "TEXT",
-            length = 20,
-            updatable = false
+            length = 20
     )
     private String username;
 
     @Column(
             name = "email",
             nullable = false,
-            columnDefinition = "TEXT"
+            columnDefinition = "TEXT",
+            updatable = false,
+            unique = true
     )
     private String email;
 

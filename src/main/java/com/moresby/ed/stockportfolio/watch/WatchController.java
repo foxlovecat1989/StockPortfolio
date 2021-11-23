@@ -11,7 +11,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping(path = "api/v1/watchs")
 @RequiredArgsConstructor
-public class Watchcontroller {
+public class WatchController {
 
     private final WatchService watchService;
 
