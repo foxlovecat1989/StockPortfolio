@@ -53,4 +53,10 @@ public class UserServiceImpl implements UserService{
             e.printStackTrace();
         }
     }
+
+    @Override
+    public Boolean isEmailTaken(String email) {
+
+        return userRepository.findUserByEmailEquals(email).isPresent();
+    }
 }

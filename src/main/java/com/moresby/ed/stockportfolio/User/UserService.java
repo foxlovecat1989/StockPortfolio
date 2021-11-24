@@ -9,4 +9,5 @@ public interface UserService {
     Iterable<User> createUsers(Iterable<User> users);
     User updateUser(User user);
     void deleteUserById(Long id);
+    Boolean isEmailTaken(String email);
 }

@@ -53,4 +53,10 @@ public class UserController {
         Thread.sleep(3000); // TODO: remove when production
         userService.deleteUserById(id);
     }
+
+    @PostMapping(path = "/register/check")
+    public Boolean isEmailTaken(@RequestBody User user){
+
+        return userService.isEmailTaken(user.getEmail());
+    }
 }
