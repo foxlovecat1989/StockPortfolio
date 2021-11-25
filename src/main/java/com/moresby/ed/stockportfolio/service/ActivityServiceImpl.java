@@ -38,10 +38,21 @@ public class ActivityServiceImpl implements ActivityService{
         updateActivity.setLocation(
                 activity.getLocation() != null? activity.getLocation() : updateActivity.getLocation()
         );
-        updateActivity.setActivityTypeCapacities(
-                activity.getActivityTypeCapacities() != null?
-                        activity.getActivityTypeCapacities() : updateActivity.getActivityTypeCapacities()
+        updateActivity.setStartDateTime(
+                activity.getStartDateTime() != null ?
+                        activity.getStartDateTime() : updateActivity.getStartDateTime()
         );
+        updateActivity.setEndDateTime(
+                activity.getEndDateTime() != null ?
+                        activity.getEndDateTime() : updateActivity.getEndDateTime()
+        );
+        updateActivity.setActivityType(
+                activity.getActivityType() != null ? activity.getActivityType() : updateActivity.getActivityType()
+        );
+        updateActivity.setLimitAmount(
+                activity.getLimitAmount() != null ? activity.getLimitAmount() : updateActivity.getLimitAmount()
+        );
+
 
         return activityRepository.save(updateActivity);
     }

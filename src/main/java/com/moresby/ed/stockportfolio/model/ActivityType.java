@@ -1,9 +1,9 @@
 package com.moresby.ed.stockportfolio.model;
 
 public enum ActivityType {
-    COURSE("Couse"),
+    COURSE("Course"),
     DISCUSSION("Discussion"),
-    OUTDOOR("Outdoor-Activity");
+    SPEECH("Speech");
 
     private String description;
 

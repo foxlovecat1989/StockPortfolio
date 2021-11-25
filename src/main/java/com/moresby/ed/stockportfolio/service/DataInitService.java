@@ -1,11 +1,9 @@
 package com.moresby.ed.stockportfolio.service;
 
 import com.github.javafaker.Faker;
-import com.moresby.ed.stockportfolio.model.entities.User;
-import com.moresby.ed.stockportfolio.model.entities.Watchlist;
+import com.moresby.ed.stockportfolio.model.ActivityType;
+import com.moresby.ed.stockportfolio.model.entities.*;
 import com.moresby.ed.stockportfolio.model.WatchlistId;
-import com.moresby.ed.stockportfolio.model.entities.TStock;
-import com.moresby.ed.stockportfolio.model.entities.Watch;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -26,6 +24,7 @@ public class DataInitService {
     private final UserService userService;
     private final WatchService watchService;
     private final WatchlistService watchlistService;
+    private final ActivityService activityService;
     private Faker faker;
     private final Integer TEN_TIMES = 10;
 
@@ -36,6 +35,25 @@ public class DataInitService {
         generateStocks();
         generateRandomWatch(TEN_TIMES);
         addRandomStockToWatchlist(TEN_TIMES);
+        generateActivities();
+    }
+
+    private void generateActivities() {
+        generateActivity("Stock Course for Beginners", "Online Course", ActivityType.COURSE);
+        generateActivity("Hank McClure's Speech", "Civic Activity Center", ActivityType.SPEECH);
+        generateActivity("Stock Course for Advance", "Online Course", ActivityType.COURSE);
+        generateActivity("Stock Discussion", "Online channel", ActivityType.DISCUSSION);
+    }
+
+    private void generateActivity(String name, String location, ActivityType type) {
+        var activity = new Activity();
+        activity.setName(name);
+        activity.setLocation(location);
+        activity.setStartDateTime(LocalDateTime.now().plusMinutes(faker.number().numberBetween(100, 10000)));
+        activity.setEndDateTime(activity.getStartDateTime().plusMinutes(faker.number().numberBetween(60, 360)));
+        activity.setActivityType(type);
+        activity.setLimitAmount(faker.number().numberBetween(1, 100));
+        activityService.create(activity);
     }
 
     private void generateClassify() {

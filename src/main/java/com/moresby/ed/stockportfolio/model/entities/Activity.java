@@ -1,19 +1,17 @@
 package com.moresby.ed.stockportfolio.model.entities;
 
 import com.moresby.ed.stockportfolio.model.ActivityType;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
+import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
+
 
 @Entity(name = "Activity")
 @Table(name = "activity")
-@NoArgsConstructor
+@RequiredArgsConstructor
 @Getter
+@Setter
 public class Activity {
 
     @Id
@@ -42,33 +40,15 @@ public class Activity {
     @NotNull(message = "Location cannot be blank.")
     private String location;
 
-    @OneToMany(
-            cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY
-    )
-    private List<ActivityTypeCapacity> activityTypeCapacities;
+    @Column(name = "start_date_time")
+    private LocalDateTime startDateTime;
 
-    public Activity(String name, String location) {
-        this.name = name;
-        this.location = location;
-        activityTypeCapacities = new ArrayList<>();
-        for(ActivityType activityType: ActivityType.values())
-            activityTypeCapacities.add(new ActivityTypeCapacity(activityType, 0));
-    }
+    @Column(name = "end_date_time")
+    private LocalDateTime endDateTime;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @Column(name = "activity_type")
+    private ActivityType activityType;
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public void setActivityTypeCapacities(List<ActivityTypeCapacity> activityTypeCapacities) {
-        this.activityTypeCapacities = activityTypeCapacities;
-    }
+    @Column(name = "limit_amount")
+    private Integer limitAmount;
 }
