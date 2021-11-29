@@ -49,7 +49,7 @@ public class TStockController {
         return tStockService.updateStock(TStock);
     }
 
-    @DeleteMapping(path = "{id}")
+    @DeleteMapping(path = "/{id}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void deleteStock(@PathVariable Long id) throws InterruptedException {
         Thread.sleep(3000); // TODO: remove this line when production
