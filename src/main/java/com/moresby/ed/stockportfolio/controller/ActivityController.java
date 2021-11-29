@@ -1,7 +1,6 @@
 package com.moresby.ed.stockportfolio.controller;
 
 import com.moresby.ed.stockportfolio.model.entities.Activity;
-import com.moresby.ed.stockportfolio.model.entities.Watch;
 import com.moresby.ed.stockportfolio.service.ActivityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -43,7 +42,7 @@ public class ActivityController {
         return activityService.create(activity);
     }
 
-    @PatchMapping(consumes = "application/json")
+    @PutMapping(consumes = "application/json")
     public Activity update(@RequestBody Activity activity) throws InterruptedException {
         Thread.sleep(3000); // TODO: remove when production
 

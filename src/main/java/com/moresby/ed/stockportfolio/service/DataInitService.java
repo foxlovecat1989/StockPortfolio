@@ -9,8 +9,9 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -27,6 +28,7 @@ public class DataInitService {
     private final ActivityService activityService;
     private Faker faker;
     private final Integer TEN_TIMES = 10;
+    private final Long MILLISECONDS_IN_ONE_DAY = 86400*1000L;
 
     @EventListener(ApplicationReadyEvent.class)
     public void initData() {
@@ -49,11 +51,22 @@ public class DataInitService {
         var activity = new Activity();
         activity.setName(name);
         activity.setLocation(location);
-        activity.setStartDateTime(LocalDateTime.now().plusMinutes(faker.number().numberBetween(100, 10000)));
-        activity.setEndDateTime(activity.getStartDateTime().plusMinutes(faker.number().numberBetween(60, 360)));
+        activity.setStartDate(
+                new java.sql.Date(
+                        new java.util.Date().getTime() + MILLISECONDS_IN_ONE_DAY * faker.number().numberBetween(1, 10)
+                )
+        );
+        activity.setStartTime(java.sql.Time.valueOf(String.format("%d:00:00", faker.number().numberBetween(8, 14))));
+        activity.setEndTime(java.sql.Time.valueOf(String.format("%d:30:00", faker.number().numberBetween(14, 20))));
         activity.setActivityType(type);
         activity.setLimitAmount(faker.number().numberBetween(1, 100));
         activityService.create(activity);
+    }
+
+    private Date convertToDateViaInstant(LocalDateTime dateToConvert) {
+        return java.util.Date
+                .from(dateToConvert.atZone(ZoneId.systemDefault())
+                        .toInstant());
     }
 
     private void generateClassify() {
