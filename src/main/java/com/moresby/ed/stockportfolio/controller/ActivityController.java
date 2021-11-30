@@ -42,7 +42,7 @@ public class ActivityController {
         return activityService.create(activity);
     }
 
-    @PutMapping(consumes = "application/json")
+    @PatchMapping(consumes = "application/json")
     public Activity update(@RequestBody Activity activity) throws InterruptedException {
         Thread.sleep(3000); // TODO: remove when production
 
