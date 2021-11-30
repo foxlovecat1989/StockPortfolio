@@ -47,8 +47,13 @@ public class ActivityServiceImpl implements ActivityService{
                         activity.getStartDate() : updateActivity.getStartDate()
         );
 
-        updateActivity.setStartTime(activity.getStartTime());
-        updateActivity.setEndTime(activity.getEndTime());
+        updateActivity.setStartTime(
+                activity.getStartTime() != null ?
+                        activity.getStartTime() : updateActivity.getStartTime()
+        );
+        updateActivity.setEndTime(activity.getEndTime() != null ?
+                activity.getEndTime() : updateActivity.getEndTime()
+        );
 
         updateActivity.setActivityType(
                 activity.getActivityType() != null ? activity.getActivityType() : updateActivity.getActivityType()
