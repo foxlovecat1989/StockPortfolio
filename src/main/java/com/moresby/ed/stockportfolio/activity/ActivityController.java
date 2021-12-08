@@ -6,16 +6,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "/api/v1/activities")
+@RequestMapping(path = "api/v1/activities")
 public class ActivityController {
 
     private final ActivityService activityService;
 
-    @GetMapping(path = "findAll", produces = "application/json")
+    @GetMapping(path = "/findAll", produces = "application/json")
     public Iterable<Activity> findAll() throws InterruptedException {
         Thread.sleep(3000); // TODO: remove when production
 

@@ -14,17 +14,16 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class JWTAuthenticationAndAuthorizationFilter extends BasicAuthenticationFilter {
 
     private JWTService jwtService;
-    private static final int INDEX_OF_BEARER_START_IN_TOKEN = 7;
+    private final int INDEX_OF_BEARER_START_IN_TOKEN = 7;
 
     public JWTAuthenticationAndAuthorizationFilter(AuthenticationManager authenticationManager) {
         super(authenticationManager);
@@ -36,26 +35,37 @@ public class JWTAuthenticationAndAuthorizationFilter extends BasicAuthentication
             HttpServletResponse response,
             FilterChain chain
     ) throws IOException, ServletException {
-        String header = request.getHeader("Authorization");
-        if(header == null || !header.startsWith("Bearer")){
+
+        Cookie[] cookies = request.getCookies();
+        if(cookies == null || cookies.length == 0){
             chain.doFilter(request, response);
             return;
         }
+
+        Optional<Cookie> tokenCookieOpt =
+                Arrays.stream(cookies)
+                        .filter(cookie -> cookie.getName().equals("token"))
+                        .findFirst();
+
+
+        if(!tokenCookieOpt.isPresent()){
+            chain.doFilter(request, response);
+            return;
+        }
+
         if(jwtService == null){
             ServletContext servletContext = request.getServletContext();
             WebApplicationContext webApplicationContext  =
                     WebApplicationContextUtils.getWebApplicationContext(servletContext);
-            assert webApplicationContext != null;
             jwtService = webApplicationContext.getBean(JWTService.class);
         }
 
-        UsernamePasswordAuthenticationToken authentication = getAuthentication(header);
+        UsernamePasswordAuthenticationToken authentication = getAuthentication(tokenCookieOpt.get().getValue());
         SecurityContextHolder.getContext().setAuthentication(authentication);
         chain.doFilter(request, response);
     }
 
-    private UsernamePasswordAuthenticationToken getAuthentication(String header){
-        String jwtToken = header.substring(INDEX_OF_BEARER_START_IN_TOKEN);
+    private UsernamePasswordAuthenticationToken getAuthentication(String jwtToken){
         try{
             String payload = jwtService.validateToken(jwtToken);
             JsonParser parser = JsonParserFactory.getJsonParser();
@@ -63,7 +73,12 @@ public class JWTAuthenticationAndAuthorizationFilter extends BasicAuthentication
             String user = payloadMap.get("user").toString();
             String role = payloadMap.get("role").toString();
             List<GrantedAuthority> roles = new ArrayList<>();
-            GrantedAuthority grantedAuthority = () -> "ROLE_" + role;
+            GrantedAuthority grantedAuthority = new GrantedAuthority() {
+                @Override
+                public String getAuthority() {
+                    return "ROLE_" + role;
+                }
+            };
             roles.add(grantedAuthority);
 
             return new UsernamePasswordAuthenticationToken(user, null, roles);
@@ -75,5 +90,3 @@ public class JWTAuthenticationAndAuthorizationFilter extends BasicAuthentication
 
     }
 }
-
-
