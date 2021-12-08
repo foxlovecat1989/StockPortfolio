@@ -1,9 +1,19 @@
 package com.moresby.ed.stockportfolio.service;
 
 import com.github.javafaker.Faker;
-import com.moresby.ed.stockportfolio.model.ActivityType;
-import com.moresby.ed.stockportfolio.model.entities.*;
-import com.moresby.ed.stockportfolio.model.WatchlistId;
+import com.moresby.ed.stockportfolio.activity.Activity;
+import com.moresby.ed.stockportfolio.activity.ActivityService;
+import com.moresby.ed.stockportfolio.activity.activitytype.ActivityType;
+import com.moresby.ed.stockportfolio.user.User;
+import com.moresby.ed.stockportfolio.classify.ClassifyService;
+import com.moresby.ed.stockportfolio.user.UserService;
+import com.moresby.ed.stockportfolio.watchlist.WatchlistId;
+import com.moresby.ed.stockportfolio.tstock.TStock;
+import com.moresby.ed.stockportfolio.tstock.TStockService;
+import com.moresby.ed.stockportfolio.watch.Watch;
+import com.moresby.ed.stockportfolio.watch.WatchService;
+import com.moresby.ed.stockportfolio.watchlist.Watchlist;
+import com.moresby.ed.stockportfolio.watchlist.WatchlistService;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
