@@ -94,7 +94,7 @@ public class TStockServiceImpl implements TStockService {
                 tStock.setLastUpDateTime(localDateTime);
                 tStock.setVolume(stock.getQuote().getVolume());
                 // Update price
-                Thread.sleep(1000);
+                // Thread.sleep(1000);
                 this.updatePrice(
                         tStock.getId(),
                         tStock.getChangePrice(),
