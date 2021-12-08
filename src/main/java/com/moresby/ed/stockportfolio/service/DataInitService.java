@@ -103,7 +103,6 @@ public class DataInitService {
                 new TStock("1101.TW", "台泥", classifyStock),
                 new TStock("5483.TWO", "中美晶", classifyStock),
                 new TStock("TWDUSD=x", "台幣對美金", classifyForeignExchange),
-                new TStock("USDTWD=x", "美金對台幣", classifyForeignExchange),
                 new TStock("CNYTWD=x", "人民幣對台幣", classifyForeignExchange),
                 new TStock("^TWII", "台灣加權指數", classifyTWSE)
         );
