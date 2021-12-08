@@ -17,7 +17,7 @@ public class JWTService {
 
     RSAPublicKey publicKey;
     RSAPrivateKey privateKey;
-    private final long EXPIRATION_TIME_IN_MILES = 1800000;
+    private final static long EXPIRATION_TIME_IN_MILES = 1800000;
 
     @PostConstruct
     private void initKeys() throws NoSuchAlgorithmException {
@@ -36,11 +36,11 @@ public class JWTService {
                 .sign(Algorithm.RSA256(publicKey, privateKey));
     }
 
-//    public String validateToken(String token){
-//        String encodedPayload = JWT.require(Algorithm.RSA256(publicKey, privateKey))
-//                .build()
-//                .verify(token)
-//                .getPayload();
-//        return new String(Base64.getDecoder().decode(encodedPayload));
-//    }
+    public String validateToken(String token){
+        String encodedPayload = JWT.require(Algorithm.RSA256(publicKey, privateKey))
+                .build()
+                .verify(token)
+                .getPayload();
+        return new String(Base64.getDecoder().decode(encodedPayload));
+    }
 }

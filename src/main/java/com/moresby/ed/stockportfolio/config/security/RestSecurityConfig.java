@@ -1,5 +1,7 @@
 package com.moresby.ed.stockportfolio.config.security;
 
+import com.moresby.ed.stockportfolio.config.JWTAuthenticationAndAuthorizationFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -9,10 +11,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 @Configuration
 @EnableWebSecurity
-public class BasicAuthConfig extends WebSecurityConfigurerAdapter {
+public class RestSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    @Autowired
+    protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
                 .withUser("matt").password("{noop}password").authorities("ROLE_ADMIN")
                 .and()
@@ -26,8 +28,18 @@ public class BasicAuthConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/api/v1/basicAuth/**").permitAll()
-                .antMatchers("/api/v1/basicAuth/**").hasRole("ADMIN")
+                .antMatchers("/api/v1/basicAuth/**").hasAnyRole("ADMIN", "USER")
                 .and()
                 .httpBasic();
+        http
+                .csrf().disable()
+                .authorizeRequests()
+                .antMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/v1/activities/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/api/v1/activities/**").hasRole("ADMIN")
+                .antMatchers("/api/v1/**").permitAll()
+                .and()
+                .addFilter(new JWTAuthenticationAndAuthorizationFilter(authenticationManager()));
+
     }
 }
