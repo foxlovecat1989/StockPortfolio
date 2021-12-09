@@ -4,6 +4,9 @@ import com.github.javafaker.Faker;
 import com.moresby.ed.stockportfolio.activity.Activity;
 import com.moresby.ed.stockportfolio.activity.ActivityService;
 import com.moresby.ed.stockportfolio.activity.activitytype.ActivityType;
+import com.moresby.ed.stockportfolio.trade.Trade;
+import com.moresby.ed.stockportfolio.trade.TradeId;
+import com.moresby.ed.stockportfolio.trade.TradeService;
 import com.moresby.ed.stockportfolio.user.User;
 import com.moresby.ed.stockportfolio.classify.ClassifyService;
 import com.moresby.ed.stockportfolio.user.UserService;
@@ -19,11 +22,9 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 @Service
@@ -36,9 +37,11 @@ public class DataInitService {
     private final WatchService watchService;
     private final WatchlistService watchlistService;
     private final ActivityService activityService;
+    private final TradeService tradeService;
     private Faker faker;
-    private final Integer TEN_TIMES = 10;
-    private final Long MILLISECONDS_IN_ONE_DAY = 86400*1000L;
+    private static final int TEN_TIMES = 10;
+    private static final long MILLISECONDS_IN_ONE_DAY = 86400*1000L;
+    private static final int PER_UNIT_EQUALS_ONE_THOUSAND = 1000;
 
     @EventListener(ApplicationReadyEvent.class)
     public void initData() {
@@ -48,6 +51,46 @@ public class DataInitService {
         generateRandomWatch(TEN_TIMES);
         addRandomStockToWatchlist(TEN_TIMES);
         generateActivities();
+        generateTrades(TEN_TIMES);
+    }
+
+    private void generateTrades(int times){
+        for (int i = 0; i < times; i++) {
+            generateTrade();
+        }
+    }
+
+    private void generateTrade() {
+        Trade trade = new Trade();
+        TradeId tradeId = new TradeId();
+        Long userId = getFakeNumberBetween(1L, 10L);
+        Long tStockId = getFakeNumberBetween(1L, 10L);
+        Integer volume = (int) getFakeNumberBetween(1L , 10L) * PER_UNIT_EQUALS_ONE_THOUSAND;
+
+        User user = userService.findUserById(userId)
+                .orElseThrow(
+                        () -> new NoSuchElementException(String.format("User ID: %s Not Found", userId))
+                );
+        TStock tStock = tStockService.findStock(tStockId)
+                .orElseThrow(
+                        () -> new NoSuchElementException(String.format("Stock ID: %s Not Found", tStockId))
+                );
+
+        tradeId.setUserId(user.getId());
+        tradeId.setTStockId(tStock.getId());
+        trade.setTradeId(tradeId);
+        trade.setTradeDate(
+                new java.sql.Date(
+                    new Date().getTime() - MILLISECONDS_IN_ONE_DAY * faker.number().numberBetween(1, 10))
+        );
+        trade.setTradeTime(java.sql.Time.valueOf(String.format("%d:00:00", faker.number().numberBetween(9, 13))));
+        trade.setPrice(tStock.getPrice());
+        trade.setUser(user);
+        trade.setTStock(tStock);
+        trade.setVolume(volume);
+        trade.setCost(tStock.getPrice().multiply(BigDecimal.valueOf(volume)));
+
+        tradeService.newTrade(trade);
     }
 
     private void generateActivities() {

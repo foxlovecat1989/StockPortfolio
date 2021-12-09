@@ -35,8 +35,8 @@ public class RestSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/v1/activities/**").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/api/v1/activities/**").hasRole("ADMIN")
+                // .antMatchers(HttpMethod.GET, "/api/v1/activities/**").hasAnyRole("USER", "ADMIN")
+                // .antMatchers("/api/v1/activities/**").hasRole("ADMIN")
                 .antMatchers("/api/v1/**").permitAll()
                 .and()
                 .addFilter(new JWTAuthenticationAndAuthorizationFilter(authenticationManager()));
