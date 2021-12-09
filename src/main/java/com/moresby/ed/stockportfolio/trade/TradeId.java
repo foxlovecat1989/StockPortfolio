@@ -1,7 +1,6 @@
 package com.moresby.ed.stockportfolio.trade;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,7 +13,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
-@JsonIgnoreProperties(value = {"userId", "tStockId"})
+// @JsonIgnoreProperties(value = {"userId", "tstockId"})
 public class TradeId implements Serializable {
 
     @Column(name = "user_id")
