@@ -19,38 +19,48 @@ import java.sql.Time;
 @Setter
 public class Trade {
 
-    @EmbeddedId
-    private TradeId tradeId;
+    @Id
+    @SequenceGenerator(
+            name = "trade_sequence",
+            sequenceName = "trade_sequence",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "trade_sequence"
+    )
+    private Long tradeId;
 
     @ManyToOne
-    @MapsId(value = "userId")
     @JoinColumn(
             name = "user_id",
+            referencedColumnName = "id",
             foreignKey = @ForeignKey(name = "trade_user_fk")
     )
     private User user;
 
     @ManyToOne
-    @MapsId(value = "tStockId")
     @JoinColumn(
-            name = "tStock_id",
-            foreignKey = @ForeignKey(name = "trade_tStock_fk")
+            name = "tstock_id",
+            referencedColumnName = "id",
+            foreignKey = @ForeignKey(name = "trade_tstock_fk")
     )
     private TStock tStock;
 
     @Column(name = "amount")
-    private Long amount;
+    private Integer amount;
 
     @Column(name = "price")
-    private BigDecimal price;
-
-    @Column(name = "cost")
-    private BigDecimal cost;
+    private Double price;
 
     @Column(name = "trade_date")
     private Date tradeDate;
 
     @Column(name = "trade_time")
     private Time tradeTime;
+
+    @Column(name = "trade_type")
+    @Enumerated(value = EnumType.STRING)
+    private TradeType tradeType;
 
 }

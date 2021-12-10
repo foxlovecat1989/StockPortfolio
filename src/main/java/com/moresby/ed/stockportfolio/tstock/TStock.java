@@ -2,6 +2,7 @@ package com.moresby.ed.stockportfolio.tstock;
 
 import com.moresby.ed.stockportfolio.classify.Classify;
 import com.moresby.ed.stockportfolio.inventory.Inventory;
+import com.moresby.ed.stockportfolio.trade.Trade;
 import lombok.*;
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -85,6 +86,11 @@ public class TStock {
             foreignKey = @ForeignKey(name = "stock_classify_fk")
     )
     private Classify classify;
+
+    @OneToMany(
+            mappedBy = "tStock"
+    )
+    private List<Trade> trades;
 
     public TStock(String symbol, String name, Classify classify) {
         this.symbol = symbol;

@@ -5,7 +5,6 @@ import com.moresby.ed.stockportfolio.activity.Activity;
 import com.moresby.ed.stockportfolio.activity.ActivityService;
 import com.moresby.ed.stockportfolio.activity.activitytype.ActivityType;
 import com.moresby.ed.stockportfolio.trade.Trade;
-import com.moresby.ed.stockportfolio.trade.TradeId;
 import com.moresby.ed.stockportfolio.trade.TradeService;
 import com.moresby.ed.stockportfolio.user.User;
 import com.moresby.ed.stockportfolio.classify.ClassifyService;
@@ -40,8 +39,10 @@ public class DataInitService {
     private final TradeService tradeService;
     private Faker faker;
     private static final int TEN_TIMES = 10;
+    private static final int HUNDRED_TIMES = 100;
     private static final long MILLISECONDS_IN_ONE_DAY = 86400*1000L;
     private static final int PER_UNIT_EQUALS_ONE_THOUSAND = 1000;
+    private static final int ONE_MILLION = 1000000;
 
     @EventListener(ApplicationReadyEvent.class)
     public void initData() {
@@ -51,46 +52,16 @@ public class DataInitService {
         generateRandomWatch(TEN_TIMES);
         addRandomStockToWatchlist(TEN_TIMES);
         generateActivities();
-        generateTrades(TEN_TIMES);
+        generateBuyTrades(HUNDRED_TIMES);
     }
 
-    private void generateTrades(int times){
+    private void generateBuyTrades(int times){
         for (int i = 0; i < times; i++) {
-            generateTrade();
+            Long userId = getFakeNumberBetween(1L, 10L);
+            Long stockId = getFakeNumberBetween(1L, 10L);
+            Integer amount = (int) getFakeNumberBetween(1L, 10L) * PER_UNIT_EQUALS_ONE_THOUSAND;
+            tradeService.buy(userId, stockId, amount);
         }
-    }
-
-    private void generateTrade() {
-        Trade trade = new Trade();
-        TradeId tradeId = new TradeId();
-        Long userId = getFakeNumberBetween(1L, 10L);
-        Long tStockId = getFakeNumberBetween(1L, 10L);
-        Long amount = getFakeNumberBetween(1L , 10L) * PER_UNIT_EQUALS_ONE_THOUSAND;
-
-        User user = userService.findUserById(userId)
-                .orElseThrow(
-                        () -> new NoSuchElementException(String.format("User ID: %s Not Found", userId))
-                );
-        TStock tStock = tStockService.findStock(tStockId)
-                .orElseThrow(
-                        () -> new NoSuchElementException(String.format("Stock ID: %s Not Found", tStockId))
-                );
-
-        tradeId.setUserId(user.getId());
-        tradeId.setTStockId(tStock.getId());
-        trade.setTradeId(tradeId);
-        trade.setTradeDate(
-                new java.sql.Date(
-                    new Date().getTime() - MILLISECONDS_IN_ONE_DAY * faker.number().numberBetween(1, 10))
-        );
-        trade.setTradeTime(java.sql.Time.valueOf(String.format("%d:00:00", faker.number().numberBetween(9, 13))));
-        trade.setPrice(tStock.getPrice());
-        trade.setUser(user);
-        trade.setTStock(tStock);
-        trade.setAmount(amount);
-        trade.setCost(tStock.getPrice().multiply(BigDecimal.valueOf(amount)));
-
-        tradeService.newTrade(trade);
     }
 
     private void generateActivities() {
@@ -135,16 +106,14 @@ public class DataInitService {
         Iterable<TStock> tStocks = List.of(
                 new TStock("2303.TW", "聯電", classifyStock),
                 new TStock("2317.TW", "鴻海", classifyStock),
-                new TStock("2454.TW", "聯發科", classifyStock),
                 new TStock("4938.TW", "和碩", classifyStock),
                 new TStock("2308.TW", "台達電", classifyStock),
                 new TStock("2603.TW", "長榮海", classifyStock),
-                new TStock("3231.TW", "緯創", classifyStock),
-                new TStock("2330.TW", "台積電", classifyStock),
-                new TStock("3008.TW", "大立光", classifyStock),
                 new TStock("3711.TW", "日月光控股", classifyStock),
                 new TStock("1101.TW", "台泥", classifyStock),
-                new TStock("5483.TWO", "中美晶", classifyStock),
+                new TStock("8104.TW", "錸寶", classifyStock),
+                new TStock("0050.TW", "元大台灣", classifyStock),
+                new TStock("3380.TW", "明泰", classifyStock),
                 new TStock("TWDUSD=x", "台幣對美金", classifyForeignExchange),
                 new TStock("CNYTWD=x", "人民幣對台幣", classifyForeignExchange),
                 new TStock("^TWII", "台灣加權指數", classifyTWSE)
@@ -176,6 +145,7 @@ public class DataInitService {
         user.setUsername(username);
         user.setEmail(email);
         user.setPassword(password);
+        user.setBalance((int)getFakeNumberBetween(5L, 10L) * ONE_MILLION);
 
         return user;
     }

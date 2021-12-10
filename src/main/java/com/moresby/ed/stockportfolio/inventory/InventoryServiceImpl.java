@@ -5,8 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -18,19 +16,23 @@ public class InventoryServiceImpl implements InventoryService{
     private final InventoryRepository inventoryRepository;
 
     @Override
-    public Inventory add(Inventory inventory) {
-        return inventoryRepository.save(inventory);
+    public Optional<Inventory> findOneByUserIdAndTStockId(Long userId, Long tStcokId) {
+        return inventoryRepository.findOneByUserIdAndTStockId(userId, tStcokId);
     }
 
-
     @Override
-    public Iterable<Inventory> findAll() {
-        return inventoryRepository.findAll();
+    public Inventory add(Inventory inventory) {
+        return inventoryRepository.save(inventory);
     }
 
     @Override
     public Optional<Inventory> findByInventoryId(Long id) {
         return inventoryRepository.findById(id);
+    }
+
+    @Override
+    public List<Inventory> findAllByUserId(Long userId) {
+        return inventoryRepository.findAllByUserId(userId);
     }
 
     @Override

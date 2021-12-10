@@ -14,12 +14,10 @@ import java.util.List;
 public class InventoryController {
 
     private final InventoryService inventoryService;
-    private final InventoryRepository inventoryRepository;
 
     @GetMapping(value = "/findAll/{id}")
-    public List<Inventory> findAll(@PathVariable Long id){
-        List<Inventory> inventories = inventoryRepository.findByUserId(id);
+    public List<Inventory> findAllByUserId(@PathVariable("id") Long userId){
 
-        return inventoryRepository.findByUserId(id);
+        return inventoryService.findAllByUserId(userId);
     }
 }

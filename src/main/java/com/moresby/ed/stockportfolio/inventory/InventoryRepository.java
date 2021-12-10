@@ -1,10 +1,15 @@
 package com.moresby.ed.stockportfolio.inventory;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
 import java.util.List;
+import java.util.Optional;
 
-public interface InventoryRepository extends JpaRepository<Inventory, Long> {
-    @Query(value = "SELECT i FROM Inventory i WHERE i.userId = ?1")
-    List<Inventory> findByUserId(Long userId);
+public interface InventoryRepository extends CrudRepository<Inventory, Long> {
+
+    @Query(value ="SELECT i FROM Inventory i WHERE i.user.id = ?1")
+    List<Inventory> findAllByUserId(Long userId);
+
+    @Query(value = "SELECT i FROM Inventory i WHERE i.user.id = ?1 AND i.tStock.id = ?2")
+    Optional<Inventory> findOneByUserIdAndTStockId(Long userId, Long tStcokId);
 }
