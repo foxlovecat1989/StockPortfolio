@@ -1,10 +1,12 @@
 package com.moresby.ed.stockportfolio.tstock;
 
 import com.moresby.ed.stockportfolio.classify.Classify;
+import com.moresby.ed.stockportfolio.inventory.Inventory;
 import lombok.*;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity(name = "TStock")
 @Table(name = "tstock")

@@ -1,5 +1,6 @@
 package com.moresby.ed.stockportfolio.trade;
 
+import com.moresby.ed.stockportfolio.inventory.Inventory;
 import com.moresby.ed.stockportfolio.tstock.TStock;
 import com.moresby.ed.stockportfolio.user.User;
 import lombok.Getter;
@@ -24,7 +25,7 @@ public class Trade {
     @ManyToOne
     @MapsId(value = "userId")
     @JoinColumn(
-            name = "userId",
+            name = "user_id",
             foreignKey = @ForeignKey(name = "trade_user_fk")
     )
     private User user;
@@ -37,8 +38,8 @@ public class Trade {
     )
     private TStock tStock;
 
-    @Column(name = "volume")
-    private Integer volume;
+    @Column(name = "amount")
+    private Long amount;
 
     @Column(name = "price")
     private BigDecimal price;
@@ -51,4 +52,5 @@ public class Trade {
 
     @Column(name = "trade_time")
     private Time tradeTime;
+
 }

@@ -1,10 +1,12 @@
 package com.moresby.ed.stockportfolio.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.moresby.ed.stockportfolio.inventory.Inventory;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import javax.persistence.*;
+import java.util.List;
 
 @Entity(name = "User")
 @Table(name = "app_user")

@@ -65,7 +65,7 @@ public class DataInitService {
         TradeId tradeId = new TradeId();
         Long userId = getFakeNumberBetween(1L, 10L);
         Long tStockId = getFakeNumberBetween(1L, 10L);
-        Integer volume = (int) getFakeNumberBetween(1L , 10L) * PER_UNIT_EQUALS_ONE_THOUSAND;
+        Long amount = getFakeNumberBetween(1L , 10L) * PER_UNIT_EQUALS_ONE_THOUSAND;
 
         User user = userService.findUserById(userId)
                 .orElseThrow(
@@ -87,8 +87,8 @@ public class DataInitService {
         trade.setPrice(tStock.getPrice());
         trade.setUser(user);
         trade.setTStock(tStock);
-        trade.setVolume(volume);
-        trade.setCost(tStock.getPrice().multiply(BigDecimal.valueOf(volume)));
+        trade.setAmount(amount);
+        trade.setCost(tStock.getPrice().multiply(BigDecimal.valueOf(amount)));
 
         tradeService.newTrade(trade);
     }
