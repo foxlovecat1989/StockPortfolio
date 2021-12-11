@@ -2,9 +2,6 @@ package com.moresby.ed.stockportfolio.service;
 
 import com.github.javafaker.Faker;
 import com.moresby.ed.stockportfolio.account.Account;
-import com.moresby.ed.stockportfolio.activity.Activity;
-import com.moresby.ed.stockportfolio.activity.ActivityService;
-import com.moresby.ed.stockportfolio.activity.activitytype.ActivityType;
 import com.moresby.ed.stockportfolio.trade.TradeService;
 import com.moresby.ed.stockportfolio.trade.model.enumeration.TradeType;
 import com.moresby.ed.stockportfolio.trade.model.pojo.TradePOJO;
@@ -31,89 +28,46 @@ import java.util.stream.Stream;
 @Service
 @AllArgsConstructor
 public class DataInitService {
-
     private final ClassifyService classifyService;
     private final TStockService tStockService;
     private final UserService userService;
     private final WatchService watchService;
     private final WatchlistService watchlistService;
-    private final ActivityService activityService;
     private final TradeService tradeService;
     private Faker faker;
     private static final int TEN_TIMES = 10;
     private static final int HUNDRED_TIMES = 100;
-    private static final long MILLISECONDS_IN_ONE_DAY = 86400*1000L;
     private static final int PER_UNIT_EQUALS_ONE_THOUSAND = 1000;
     private static final int ONE_MILLION = 1000000;
 
     @EventListener(ApplicationReadyEvent.class)
     public void initData() {
-        generatedUsers(TEN_TIMES);
-        generateClassify();
+        generateUsers(TEN_TIMES);
         generateStocks();
+        generateExecuteTrades(TEN_TIMES);
+
         generateRandomWatch(TEN_TIMES);
         addRandomStockToWatchlist(TEN_TIMES);
-        generateActivities();
-        generateBuyTrades(TEN_TIMES);
     }
 
-    private void generateBuyTrades(int times){
+    private void generateUsers(int times){
         for (int i = 0; i < times; i++) {
-            Long userId = getFakeNumberBetween(1L, 10L);
-            Long stockId = getFakeNumberBetween(1L, 10L);
-            Long amount = getFakeNumberBetween(1L, 10L) * PER_UNIT_EQUALS_ONE_THOUSAND;
-            var user = userService.findExistingUserById(userId);
-            var stock = tStockService.findExistingStock(stockId);
-            TradePOJO trade =
-                    TradePOJO.builder()
-                            .user(user).tStock(stock).amount(amount).tradeType(TradeType.BUY)
-                            .build();
+            var user = new User();
+            var account = new Account();
+            var username = faker.name().lastName();
+            var password = Integer.toHexString(user.hashCode());
+            var email = String.format("%s@gmail.com", username);
 
-            tradeService.executeTrade(trade);
-
-            boolean toSellIt = faker.number().numberBetween(0, 2) == 1 ? true : false;
-            if(toSellIt){
-                trade.setTradeType(TradeType.SELL);
-                tradeService.executeTrade(trade);
-            }
+            user.setUsername(username);
+            user.setEmail(email);
+            user.setPassword(password);
+            account.setBalance(BigDecimal.valueOf(getFakeNumberBetween(5L, 10L) * ONE_MILLION));
+            user.setAccount(account);
         }
     }
 
-    private void generateActivities() {
-        generateActivity("Stock Course for Beginners", "Online Course", ActivityType.COURSE);
-        generateActivity("Hank McClure's Speech", "Civic Activity Center", ActivityType.SPEECH);
-        generateActivity("Stock Course for Advance", "Online Course", ActivityType.COURSE);
-        generateActivity("Stock Discussion", "Online channel", ActivityType.DISCUSSION);
-    }
-
-    private void generateActivity(String name, String location, ActivityType type) {
-        var activity = new Activity();
-        activity.setName(name);
-        activity.setLocation(location);
-        activity.setStartDate(
-                new java.sql.Date(
-                        new java.util.Date().getTime() + MILLISECONDS_IN_ONE_DAY * faker.number().numberBetween(1, 10)
-                )
-        );
-        activity.setStartTime(java.sql.Time.valueOf(String.format("%d:00:00", faker.number().numberBetween(8, 14))));
-        activity.setEndTime(java.sql.Time.valueOf(String.format("%d:30:00", faker.number().numberBetween(14, 20))));
-        activity.setActivityType(type);
-        activity.setLimitAmount(faker.number().numberBetween(1, 100));
-        activityService.create(activity);
-    }
-
-    private Date convertToDateViaInstant(LocalDateTime dateToConvert) {
-        return java.util.Date
-                .from(dateToConvert.atZone(ZoneId.systemDefault())
-                        .toInstant());
-    }
-
-    private void generateClassify() {
-        // List.of("Ordinary Stock/普通股", "Futures/期貨", "Fund/基金", "Foreign Exchange/外匯")
-        Stream.of("Ordinary Stock", "Futures", "Fund", "Foreign Exchange", "TWSE").forEach(classifyService::createClassifyByName);
-    }
-
     private void generateStocks() {
+        generateClassify();
         var classifyStock = classifyService.findClassifyByName("Ordinary Stock");
         var classifyForeignExchange = classifyService.findClassifyByName("Foreign Exchange");
         var classifyTWSE = classifyService.findClassifyByName("TWSE");
@@ -135,36 +89,34 @@ public class DataInitService {
         );
 
         tStockService.createStocks(tStocks);
-        this.getPriceOfStock();
-    }
-
-    private void getPriceOfStock() {
         tStockService.refreshPriceOfStocks();
     }
 
-    private void generatedUsers(Integer times) {
-        List<User> users = new ArrayList<>();
-        for (int i = 0; i < times; i++) {
-            User user = generateRandomUser();
-            users.add(user);
-        }
-
-        userService.createUsers(users);
+    private void generateClassify() {
+        // List.of("Ordinary Stock/普通股", "Futures/期貨", "Fund/基金", "Foreign Exchange/外匯")
+        Stream.of("Ordinary Stock", "Futures", "Fund", "Foreign Exchange", "TWSE").forEach(classifyService::createClassifyByName);
     }
 
-    private User generateRandomUser(){
-        User user = new User();
-        Account account = new Account();
-        account.setBalance(BigDecimal.valueOf(getFakeNumberBetween(5L, 10L) * ONE_MILLION));
-        String username = faker.name().lastName();
-        String password = Integer.toHexString(user.hashCode());
-        String email = String.format("%s@gmail.com", username);
-        user.setUsername(username);
-        user.setEmail(email);
-        user.setPassword(password);
-        user.setAccount(account);
+    private void generateExecuteTrades(int times){
+        for (int i = 0; i < times; i++) {
+            Long userId = getFakeNumberBetween(1L, 10L);
+            Long stockId = getFakeNumberBetween(1L, 10L);
+            Long amount = getFakeNumberBetween(1L, 10L) * PER_UNIT_EQUALS_ONE_THOUSAND;
+            var user = userService.findExistingUserById(userId);
+            var stock = tStockService.findExistingStock(stockId);
+            TradePOJO trade =
+                    TradePOJO.builder()
+                            .user(user).tStock(stock).amount(amount).tradeType(TradeType.BUY)
+                            .build();
 
-        return user;
+            tradeService.executeTrade(trade);
+
+            boolean toSellIt = faker.number().numberBetween(0, 2) == 1;
+            if(toSellIt){
+                trade.setTradeType(TradeType.SELL);
+                tradeService.executeTrade(trade);
+            }
+        }
     }
 
     private void generateRandomWatch(Integer times) {
@@ -182,10 +134,6 @@ public class DataInitService {
         watch.setUser(user);
 
         return  watchService.createWatch(watch);
-    }
-
-    private long getFakeNumberBetween(Long min, Long max) {
-        return faker.number().numberBetween(min, max);
     }
 
     private void addRandomStockToWatchlist(Integer times) {
@@ -209,5 +157,9 @@ public class DataInitService {
         watchlist.setLastUpdateDate(LocalDateTime.now());
 
         return watchlistService.createOne(watchlist);
+    }
+
+    private long getFakeNumberBetween(Long min, Long max) {
+        return faker.number().numberBetween(min, max);
     }
 }
