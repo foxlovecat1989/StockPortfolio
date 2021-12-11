@@ -1,13 +1,11 @@
 package com.moresby.ed.stockportfolio.inventory;
 
+import com.moresby.ed.stockportfolio.trade.model.enumeration.TradeType;
 import com.moresby.ed.stockportfolio.trade.model.pojo.TradePOJO;
-import com.moresby.ed.stockportfolio.tstock.TStock;
-import com.moresby.ed.stockportfolio.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -84,17 +82,26 @@ public class InventoryServiceImpl implements InventoryService{
 
     @Override
     public Inventory updateInventory(TradePOJO tradePOJO) {
-        Optional<Inventory> optInventory = inventoryRepository.findOneByUserIdAndTStockId(tradePOJO.getUser().getId(), tradePOJO.getTStock().getId());
+        Optional<Inventory> optInventory =
+                inventoryRepository.findOneByUserIdAndTStockId(tradePOJO.getUser().getId(), tradePOJO.getTStock().getId());
         Inventory inventory =
                 optInventory.isPresent() ? optInventory.get() : new Inventory();
         inventory.setUser(tradePOJO.getUser());
         inventory.setTStock(tradePOJO.getTStock());
-        inventory.setAmount(
-                tradePOJO.getAmount() + (optInventory.isPresent() ? optInventory.get().getAmount() : 0)
-        );
 
-        double avgPrice = calculateAvgPriceInInventory(tradePOJO);
-        inventory.setAvgPrice(BigDecimal.valueOf(avgPrice));
+        if(tradePOJO.getTradeType() == TradeType.BUY){      // under buy mode
+            inventory.setAmount(
+                    tradePOJO.getAmount() + (optInventory.isPresent() ? optInventory.get().getAmount() : 0)
+            );
+            double avgPrice = calculateAvgPriceInInventory(tradePOJO);
+            inventory.setAvgPrice(BigDecimal.valueOf(avgPrice));
+        }else {                                             // under sell mode
+            // TODO: examine amount is sufficient to sell - if(inventory.getAmount() - tradePOJO.getAmount() < 0)
+            inventory.setAmount(
+                    inventory.getAmount() - tradePOJO.getAmount()
+            );
+            inventory.setAvgPrice(inventory.getAvgPrice());
+        }
 
         inventoryRepository.save(inventory);
 

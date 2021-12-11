@@ -5,6 +5,7 @@ import com.moresby.ed.stockportfolio.activity.Activity;
 import com.moresby.ed.stockportfolio.activity.ActivityService;
 import com.moresby.ed.stockportfolio.activity.activitytype.ActivityType;
 import com.moresby.ed.stockportfolio.trade.TradeService;
+import com.moresby.ed.stockportfolio.trade.model.enumeration.TradeType;
 import com.moresby.ed.stockportfolio.trade.model.pojo.TradePOJO;
 import com.moresby.ed.stockportfolio.user.User;
 import com.moresby.ed.stockportfolio.classify.ClassifyService;
@@ -51,18 +52,28 @@ public class DataInitService {
         generateRandomWatch(TEN_TIMES);
         addRandomStockToWatchlist(TEN_TIMES);
         generateActivities();
-        generateBuyTrades(HUNDRED_TIMES);
+        generateBuyTrades(TEN_TIMES);
     }
 
     private void generateBuyTrades(int times){
         for (int i = 0; i < times; i++) {
             Long userId = getFakeNumberBetween(1L, 10L);
-            var user = userService.findExistingUserById(userId);
             Long stockId = getFakeNumberBetween(1L, 10L);
-            var stock = tStockService.findExistingStock(stockId);
             Long amount = getFakeNumberBetween(1L, 10L) * PER_UNIT_EQUALS_ONE_THOUSAND;
-            TradePOJO trade = TradePOJO.builder().user(user).tStock(stock).amount(amount).build();
+            var user = userService.findExistingUserById(userId);
+            var stock = tStockService.findExistingStock(stockId);
+            TradePOJO trade =
+                    TradePOJO.builder()
+                            .user(user).tStock(stock).amount(amount).tradeType(TradeType.BUY)
+                            .build();
+
             tradeService.buy(trade);
+
+            boolean toSellIt = faker.number().numberBetween(0, 2) == 1 ? true : false;
+            if(toSellIt){
+                trade.setTradeType(TradeType.SELL);
+                tradeService.sell(trade);
+            }
         }
     }
 
