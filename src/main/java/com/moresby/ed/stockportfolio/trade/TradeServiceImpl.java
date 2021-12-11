@@ -58,8 +58,7 @@ public class TradeServiceImpl implements TradeService {
                 tStockRepository.findById(stockId).orElseThrow(
                         () -> new NoSuchElementException(String.format("Stock Id: %s Not Found", stockId))
                 );
-        Inventory inventory =
-                optInventory.isPresent() ? optInventory.get() : new Inventory();
+
         Trade trade = new Trade();
         trade.setUser(user);
         trade.setTStock(tStock);
@@ -78,6 +77,8 @@ public class TradeServiceImpl implements TradeService {
         );
         trade.setTradeTime(java.sql.Time.valueOf(String.format("%d:00:00", faker.number().numberBetween(9, 12))));
 
+        Inventory inventory =
+                optInventory.isPresent() ? optInventory.get() : new Inventory();
         inventory.setUser(user);
         inventory.setTStock(tStock);
         inventory.setAmount(
@@ -88,6 +89,7 @@ public class TradeServiceImpl implements TradeService {
         int remainBalance = user.getBalance() - buyTotalCost;
         // TODO: EXAMINE THE BALANCE IS GREATER THAN ZERO - if (remainBalance < 0) ROLLBACK
         user.setBalance(remainBalance);
+        inventory.setCost((double)buyTotalCost);
 
         inventoryRepository.save(inventory);
         userRepository.save(user);

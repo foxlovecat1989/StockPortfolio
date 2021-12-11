@@ -30,6 +30,9 @@ public class Inventory {
     @Column(name = "amount")
     private Integer amount;
 
+    @Column(name = "cost")
+    private Double cost;
+
     @ManyToOne
     @JoinColumn(
             name = "user_id",
