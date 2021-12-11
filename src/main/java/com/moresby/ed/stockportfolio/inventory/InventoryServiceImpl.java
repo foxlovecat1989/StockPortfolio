@@ -1,6 +1,5 @@
 package com.moresby.ed.stockportfolio.inventory;
 
-import com.moresby.ed.stockportfolio.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;

@@ -1,11 +1,9 @@
 package com.moresby.ed.stockportfolio.inventory;
 
-
 import com.moresby.ed.stockportfolio.tstock.TStock;
 import com.moresby.ed.stockportfolio.user.User;
 import lombok.Getter;
 import lombok.Setter;
-
 import javax.persistence.*;
 import java.math.BigDecimal;
 
@@ -30,8 +28,8 @@ public class Inventory {
     @Column(name = "amount")
     private Integer amount;
 
-    @Column(name = "cost")
-    private Long cost;
+    @Column(name = "avg_price")
+    private BigDecimal avgPrice;
 
     @ManyToOne
     @JoinColumn(
