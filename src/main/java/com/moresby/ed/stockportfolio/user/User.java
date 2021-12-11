@@ -51,7 +51,8 @@ public class User {
     )
     private String password;
 
-    private Integer balance;
+    @Column(name = "balance")
+    private Double balance;
 
     @OneToMany(
             mappedBy = "user",

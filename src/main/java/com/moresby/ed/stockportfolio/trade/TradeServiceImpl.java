@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.List;
@@ -62,8 +63,8 @@ public class TradeServiceImpl implements TradeService {
         Trade trade = new Trade();
         trade.setUser(user);
         trade.setTStock(tStock);
-        trade.setPrice(tStock.getPrice().doubleValue());
-        trade.setAmount(amount);
+        trade.setPrice(tStock.getPrice());
+        trade.setAmount(BigDecimal.valueOf(amount));
         trade.setTradeType(TradeType.BUY);
 //        trade.setTradeDate(
 //                new java.sql.Date(
@@ -85,11 +86,13 @@ public class TradeServiceImpl implements TradeService {
                 amount + (optInventory.isPresent() ? optInventory.get().getAmount() : 0)
         );
 
-        int buyTotalCost = tStock.getPrice().intValue() * amount;
-        int remainBalance = user.getBalance() - buyTotalCost;
+        long buyTotalCost = Math.round(tStock.getPrice().doubleValue() * amount);
+        double remainBalance = user.getBalance() - buyTotalCost;
         // TODO: EXAMINE THE BALANCE IS GREATER THAN ZERO - if (remainBalance < 0) ROLLBACK
         user.setBalance(remainBalance);
-        inventory.setCost((double)buyTotalCost);
+        inventory.setCost(
+                buyTotalCost + ( inventory.getCost() != null ? inventory.getCost() : 0)
+        );
 
         inventoryRepository.save(inventory);
         userRepository.save(user);

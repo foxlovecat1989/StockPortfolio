@@ -31,7 +31,7 @@ public class Inventory {
     private Integer amount;
 
     @Column(name = "cost")
-    private Double cost;
+    private Long cost;
 
     @ManyToOne
     @JoinColumn(

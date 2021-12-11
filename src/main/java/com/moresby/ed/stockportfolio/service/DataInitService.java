@@ -52,7 +52,7 @@ public class DataInitService {
         generateRandomWatch(TEN_TIMES);
         addRandomStockToWatchlist(TEN_TIMES);
         generateActivities();
-        generateBuyTrades(HUNDRED_TIMES);
+        generateBuyTrades(TEN_TIMES);
     }
 
     private void generateBuyTrades(int times){
@@ -145,7 +145,7 @@ public class DataInitService {
         user.setUsername(username);
         user.setEmail(email);
         user.setPassword(password);
-        user.setBalance((int)getFakeNumberBetween(5L, 10L) * ONE_MILLION);
+        user.setBalance((double)(getFakeNumberBetween(5L, 10L) * ONE_MILLION));
 
         return user;
     }

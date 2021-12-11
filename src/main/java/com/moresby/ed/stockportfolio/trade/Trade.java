@@ -48,10 +48,10 @@ public class Trade {
     private TStock tStock;
 
     @Column(name = "amount")
-    private Integer amount;
+    private BigDecimal amount;
 
     @Column(name = "price")
-    private Double price;
+    private BigDecimal price;
 
     @Column(name = "trade_date")
     private Date tradeDate;
