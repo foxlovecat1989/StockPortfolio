@@ -9,7 +9,6 @@ public interface UserService {
     Optional<User> findById(long id);
     Iterable<User> findAllUsers();
     User createUser(User user);
-    Iterable<User> createUsers(Iterable<User> users);
     User updateUser(User user);
     void deleteUserById(Long id);
     Boolean isEmailTaken(String email);

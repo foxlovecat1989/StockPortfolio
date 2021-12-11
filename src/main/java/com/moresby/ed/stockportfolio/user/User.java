@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.moresby.ed.stockportfolio.account.Account;
 import com.moresby.ed.stockportfolio.inventory.Inventory;
 import com.moresby.ed.stockportfolio.trade.model.entity.Trade;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -73,4 +74,12 @@ public class User {
             foreignKey = @ForeignKey(name = "user_account_id")
     )
     private Account account;
+
+    @Builder
+    public User(String username, String email, String password, Account account) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.account = account;
+    }
 }

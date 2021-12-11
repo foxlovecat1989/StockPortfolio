@@ -37,10 +37,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
-    @Override
-    public Iterable<User> createUsers(Iterable<User> users) {
-        return userRepository.saveAll(users);
-    }
 
     @Override
     public User updateUser(User user) {

@@ -45,24 +45,28 @@ public class DataInitService {
         generateUsers(TEN_TIMES);
         generateStocks();
         generateExecuteTrades(TEN_TIMES);
-
         generateRandomWatch(TEN_TIMES);
         addRandomStockToWatchlist(TEN_TIMES);
     }
 
     private void generateUsers(int times){
         for (int i = 0; i < times; i++) {
-            var user = new User();
-            var account = new Account();
             var username = faker.name().lastName();
-            var password = Integer.toHexString(user.hashCode());
-            var email = String.format("%s@gmail.com", username);
 
-            user.setUsername(username);
-            user.setEmail(email);
-            user.setPassword(password);
-            account.setBalance(BigDecimal.valueOf(getFakeNumberBetween(5L, 10L) * ONE_MILLION));
+            var user
+                    = User.builder()
+                    .username(username)
+                    .password(Integer.toHexString(username.hashCode()))
+                    .email(String.format("%s@gmail.com", username))
+                    .build();
+
+            var account =
+                    Account.builder()
+                            .balance(BigDecimal.valueOf(getFakeNumberBetween(5L, 10L) * ONE_MILLION))
+                            .user(user)
+                            .build();
             user.setAccount(account);
+            userService.createUser(user);
         }
     }
 
@@ -106,7 +110,10 @@ public class DataInitService {
             var stock = tStockService.findExistingStock(stockId);
             TradePOJO trade =
                     TradePOJO.builder()
-                            .user(user).tStock(stock).amount(amount).tradeType(TradeType.BUY)
+                            .user(user)
+                            .tStock(stock)
+                            .amount(amount)
+                            .tradeType(TradeType.BUY)
                             .build();
 
             tradeService.executeTrade(trade);

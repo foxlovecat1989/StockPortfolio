@@ -1,17 +1,14 @@
 package com.moresby.ed.stockportfolio.account;
 
 import com.moresby.ed.stockportfolio.user.User;
-import lombok.Data;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Entity(name = "Account")
 @Table(name = "account")
-@RequiredArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 public class Account {
@@ -24,4 +21,10 @@ public class Account {
 
     @OneToOne(mappedBy = "account")
     private User user;
+
+    @Builder
+    public Account(BigDecimal balance, User user) {
+        this.balance = balance;
+        this.user = user;
+    }
 }
