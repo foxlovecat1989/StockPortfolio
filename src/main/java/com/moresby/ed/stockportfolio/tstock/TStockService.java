@@ -21,4 +21,5 @@ public interface TStockService {
             LocalDateTime lastUpDateTime,
             Long volume
     );
+    TStock findExistingStock(Long stockId);
 }

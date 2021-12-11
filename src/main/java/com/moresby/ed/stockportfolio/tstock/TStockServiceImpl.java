@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -124,6 +125,14 @@ public class TStockServiceImpl implements TStockService {
             Long volume
     ) {
         tStockRepository.updatePrice(tStockId, changePrice, changeInPercent, previousClosed, price, transactionDate, volume);
+    }
+
+    @Override
+    public TStock findExistingStock(Long stockId) {
+
+        return  tStockRepository.findById(stockId).orElseThrow(
+                        () -> new NoSuchElementException(String.format("Stock Id: %s Not Found", stockId))
+                );
     }
 
 

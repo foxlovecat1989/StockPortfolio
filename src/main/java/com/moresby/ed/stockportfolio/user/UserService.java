@@ -5,7 +5,8 @@ import com.moresby.ed.stockportfolio.user.User;
 import java.util.Optional;
 
 public interface UserService {
-    Optional<User> findUserById(Long id);
+    User findExistingUserById(Long id);
+    Optional<User> findById(long id);
     Iterable<User> findAllUsers();
     User createUser(User user);
     Iterable<User> createUsers(Iterable<User> users);

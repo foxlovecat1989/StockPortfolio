@@ -1,6 +1,6 @@
-package com.moresby.ed.stockportfolio.trade;
+package com.moresby.ed.stockportfolio.trade.model.entity;
 
-import com.moresby.ed.stockportfolio.inventory.Inventory;
+import com.moresby.ed.stockportfolio.trade.model.enumeration.TradeType;
 import com.moresby.ed.stockportfolio.tstock.TStock;
 import com.moresby.ed.stockportfolio.user.User;
 import lombok.Getter;

@@ -4,8 +4,8 @@ import com.github.javafaker.Faker;
 import com.moresby.ed.stockportfolio.activity.Activity;
 import com.moresby.ed.stockportfolio.activity.ActivityService;
 import com.moresby.ed.stockportfolio.activity.activitytype.ActivityType;
-import com.moresby.ed.stockportfolio.trade.Trade;
 import com.moresby.ed.stockportfolio.trade.TradeService;
+import com.moresby.ed.stockportfolio.trade.model.pojo.TradePOJO;
 import com.moresby.ed.stockportfolio.user.User;
 import com.moresby.ed.stockportfolio.classify.ClassifyService;
 import com.moresby.ed.stockportfolio.user.UserService;
@@ -21,7 +21,6 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.time.*;
 import java.util.*;
 import java.util.stream.Stream;
@@ -52,15 +51,18 @@ public class DataInitService {
         generateRandomWatch(TEN_TIMES);
         addRandomStockToWatchlist(TEN_TIMES);
         generateActivities();
-        generateBuyTrades(TEN_TIMES);
+        generateBuyTrades(HUNDRED_TIMES);
     }
 
     private void generateBuyTrades(int times){
         for (int i = 0; i < times; i++) {
             Long userId = getFakeNumberBetween(1L, 10L);
+            var user = userService.findExistingUserById(userId);
             Long stockId = getFakeNumberBetween(1L, 10L);
-            Integer amount = (int) getFakeNumberBetween(1L, 10L) * PER_UNIT_EQUALS_ONE_THOUSAND;
-            tradeService.buy(userId, stockId, amount);
+            var stock = tStockService.findExistingStock(stockId);
+            Long amount = getFakeNumberBetween(1L, 10L) * PER_UNIT_EQUALS_ONE_THOUSAND;
+            TradePOJO trade = TradePOJO.builder().user(user).tStock(stock).amount(amount).build();
+            tradeService.buy(trade);
         }
     }
 
@@ -154,8 +156,8 @@ public class DataInitService {
         for (int i = 0; i < times; i++) {
             Long fakeUserId = getFakeNumberBetween(1L, 10L);
             String fakeWatchName = faker.name().nameWithMiddle().toUpperCase();
-            Optional<User> optUser = userService.findUserById(fakeUserId);
-            optUser.ifPresent(user -> addWatch(fakeWatchName, user));
+            var user = userService.findExistingUserById(fakeUserId);
+            addWatch(fakeWatchName, user);
         }
     }
 

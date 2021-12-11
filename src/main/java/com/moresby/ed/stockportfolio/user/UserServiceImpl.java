@@ -1,12 +1,10 @@
 package com.moresby.ed.stockportfolio.user;
 
-import com.moresby.ed.stockportfolio.user.User;
-import com.moresby.ed.stockportfolio.user.UserRepository;
-import com.moresby.ed.stockportfolio.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -16,7 +14,16 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public Optional<User> findUserById(Long id) {
+    public User findExistingUserById(Long id) {
+
+        return userRepository.findById(id)
+                .orElseThrow(
+                        () -> new NoSuchElementException(String.format("User Id: %s Not Found", id))
+                );
+    }
+
+    @Override
+    public Optional<User> findById(long id) {
         return userRepository.findById(id);
     }
 
@@ -62,4 +69,6 @@ public class UserServiceImpl implements UserService {
 
         return userRepository.findUserByEmailEquals(email).isPresent();
     }
+
+
 }

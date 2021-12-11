@@ -1,8 +1,9 @@
 package com.moresby.ed.stockportfolio.trade;
 
+
+import com.moresby.ed.stockportfolio.trade.model.entity.Trade;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-
 import java.sql.Date;
 import java.util.List;
 

@@ -2,7 +2,7 @@ package com.moresby.ed.stockportfolio.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.moresby.ed.stockportfolio.inventory.Inventory;
-import com.moresby.ed.stockportfolio.trade.Trade;
+import com.moresby.ed.stockportfolio.trade.model.entity.Trade;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

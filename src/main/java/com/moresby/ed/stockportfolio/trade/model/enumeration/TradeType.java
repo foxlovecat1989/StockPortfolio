@@ -1,4 +1,4 @@
-package com.moresby.ed.stockportfolio.trade;
+package com.moresby.ed.stockportfolio.trade.model.enumeration;
 
 public enum TradeType {
     SELL("BUY"),

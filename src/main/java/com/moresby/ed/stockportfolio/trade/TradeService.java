@@ -1,7 +1,7 @@
 package com.moresby.ed.stockportfolio.trade;
 
-import com.moresby.ed.stockportfolio.tstock.TStock;
-import com.moresby.ed.stockportfolio.user.User;
+import com.moresby.ed.stockportfolio.trade.model.entity.Trade;
+import com.moresby.ed.stockportfolio.trade.model.pojo.TradePOJO;
 
 import java.sql.Date;
 import java.util.List;
@@ -12,6 +12,6 @@ public interface TradeService {
     Optional<Trade> findByTradeId(Long tradeId);
     List<Trade> findOneByUserIdAndTradeDate(Long userId, Date tradeDate);
     Iterable<Trade> findAll();
-    Trade buy(Long userId, Long stockId, Integer amount);
-    Trade sell(Long userId, Long stockId, Integer amount);
+    Trade buy(TradePOJO tradePOJO);
+    Trade sell(TradePOJO tradePOJO);
 }

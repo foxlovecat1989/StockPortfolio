@@ -26,7 +26,7 @@ public class Inventory {
     private Long id;
 
     @Column(name = "amount")
-    private Integer amount;
+    private Long amount;
 
     @Column(name = "avg_price")
     private BigDecimal avgPrice;

@@ -1,14 +1,17 @@
 package com.moresby.ed.stockportfolio.inventory;
 
+import com.moresby.ed.stockportfolio.trade.model.pojo.TradePOJO;
 import java.util.List;
 import java.util.Optional;
 
 public interface InventoryService {
-    Optional<Inventory> findOneByUserIdAndTStockId(Long userId, Long tStcokId);
-
     Inventory add(Inventory inventory);
-    Optional<Inventory> findByInventoryId(Long id);
     List<Inventory> findAllByUserId(Long userId);
     Inventory update(Inventory inventory);
+    Inventory updateInventory(TradePOJO tradePOJO);
+    Inventory findExistingInventoryByUseIdAndStockId(Long userId, Long stockId);
+    Optional<Inventory> findByInventoryId(Long id);
+    double calculateAvgPriceInInventory(TradePOJO tradePOJO);
     void remove(Inventory inventory);
+    Optional<Inventory> findInventoryByUseIdAndStockId(Long userId, Long stockId);
 }

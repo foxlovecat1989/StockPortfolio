@@ -1,7 +1,9 @@
 package com.moresby.ed.stockportfolio.trade;
 
+import com.moresby.ed.stockportfolio.trade.model.entity.Trade;
+import com.moresby.ed.stockportfolio.trade.model.pojo.TradePOJO;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,9 +14,11 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "api/v1/trades")
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class TradeController {
+
     private final TradeService tradeService;
+    private TradePOJO tradePOJO;
 
     @GetMapping(path = "/{id}", produces = "application/json")
     public ResponseEntity<Trade> findByTradeId(@PathVariable("id") Long tradeId) throws InterruptedException {
@@ -44,16 +48,12 @@ public class TradeController {
         return tradeService.findOneByUserIdAndTradeDate(userId, tradeDate);
     }
 
-    @GetMapping(path = "/buy/{userId}/{stockId}/{amount}", produces = "application/json")
+    @PostMapping
     @Transactional
-    public Trade buy(
-            @PathVariable("userId") Long userId,
-            @PathVariable("stockId") Long stockId,
-            @PathVariable("amount") Integer amount
-    ) throws InterruptedException {
+    public Trade buy(@RequestBody TradePOJO tradePOJO) throws InterruptedException {
         Thread.sleep(3000); // TODO: remove this line when production
 
-        return tradeService.buy(userId, stockId, amount);
+        return tradeService.buy(tradePOJO);
     }
 
 }

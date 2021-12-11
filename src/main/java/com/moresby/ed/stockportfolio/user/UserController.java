@@ -32,7 +32,7 @@ public class UserController {
     @GetMapping(path = "/{id}", produces = "application/json")
     public ResponseEntity<User> findOneById(@PathVariable Long id) throws InterruptedException {
         Thread.sleep(3000); // TODO: remove when production
-        Optional<User> optUser = userService.findUserById(id);
+        Optional<User> optUser = userService.findById(id);
 
         return optUser.map(
                 user -> new ResponseEntity<>(user, HttpStatus.OK))

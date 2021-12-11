@@ -1,9 +1,14 @@
 package com.moresby.ed.stockportfolio.inventory;
 
+import com.moresby.ed.stockportfolio.trade.model.pojo.TradePOJO;
+import com.moresby.ed.stockportfolio.tstock.TStock;
+import com.moresby.ed.stockportfolio.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -13,11 +18,6 @@ import java.util.Optional;
 public class InventoryServiceImpl implements InventoryService{
 
     private final InventoryRepository inventoryRepository;
-
-    @Override
-    public Optional<Inventory> findOneByUserIdAndTStockId(Long userId, Long tStcokId) {
-        return inventoryRepository.findOneByUserIdAndTStockId(userId, tStcokId);
-    }
 
     @Override
     public Inventory add(Inventory inventory) {
@@ -64,5 +64,53 @@ public class InventoryServiceImpl implements InventoryService{
         } catch(EmptyResultDataAccessException e){
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public double calculateAvgPriceInInventory(TradePOJO tradePOJO) {
+        var stock = tradePOJO.getTStock();
+        var amount = tradePOJO.getAmount();
+        Optional<Inventory> optInventory = findInventoryByUseIdAndStockId(tradePOJO.getUser().getId(), tradePOJO.getTStock().getId());
+        double avgPrice =
+                (optInventory.isEmpty() ?
+                        stock.getPrice().doubleValue() :
+                        (optInventory.get().getAvgPrice().doubleValue()
+                                * optInventory.get().getAmount() + stock.getPrice().doubleValue()
+                                * amount)
+                                / (optInventory.get().getAmount() + amount));
+
+        return avgPrice;
+    }
+
+    @Override
+    public Inventory updateInventory(TradePOJO tradePOJO) {
+        Optional<Inventory> optInventory = inventoryRepository.findOneByUserIdAndTStockId(tradePOJO.getUser().getId(), tradePOJO.getTStock().getId());
+        Inventory inventory =
+                optInventory.isPresent() ? optInventory.get() : new Inventory();
+        inventory.setUser(tradePOJO.getUser());
+        inventory.setTStock(tradePOJO.getTStock());
+        inventory.setAmount(
+                tradePOJO.getAmount() + (optInventory.isPresent() ? optInventory.get().getAmount() : 0)
+        );
+
+        double avgPrice = calculateAvgPriceInInventory(tradePOJO);
+        inventory.setAvgPrice(BigDecimal.valueOf(avgPrice));
+
+        inventoryRepository.save(inventory);
+
+        return inventory;
+    }
+
+    @Override
+    public Inventory findExistingInventoryByUseIdAndStockId(Long userId, Long stockId){
+      return inventoryRepository.findOneByUserIdAndTStockId(userId, stockId).orElseThrow(
+              () -> new NoSuchElementException(
+                      String.format("Inventory with UserId: %s  & Stock Id: %s Not Found", userId, stockId))
+      );
+    }
+
+    @Override
+    public Optional<Inventory> findInventoryByUseIdAndStockId(Long userId, Long stockId){
+        return inventoryRepository.findOneByUserIdAndTStockId(userId, stockId);
     }
 }
