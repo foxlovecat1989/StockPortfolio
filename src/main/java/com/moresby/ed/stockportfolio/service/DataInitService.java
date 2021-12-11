@@ -1,6 +1,7 @@
 package com.moresby.ed.stockportfolio.service;
 
 import com.github.javafaker.Faker;
+import com.moresby.ed.stockportfolio.account.Account;
 import com.moresby.ed.stockportfolio.activity.Activity;
 import com.moresby.ed.stockportfolio.activity.ActivityService;
 import com.moresby.ed.stockportfolio.activity.activitytype.ActivityType;
@@ -22,6 +23,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.*;
 import java.util.*;
 import java.util.stream.Stream;
@@ -67,12 +69,12 @@ public class DataInitService {
                             .user(user).tStock(stock).amount(amount).tradeType(TradeType.BUY)
                             .build();
 
-            tradeService.buy(trade);
+            tradeService.executeTrade(trade);
 
             boolean toSellIt = faker.number().numberBetween(0, 2) == 1 ? true : false;
             if(toSellIt){
                 trade.setTradeType(TradeType.SELL);
-                tradeService.sell(trade);
+                tradeService.executeTrade(trade);
             }
         }
     }
@@ -152,13 +154,15 @@ public class DataInitService {
 
     private User generateRandomUser(){
         User user = new User();
+        Account account = new Account();
+        account.setBalance(BigDecimal.valueOf(getFakeNumberBetween(5L, 10L) * ONE_MILLION));
         String username = faker.name().lastName();
         String password = Integer.toHexString(user.hashCode());
         String email = String.format("%s@gmail.com", username);
         user.setUsername(username);
         user.setEmail(email);
         user.setPassword(password);
-        user.setBalance((double)(getFakeNumberBetween(5L, 10L) * ONE_MILLION));
+        user.setAccount(account);
 
         return user;
     }

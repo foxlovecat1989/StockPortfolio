@@ -50,10 +50,10 @@ public class TradeController {
 
     @PostMapping
     @Transactional
-    public Trade buy(@RequestBody TradePOJO tradePOJO) throws InterruptedException {
+    public Trade executeTrade(@RequestBody TradePOJO tradePOJO) throws InterruptedException {
         Thread.sleep(3000); // TODO: remove this line when production
 
-        return tradeService.buy(tradePOJO);
+        return tradeService.executeTrade(tradePOJO);
     }
 
 }

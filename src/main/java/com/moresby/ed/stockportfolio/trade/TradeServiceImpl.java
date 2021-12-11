@@ -1,6 +1,8 @@
 package com.moresby.ed.stockportfolio.trade;
 
 import com.github.javafaker.Faker;
+import com.moresby.ed.stockportfolio.account.Account;
+import com.moresby.ed.stockportfolio.account.AccountService;
 import com.moresby.ed.stockportfolio.inventory.InventoryService;
 import com.moresby.ed.stockportfolio.trade.model.entity.Trade;
 import com.moresby.ed.stockportfolio.trade.model.enumeration.TradeType;
@@ -22,6 +24,7 @@ public class TradeServiceImpl implements TradeService {
     private final TradeRepository tradeRepository;
     private final UserRepository userRepository;
     private final InventoryService inventoryService;
+    private final AccountService accountService;
     private final Faker faker;
     private static final int MILLISECONDS_IN_ONE_DAY = 86400 * 1000;
 
@@ -41,37 +44,13 @@ public class TradeServiceImpl implements TradeService {
     }
 
     @Override
-    @Transactional
-    public Trade buy(TradePOJO tradePOJO) {
-
+    public Trade executeTrade(TradePOJO tradePOJO){
+        var tradeAmount = Math.round(tradePOJO.getTStock().getPrice().doubleValue() * tradePOJO.getAmount());
         inventoryService.updateInventory(tradePOJO);
-
-        // TODO: REMOVE THIS TO ACCOUNT SERVICE
-        var user = tradePOJO.getUser();
-        var stock = tradePOJO.getTStock();
-        var amount = tradePOJO.getAmount();
-        long buyTotalCost = Math.round(stock.getPrice().doubleValue() * amount);
-        double remainBalance = user.getBalance() - buyTotalCost;
-        // TODO: EXAMINE THE BALANCE IS GREATER THAN ZERO - if (remainBalance < 0) ROLLBACK
-        user.setBalance(remainBalance);
-        userRepository.save(user);
-
-        return createTrade(tradePOJO);
-    }
-
-    @Override
-    @Transactional
-    public Trade sell(TradePOJO tradePOJO) {
-        inventoryService.updateInventory(tradePOJO);
-
-        // TODO: REMOVE THIS TO ACCOUNT SERVICE
-        var user = tradePOJO.getUser();
-        var stock = tradePOJO.getTStock();
-        var amount = tradePOJO.getAmount();
-        long profit = Math.round(stock.getPrice().doubleValue() * amount);
-        double remainBalance = user.getBalance() + profit;
-        user.setBalance(remainBalance);
-        userRepository.save(user);
+        if (tradePOJO.getTradeType() == TradeType.BUY)
+            accountService.withdrawal(tradePOJO.getUser(), tradeAmount);
+        else
+            accountService.deposit(tradePOJO.getUser(), tradeAmount);
 
         return createTrade(tradePOJO);
     }

@@ -1,6 +1,7 @@
 package com.moresby.ed.stockportfolio.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.moresby.ed.stockportfolio.account.Account;
 import com.moresby.ed.stockportfolio.inventory.Inventory;
 import com.moresby.ed.stockportfolio.trade.model.entity.Trade;
 import lombok.Getter;
@@ -51,9 +52,6 @@ public class User {
     )
     private String password;
 
-    @Column(name = "balance")
-    private Double balance;
-
     @OneToMany(
             mappedBy = "user",
             orphanRemoval = true,
@@ -67,4 +65,12 @@ public class User {
             cascade = CascadeType.ALL
     )
     private List<Trade> trades;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(
+            name = "account_id",
+            referencedColumnName = "id",
+            foreignKey = @ForeignKey(name = "user_account_id")
+    )
+    private Account account;
 }

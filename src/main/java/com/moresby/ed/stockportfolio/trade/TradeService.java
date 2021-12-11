@@ -12,6 +12,5 @@ public interface TradeService {
     Optional<Trade> findByTradeId(Long tradeId);
     List<Trade> findOneByUserIdAndTradeDate(Long userId, Date tradeDate);
     Iterable<Trade> findAll();
-    Trade buy(TradePOJO tradePOJO);
-    Trade sell(TradePOJO tradePOJO);
+    Trade executeTrade(TradePOJO tradePOJO);
 }
