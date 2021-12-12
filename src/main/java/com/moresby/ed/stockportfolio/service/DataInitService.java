@@ -44,7 +44,7 @@ public class DataInitService {
     public void initData() {
         generateUsers(TEN_TIMES);
         generateStocks();
-        generateExecuteTrades(HUNDRED_TIMES);
+        generateExecuteTrades(TEN_TIMES);
 
         generateRandomWatch(TEN_TIMES);
         addRandomStockToWatchlist(TEN_TIMES);

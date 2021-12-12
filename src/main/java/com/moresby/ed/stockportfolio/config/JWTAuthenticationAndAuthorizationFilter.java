@@ -1,5 +1,6 @@
 package com.moresby.ed.stockportfolio.config;
 
+
 import com.moresby.ed.stockportfolio.service.JWTService;
 import org.springframework.boot.json.JsonParser;
 import org.springframework.boot.json.JsonParserFactory;
@@ -20,9 +21,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
 
-public class JWTAuthenticationAndAuthorizationFilter extends BasicAuthenticationFilter{
+public class JWTAuthenticationAndAuthorizationFilter extends BasicAuthenticationFilter {
 
     private JWTService jwtService;
+    private final int INDEX_OF_BEARER_START_IN_TOKEN = 7;
 
     public JWTAuthenticationAndAuthorizationFilter(AuthenticationManager authenticationManager) {
         super(authenticationManager);
@@ -40,14 +42,14 @@ public class JWTAuthenticationAndAuthorizationFilter extends BasicAuthentication
             chain.doFilter(request, response);
             return;
         }
+        Cookie tokenCookie = null;
+        for(Cookie cookie : cookies){
+            if(cookie.getName().equals("token"))
+                tokenCookie = cookie;
+        }
 
-        Optional<Cookie> tokenCookieOpt =
-                Arrays.stream(cookies)
-                        .filter(cookie -> cookie.getName().equals("token"))
-                        .findFirst();
 
-
-        if(tokenCookieOpt.isEmpty()){
+        if(tokenCookie == null){
             chain.doFilter(request, response);
             return;
         }
@@ -56,13 +58,10 @@ public class JWTAuthenticationAndAuthorizationFilter extends BasicAuthentication
             ServletContext servletContext = request.getServletContext();
             WebApplicationContext webApplicationContext  =
                     WebApplicationContextUtils.getWebApplicationContext(servletContext);
-
-            assert webApplicationContext != null;
             jwtService = webApplicationContext.getBean(JWTService.class);
-
         }
 
-        UsernamePasswordAuthenticationToken authentication = getAuthentication(tokenCookieOpt.get().getValue());
+        UsernamePasswordAuthenticationToken authentication = getAuthentication(tokenCookie.getValue());
         SecurityContextHolder.getContext().setAuthentication(authentication);
         chain.doFilter(request, response);
     }
@@ -75,7 +74,12 @@ public class JWTAuthenticationAndAuthorizationFilter extends BasicAuthentication
             String user = payloadMap.get("user").toString();
             String role = payloadMap.get("role").toString();
             List<GrantedAuthority> roles = new ArrayList<>();
-            GrantedAuthority grantedAuthority = () -> "ROLE_" + role;
+            GrantedAuthority grantedAuthority = new GrantedAuthority() {
+                @Override
+                public String getAuthority() {
+                    return "ROLE_" + role;
+                }
+            };
             roles.add(grantedAuthority);
 
             return new UsernamePasswordAuthenticationToken(user, null, roles);
@@ -87,3 +91,4 @@ public class JWTAuthenticationAndAuthorizationFilter extends BasicAuthentication
 
     }
 }
+

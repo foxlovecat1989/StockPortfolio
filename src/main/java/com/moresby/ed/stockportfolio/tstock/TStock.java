@@ -1,5 +1,6 @@
 package com.moresby.ed.stockportfolio.tstock;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.moresby.ed.stockportfolio.classify.Classify;
 import com.moresby.ed.stockportfolio.trade.model.entity.Trade;
 import lombok.*;
@@ -14,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
+@JsonIgnoreProperties(value = "trades")
 public class TStock {
     @SequenceGenerator(
             name = "tstock_sequence",

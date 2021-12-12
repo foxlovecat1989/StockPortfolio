@@ -1,5 +1,8 @@
 package com.moresby.ed.stockportfolio.trade.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.moresby.ed.stockportfolio.trade.model.enumeration.TradeType;
 import com.moresby.ed.stockportfolio.tstock.TStock;
 import com.moresby.ed.stockportfolio.user.User;
@@ -15,8 +18,9 @@ import java.sql.Time;
 @Entity(name = "Trade")
 @Table(name = "trade")
 @NoArgsConstructor
-@Getter
 @Setter
+@Getter
+@JsonIgnoreProperties(value = {"user"})
 public class Trade {
 
     @Id
