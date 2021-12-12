@@ -1,14 +1,13 @@
 package com.moresby.ed.stockportfolio.trade;
 
+import com.moresby.ed.stockportfolio.exception.InsufficientAmount;
 import com.moresby.ed.stockportfolio.trade.model.entity.Trade;
 import com.moresby.ed.stockportfolio.trade.model.pojo.TradePOJO;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
 import java.sql.Date;
 import java.util.Optional;
 
@@ -18,7 +17,6 @@ import java.util.Optional;
 public class TradeController {
 
     private final TradeService tradeService;
-    private TradePOJO tradePOJO;
 
     @GetMapping(path = "/{id}", produces = "application/json")
     public ResponseEntity<Trade> findByTradeId(@PathVariable("id") Long tradeId) throws InterruptedException {
@@ -49,11 +47,17 @@ public class TradeController {
     }
 
     @PostMapping
-    @Transactional
-    public Trade executeTrade(@RequestBody TradePOJO tradePOJO) throws InterruptedException {
+    public Optional<Trade> executeTrade(@RequestBody TradePOJO tradePOJO) throws InterruptedException {
         Thread.sleep(3000); // TODO: remove this line when production
-
-        return tradeService.executeTrade(tradePOJO);
+        Optional<Trade> optTrade = Optional.empty();
+        try{
+            Trade trade = tradeService.executeTrade(tradePOJO);
+            optTrade = Optional.of(trade);
+        } catch (InsufficientAmount e){
+            System.out.println("Transaction failed");
+            System.out.println(e.getMessage());
+        }
+        return optTrade;
     }
 
 }

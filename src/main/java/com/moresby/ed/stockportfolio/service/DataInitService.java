@@ -44,7 +44,8 @@ public class DataInitService {
     public void initData() {
         generateUsers(TEN_TIMES);
         generateStocks();
-        generateExecuteTrades(TEN_TIMES);
+        generateExecuteTrades(HUNDRED_TIMES);
+
         generateRandomWatch(TEN_TIMES);
         addRandomStockToWatchlist(TEN_TIMES);
     }
@@ -115,14 +116,19 @@ public class DataInitService {
                             .amount(amount)
                             .tradeType(TradeType.BUY)
                             .build();
-
-            tradeService.executeTrade(trade);
-
-            boolean toSellIt = faker.number().numberBetween(0, 2) == 1;
-            if(toSellIt){
-                trade.setTradeType(TradeType.SELL);
+            try{
                 tradeService.executeTrade(trade);
+                boolean toSellIt = faker.number().numberBetween(0, 7) % 2 == 0;
+                if(toSellIt){
+                    trade.setTradeType(TradeType.SELL);
+                    tradeService.executeTrade(trade);
+                }
+            } catch (RuntimeException e){
+                System.out.println("Transaction failed");
+                System.out.println(e.getMessage());
             }
+
+
         }
     }
 

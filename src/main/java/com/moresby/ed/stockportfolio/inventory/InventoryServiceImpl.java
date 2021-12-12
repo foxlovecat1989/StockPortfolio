@@ -1,5 +1,6 @@
 package com.moresby.ed.stockportfolio.inventory;
 
+import com.moresby.ed.stockportfolio.exception.InsufficientAmount;
 import com.moresby.ed.stockportfolio.trade.model.enumeration.TradeType;
 import com.moresby.ed.stockportfolio.trade.model.pojo.TradePOJO;
 import lombok.RequiredArgsConstructor;
@@ -81,7 +82,7 @@ public class InventoryServiceImpl implements InventoryService{
     }
 
     @Override
-    public Inventory updateInventory(TradePOJO tradePOJO) {
+    public Inventory updateInventory(TradePOJO tradePOJO) throws InsufficientAmount,IllegalArgumentException {
         Optional<Inventory> optInventory =
                 inventoryRepository.findOneByUserIdAndTStockId(tradePOJO.getUser().getId(), tradePOJO.getTStock().getId());
         Inventory inventory =
@@ -95,8 +96,9 @@ public class InventoryServiceImpl implements InventoryService{
             );
             double avgPrice = calculateAvgPriceInInventory(tradePOJO);
             inventory.setAvgPrice(BigDecimal.valueOf(avgPrice));
-        }else {                                             // under sell mode
-            // TODO: examine amount is sufficient to sell - if(inventory.getAmount() - tradePOJO.getAmount() < 0)
+        }else {                                             // undersell mode
+           if(inventory.getAmount() - tradePOJO.getAmount() < 0)
+               throw new InsufficientAmount("Insufficient amount in your inventory");
             inventory.setAmount(
                     inventory.getAmount() - tradePOJO.getAmount()
             );

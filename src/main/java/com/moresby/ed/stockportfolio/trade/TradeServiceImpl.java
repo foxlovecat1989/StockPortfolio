@@ -1,20 +1,21 @@
 package com.moresby.ed.stockportfolio.trade;
 
 import com.github.javafaker.Faker;
-import com.moresby.ed.stockportfolio.account.Account;
 import com.moresby.ed.stockportfolio.account.AccountService;
+import com.moresby.ed.stockportfolio.exception.InsufficientAmount;
 import com.moresby.ed.stockportfolio.inventory.InventoryService;
 import com.moresby.ed.stockportfolio.trade.model.entity.Trade;
 import com.moresby.ed.stockportfolio.trade.model.enumeration.TradeType;
 import com.moresby.ed.stockportfolio.trade.model.pojo.TradePOJO;
-import com.moresby.ed.stockportfolio.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -22,7 +23,6 @@ import java.util.Optional;
 public class TradeServiceImpl implements TradeService {
 
     private final TradeRepository tradeRepository;
-    private final UserRepository userRepository;
     private final InventoryService inventoryService;
     private final AccountService accountService;
     private final Faker faker;
@@ -44,9 +44,14 @@ public class TradeServiceImpl implements TradeService {
     }
 
     @Override
-    public Trade executeTrade(TradePOJO tradePOJO){
-        var tradeAmount = Math.round(tradePOJO.getTStock().getPrice().doubleValue() * tradePOJO.getAmount());
+    @Transactional
+    public Trade executeTrade(TradePOJO tradePOJO)
+            throws InsufficientAmount {
+
         inventoryService.updateInventory(tradePOJO);
+
+        var tradeAmount =
+                Math.round(tradePOJO.getTStock().getPrice().doubleValue() * tradePOJO.getAmount());
         if (tradePOJO.getTradeType() == TradeType.BUY)
             accountService.withdrawal(tradePOJO.getUser(), tradeAmount);
         else
@@ -68,7 +73,7 @@ public class TradeServiceImpl implements TradeService {
 //        );
 //        trade.setTradeTime(new Time(new java.util.Date().getTime()));
         // TODO: CHANGE THESE FAKER DATE AND TIME WHEN PRODUCTION
-        Integer fakeTime = MILLISECONDS_IN_ONE_DAY * faker.number().numberBetween(1, 10);
+        int fakeTime = MILLISECONDS_IN_ONE_DAY * faker.number().numberBetween(1, 10);
         Date tradeDate =
                 new Date(
                         new java.util.Date().getTime()

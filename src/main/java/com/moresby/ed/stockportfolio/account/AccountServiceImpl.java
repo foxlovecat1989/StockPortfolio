@@ -1,8 +1,10 @@
 package com.moresby.ed.stockportfolio.account;
 
+import com.moresby.ed.stockportfolio.exception.InsufficientAmount;
 import com.moresby.ed.stockportfolio.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.NoSuchElementException;
@@ -14,14 +16,14 @@ public class AccountServiceImpl implements AccountService{
     private final AccountRepository accountRepository;
 
     @Override
-    public Account withdrawal(User user, Long amount) {
+    public Account withdrawal(User user, Long amount) throws IllegalArgumentException, InsufficientAmount {
         if(amount < 0)
-            throw new IllegalArgumentException("amount cannot be negative");
+            throw new IllegalArgumentException("Amount cannot be negative");
 
         Account account = findExistingAccountByUserId(user.getId());
-        if(account.getBalance().doubleValue() - amount < 0) {
-            return null; // TODO: EXCEPTION HANDLE
-        }
+        if(account.getBalance().doubleValue() - amount < 0)
+            throw new InsufficientAmount("Insufficient Balance in your account");
+
         account.setBalance(BigDecimal.valueOf(account.getBalance().doubleValue() - amount));
 
         return accountRepository.save(account);
