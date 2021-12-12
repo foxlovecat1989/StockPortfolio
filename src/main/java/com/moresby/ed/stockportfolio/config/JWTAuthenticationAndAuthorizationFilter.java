@@ -1,7 +1,7 @@
 package com.moresby.ed.stockportfolio.config;
 
 
-import com.moresby.ed.stockportfolio.service.JWTService;
+import com.moresby.ed.stockportfolio.config.security.JWTService;
 import org.springframework.boot.json.JsonParser;
 import org.springframework.boot.json.JsonParserFactory;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -58,6 +58,7 @@ public class JWTAuthenticationAndAuthorizationFilter extends BasicAuthentication
             ServletContext servletContext = request.getServletContext();
             WebApplicationContext webApplicationContext  =
                     WebApplicationContextUtils.getWebApplicationContext(servletContext);
+            assert webApplicationContext != null;
             jwtService = webApplicationContext.getBean(JWTService.class);
         }
 
@@ -74,12 +75,7 @@ public class JWTAuthenticationAndAuthorizationFilter extends BasicAuthentication
             String user = payloadMap.get("user").toString();
             String role = payloadMap.get("role").toString();
             List<GrantedAuthority> roles = new ArrayList<>();
-            GrantedAuthority grantedAuthority = new GrantedAuthority() {
-                @Override
-                public String getAuthority() {
-                    return "ROLE_" + role;
-                }
-            };
+            GrantedAuthority grantedAuthority = () -> "ROLE_" + role;
             roles.add(grantedAuthority);
 
             return new UsernamePasswordAuthenticationToken(user, null, roles);

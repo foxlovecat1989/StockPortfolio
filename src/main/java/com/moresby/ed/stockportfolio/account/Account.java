@@ -1,5 +1,6 @@
 package com.moresby.ed.stockportfolio.account;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.moresby.ed.stockportfolio.user.User;
 import lombok.*;
 
@@ -11,6 +12,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Getter
 @Setter
+@JsonIgnoreProperties(value = "user")
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

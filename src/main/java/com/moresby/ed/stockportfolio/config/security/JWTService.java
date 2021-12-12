@@ -1,4 +1,4 @@
-package com.moresby.ed.stockportfolio.service;
+package com.moresby.ed.stockportfolio.config.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;

@@ -1,25 +1,49 @@
 package com.moresby.ed.stockportfolio.config.security;
 
 import com.moresby.ed.stockportfolio.config.JWTAuthenticationAndAuthorizationFilter;
+import com.moresby.ed.stockportfolio.user.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class RestSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .withUser("matt").password("{noop}password").authorities("ROLE_ADMIN")
-                .and()
-                .withUser("jane").password("{noop}password").authorities("ROLE_USER");
-        // TODO: this password should be encoded
+    private final UserService userService;
+    private final BCryptPasswordEncoder  passwordEncoder;
+//    @Autowired
+//    protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.inMemoryAuthentication()
+//                .withUser("matt").password("{noop}password").authorities("ROLE_ADMIN")
+//                .and()
+//                .withUser("jane").password("{noop}password").authorities("ROLE_USER");
+//        // TODO: this password should be encoded
+//
+//    }
+
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) {
+        auth.authenticationProvider(daoAuthenticationProvider());
+    }
+
+    @Bean
+    public DaoAuthenticationProvider daoAuthenticationProvider(){
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setPasswordEncoder(passwordEncoder);
+        provider.setUserDetailsService(userService);
+
+        return provider;
     }
 
     @Override

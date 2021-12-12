@@ -1,6 +1,6 @@
-package com.moresby.ed.stockportfolio.controller;
+package com.moresby.ed.stockportfolio.user;
 
-import com.moresby.ed.stockportfolio.service.JWTService;
+import com.moresby.ed.stockportfolio.config.security.JWTService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

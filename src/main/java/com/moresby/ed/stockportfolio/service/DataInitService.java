@@ -2,11 +2,13 @@ package com.moresby.ed.stockportfolio.service;
 
 import com.github.javafaker.Faker;
 import com.moresby.ed.stockportfolio.account.Account;
+import com.moresby.ed.stockportfolio.config.security.PasswordEncoder;
 import com.moresby.ed.stockportfolio.trade.TradeService;
 import com.moresby.ed.stockportfolio.trade.model.enumeration.TradeType;
 import com.moresby.ed.stockportfolio.trade.model.pojo.TradePOJO;
 import com.moresby.ed.stockportfolio.user.User;
 import com.moresby.ed.stockportfolio.classify.ClassifyService;
+import com.moresby.ed.stockportfolio.user.UserRole;
 import com.moresby.ed.stockportfolio.user.UserService;
 import com.moresby.ed.stockportfolio.watchlist.WatchlistId;
 import com.moresby.ed.stockportfolio.tstock.TStock;
@@ -18,6 +20,7 @@ import com.moresby.ed.stockportfolio.watchlist.WatchlistService;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -34,11 +37,13 @@ public class DataInitService {
     private final WatchService watchService;
     private final WatchlistService watchlistService;
     private final TradeService tradeService;
+    private final BCryptPasswordEncoder passwordEncoder;
     private Faker faker;
     private static final int TEN_TIMES = 10;
     private static final int HUNDRED_TIMES = 100;
     private static final int PER_UNIT_EQUALS_ONE_THOUSAND = 1000;
     private static final int ONE_MILLION = 1000000;
+
 
     @EventListener(ApplicationReadyEvent.class)
     public void initData() {
@@ -52,14 +57,24 @@ public class DataInitService {
 
     private void generateUsers(int times){
         for (int i = 0; i < times; i++) {
-            var username = faker.name().lastName();
+            boolean isEmailBeTaken;
+            String username;
+            String email;
+            do{
+                username = faker.name().lastName();
+                email = String.format("%s@gmail.com", username);
+                isEmailBeTaken = userService.isEmailTaken(email);
+            } while (isEmailBeTaken);
 
-            var user
-                    = User.builder()
-                    .username(username)
-                    .password(Integer.toHexString(username.hashCode()))
-                    .email(String.format("%s@gmail.com", username))
-                    .build();
+            var user =
+                    User.builder()
+                        .username(username)
+                        .password(passwordEncoder.encode(username))
+                        .email(email)
+                            .userRole(UserRole.USER)
+                            .isAccountNonLocked(Boolean.TRUE)
+                            .isEnabled(Boolean.TRUE)
+                            .build();
 
             var account =
                     Account.builder()

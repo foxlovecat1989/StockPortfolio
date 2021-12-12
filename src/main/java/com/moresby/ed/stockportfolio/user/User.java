@@ -4,11 +4,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.moresby.ed.stockportfolio.account.Account;
 import com.moresby.ed.stockportfolio.inventory.Inventory;
 import com.moresby.ed.stockportfolio.trade.model.entity.Trade;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.moresby.ed.stockportfolio.user.registration.token.ConfirmEmailToken;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Entity(name = "User")
@@ -16,8 +20,9 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
+@EqualsAndHashCode
 @JsonIgnoreProperties(value = {"password"})
-public class User {
+public class User implements UserDetails {
     @Id
     @SequenceGenerator(
             name = "user_sequence",
@@ -75,11 +80,63 @@ public class User {
     )
     private Account account;
 
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            mappedBy = "user",
+            orphanRemoval = true
+    )
+    private List<ConfirmEmailToken> confirmEmailTokens;
+
+    @Enumerated(EnumType.STRING)
+    private UserRole userRole;
+
+    private Boolean isAccountNonLocked = false;
+    private Boolean isEnabled = false;
+
+
     @Builder
-    public User(String username, String email, String password, Account account) {
+    public User(
+            String username,
+            String email,
+            String password,
+            Account account,
+            UserRole userRole,
+            Boolean isAccountNonLocked,
+            Boolean isEnabled) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.account = account;
+        this.userRole = userRole;
+        this.isAccountNonLocked = isAccountNonLocked;
+        this.isEnabled = isEnabled;
+    }
+
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        GrantedAuthority authority = new SimpleGrantedAuthority(userRole.name());
+
+        return Collections.singletonList(authority);
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return !isAccountNonLocked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return isEnabled;
     }
 }

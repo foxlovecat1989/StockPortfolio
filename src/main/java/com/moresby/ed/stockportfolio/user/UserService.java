@@ -1,10 +1,10 @@
 package com.moresby.ed.stockportfolio.user;
 
-import com.moresby.ed.stockportfolio.user.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.Optional;
 
-public interface UserService {
+public interface UserService extends UserDetailsService {
     User findExistingUserById(Long id);
     Optional<User> findById(long id);
     Iterable<User> findAllUsers();
