@@ -20,10 +20,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
 
-public class JWTAuthenticationAndAuthorizationFilter extends BasicAuthenticationFilter {
+public class JWTAuthenticationAndAuthorizationFilter extends BasicAuthenticationFilter{
 
     private JWTService jwtService;
-    private final int INDEX_OF_BEARER_START_IN_TOKEN = 7;
 
     public JWTAuthenticationAndAuthorizationFilter(AuthenticationManager authenticationManager) {
         super(authenticationManager);
@@ -48,7 +47,7 @@ public class JWTAuthenticationAndAuthorizationFilter extends BasicAuthentication
                         .findFirst();
 
 
-        if(!tokenCookieOpt.isPresent()){
+        if(tokenCookieOpt.isEmpty()){
             chain.doFilter(request, response);
             return;
         }
@@ -57,7 +56,10 @@ public class JWTAuthenticationAndAuthorizationFilter extends BasicAuthentication
             ServletContext servletContext = request.getServletContext();
             WebApplicationContext webApplicationContext  =
                     WebApplicationContextUtils.getWebApplicationContext(servletContext);
+
+            assert webApplicationContext != null;
             jwtService = webApplicationContext.getBean(JWTService.class);
+
         }
 
         UsernamePasswordAuthenticationToken authentication = getAuthentication(tokenCookieOpt.get().getValue());
@@ -73,12 +75,7 @@ public class JWTAuthenticationAndAuthorizationFilter extends BasicAuthentication
             String user = payloadMap.get("user").toString();
             String role = payloadMap.get("role").toString();
             List<GrantedAuthority> roles = new ArrayList<>();
-            GrantedAuthority grantedAuthority = new GrantedAuthority() {
-                @Override
-                public String getAuthority() {
-                    return "ROLE_" + role;
-                }
-            };
+            GrantedAuthority grantedAuthority = () -> "ROLE_" + role;
             roles.add(grantedAuthority);
 
             return new UsernamePasswordAuthenticationToken(user, null, roles);
