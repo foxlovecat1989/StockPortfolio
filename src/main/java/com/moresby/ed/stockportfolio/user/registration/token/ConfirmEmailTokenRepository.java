@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface ConfirmEmailTokenRepository extends CrudRepository<ConfirmEmailToken, Long> {
     @Query(value = "SELECT c FROM ConfirmEmailToken c WHERE c.token = ?1")
     Optional<ConfirmEmailToken> findByToken(String token);
+
+
 }

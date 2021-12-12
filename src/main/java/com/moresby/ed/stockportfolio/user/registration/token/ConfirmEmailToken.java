@@ -24,6 +24,9 @@ public class ConfirmEmailToken {
     @Column(nullable = false)
     private String token;
 
+    @Column(name = "email")
+    private String email;
+
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
@@ -32,7 +35,7 @@ public class ConfirmEmailToken {
 
     private LocalDateTime confirmedAt;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST})
     @JoinColumn(
             nullable = false,
             name = "user_id"
@@ -42,11 +45,13 @@ public class ConfirmEmailToken {
     @Builder
     public ConfirmEmailToken(
             String token,
+            String email,
             LocalDateTime createdAt,
             LocalDateTime expiresAt,
             LocalDateTime confirmedAt,
             User user) {
         this.token = token;
+        this.email = email;
         this.createdAt = createdAt;
         this.expiresAt = expiresAt;
         this.confirmedAt = confirmedAt;

@@ -11,6 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -90,6 +91,7 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
+
     private Boolean isAccountNonLocked = false;
     private Boolean isEnabled = false;
 
@@ -102,7 +104,9 @@ public class User implements UserDetails {
             Account account,
             UserRole userRole,
             Boolean isAccountNonLocked,
-            Boolean isEnabled) {
+            Boolean isEnabled,
+            List<ConfirmEmailToken> confirmEmailTokens
+            ) {
         this.username = username;
         this.email = email;
         this.password = password;
@@ -110,6 +114,13 @@ public class User implements UserDetails {
         this.userRole = userRole;
         this.isAccountNonLocked = isAccountNonLocked;
         this.isEnabled = isEnabled;
+        this.confirmEmailTokens = confirmEmailTokens;
+    }
+
+    public void addConfirmEmailToken(ConfirmEmailToken confirmEmailToken){
+        this.confirmEmailTokens =
+                this.getConfirmEmailTokens() != null ? this.getConfirmEmailTokens() : new ArrayList<>();
+        this.confirmEmailTokens.add(confirmEmailToken);
     }
 
 

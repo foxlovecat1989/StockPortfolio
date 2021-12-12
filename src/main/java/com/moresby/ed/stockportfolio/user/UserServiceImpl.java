@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -79,6 +80,16 @@ public class UserServiceImpl implements UserService {
     public Boolean isEmailTaken(String email) {
 
         return userRepository.findUserByEmailEquals(email).isPresent();
+    }
+
+    @Override
+    public void enableUser(String email) {
+        User user = userRepository.findUserByEmailEquals(email)
+                .orElseThrow(
+                        ()-> new IllegalStateException(String.format("Email: %s was Not Found", email))
+                );
+        user.setIsEnabled(Boolean.TRUE);
+        userRepository.save(user);
     }
 
 }
