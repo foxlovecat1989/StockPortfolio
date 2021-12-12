@@ -1,6 +1,7 @@
 package com.moresby.ed.stockportfolio.user.registration;
 
 import com.moresby.ed.stockportfolio.account.Account;
+import com.moresby.ed.stockportfolio.email.EmailService;
 import com.moresby.ed.stockportfolio.user.User;
 import com.moresby.ed.stockportfolio.user.UserRole;
 import com.moresby.ed.stockportfolio.user.UserService;
@@ -21,6 +22,7 @@ public class RegistrationServiceImpl implements RegistrationService{
     private final UserService userService;
     private final BCryptPasswordEncoder passwordEncoder;
     private final ConfirmEmailTokenService confirmEmailTokenService;
+    private final EmailService emailService;
 
     @Override
     @Transactional
@@ -45,7 +47,7 @@ public class RegistrationServiceImpl implements RegistrationService{
         account.setUser(user);
         var newUser = userService.createUser(user);
         confirmEmailTokenService.createToken(user);
-        // TODO: SEND EMAIL
+        emailService.sendConfirmEmail(user);
 
         return newUser;
     }
