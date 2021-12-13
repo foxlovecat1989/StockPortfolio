@@ -35,7 +35,10 @@ public class Watchlist {
     )
     private String name;
 
-    @Column(name = "last_update_at")
+    @Column(
+            name = "last_update_at",
+            columnDefinition = "TIMESTAMP WITHOUT TIME ZONE"
+    )
     private LocalDateTime lastUpdateAt;
 
     @ManyToOne
@@ -48,14 +51,14 @@ public class Watchlist {
 
     @ManyToMany
     @JoinTable(
-            name = "watchlist_stock",
+            name = "watchlist_tstock",
             joinColumns = @JoinColumn(
                     name = "watchlist_id",
-                    foreignKey = @ForeignKey(name = "watchlist_stock_fk")
+                    foreignKey = @ForeignKey(name = "watchlist_tstock_fk")
             ),
             inverseJoinColumns = @JoinColumn(
-                    name = "stock_id",
-                    foreignKey = @ForeignKey(name = "stock_watchlist_fk")
+                    name = "tstock_id",
+                    foreignKey = @ForeignKey(name = "tstock_watchlist_fk")
             )
     )
     private List<TStock> tStocks;

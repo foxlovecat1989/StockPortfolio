@@ -49,22 +49,26 @@ public class TStock {
     private String name;
 
     @Column(
-            name = "previous_closed"
+            name = "previous_closed",
+            columnDefinition="Decimal(10,2) default '0.00'"
     )
     private BigDecimal previousClosed;
 
     @Column(
-            name = "price"
+            name = "price",
+            columnDefinition="Decimal(10,2) default '0.00'"
     )
     private BigDecimal price;
 
     @Column(
-            name = "change_price"
+            name = "change_price",
+            columnDefinition="Decimal(10,2) default '0.00'"
     )
     private BigDecimal changePrice;
 
     @Column(
-            name = "change_in_percent"
+            name = "change_in_percent",
+            columnDefinition="Decimal(10,2) default '0.00'"
     )
     private BigDecimal changeInPercent;
 

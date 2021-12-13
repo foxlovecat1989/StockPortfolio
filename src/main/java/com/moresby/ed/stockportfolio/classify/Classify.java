@@ -13,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
+@Getter
 @JsonIgnoreProperties({"tStocks"})
 public class Classify {
     @Id
@@ -28,25 +29,12 @@ public class Classify {
     @Column(name = "classify_id")
     private Integer classifyId;
 
-    @Column(name = "name")
+    @Column(
+            name = "name",
+            nullable = false
+    )
     private String name;
 
-    @OneToMany(
-            mappedBy = "classify",
-            orphanRemoval = true,
-            fetch = FetchType.LAZY
-    )
+    @OneToMany(mappedBy = "classify")
     private List<TStock> tStocks = new ArrayList<>();
-
-    public Integer getClassifyId() {
-        return classifyId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public List<TStock> gettStocks() {
-        return tStocks;
-    }
 }

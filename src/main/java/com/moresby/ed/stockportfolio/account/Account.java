@@ -18,7 +18,10 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "balance")
+    @Column(
+            name = "balance",
+            columnDefinition="Decimal(16,2) default '0.00'"
+    )
     private BigDecimal balance;
 
     @OneToOne(mappedBy = "account")
