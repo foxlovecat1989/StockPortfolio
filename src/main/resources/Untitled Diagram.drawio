@@ -1,1 +1,143 @@
-<mxfile host="app.diagrams.net" modified="2021-12-13T07:42:41.177Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.93 Safari/537.36" etag="2Oe7qBq14VDLC9ucOpEX" version="15.9.4" type="github"><diagram id="R2lEEEUBdFMjLlhIrx00" name="Page-1">7Vttb5s6GP01SHcfVoEJSfuxYckmLbmr2m77eOWCA9YIRsZ526+fDTaEOGlhd2m8JlLUwMMTg59zfGyfJpbrz9cfKcziKQlRYgE7XFvuBwsABwCXv4nIpowMbgZlIKI4lEl14AH/RDJoy+gChyhvJDJCEoazZjAgaYoC1ohBSsmqmTYjSfOuGYyQFngIYKJHv+OQxWX02rPr+CeEo1jd2bHllTlUyTKQxzAkq0YIrdmYpEw+4h2ic5iilPErU0h/IGp5o5gx0dNbC4z5ayayryJCogTBDOdXAZnzcJDzlPEMznEiyrzV0FA2xG/njizXp4Sw8mi+9lEisFIwlM80PnC1qgMV7bb4gP9+uZn8sFn6aeV+Y9NpdDd4ei9bWcJkIesra8M2quAo5PWXp/xWmG3uUQIZJumovjJEaXgr0OVJo/ufiJJHMoUp7/wwZ5Cy+hpJZfoY88dzPzgqRZ7b/FzvmnzOnCxogJ7pD+hJSkIaIfZMYl8CHjbYJiv3EZE5YnTDE1Y1xyomxdv8UkFaFGXZZCmUTIqqBqt73BFcEEsOTLcn21HDUlFSNVF2XX5qG+adhno7DfV3GypLozXED7Y6XocKFnVhFHhjlHJbMsoZGEapnt1kgnP9u5TqNxsCtveqlNIZ9YWGiOYar7iiZ+KQwaeCQQUJ5BTmChbwSYlBnHL9LVkSkCSBWY6L9DIS4yScwA1ZMNWQOhvO8BqF9+UMJnI5/ya8sVxSTMwFitXiMkxwlPLjgFNO3HFIUc6fZQJzJjMOknKJKEPrZ1mksPF2QFbDfYtlwNvHMtc+TKgGgl3hcl8WAAUU7zrDMLnnCwWYRgVmTUhEXUNKskc1+kQgE0RDdLRE5VRdFJ8PdZ8kRCCbloJQpBWd84b8xbvr21ee5fEH8Pm5U5/zl0inzCdpzijEBRyIA7VCAqwhI5m8T4Jm6jGoLKY4fiKM8Zn/EKzP0vplrCW2bktoj4ZsT0P27nMXbAnv6ywpVDvGYYjSckiKdSKs8d4D5d76VzXfBWN3ILbEw22NxxYA7mvW39PqT4QQ/sc/5APr1i5V+98vj+Lv18nEqpa6JsGjdLHMHeYZDHAaTcpP9nfw846B39o6OJ7Aa+LZP2el3L8q+zNK2T+1Ug40ZMefnS7gvtJYbAlAvzUAp5LGa63gwSLnfS7VEeyRRuOweFEX/zhYpujgzUUHj6ODN6fWQeUa/ia0ZqngTevyn0oFHd3PK1eIIWSIx+XbWchge7RMkUFH3zk/xDibF6J18To0rwNct5S343kdjr4lPqOpq8Pm2mm/OzPF7XD07fZbsjsq6ho8nekb5FwK4sXz6AqiMbOcvjc+I8nssNzsLpkntz0cfRv+V/seFVcN1kh981yZwmdle3TAyhQpBP9vd3yRQoOdD6BvxQ0cfC3rXxHVXB1U5d23VjxD96MDYsaooW5/+NLDv9gf1tZXOzp/1cM+GmQX+6PlcPz77A/wtu0PYL79AXT746V/ap6T99EBQWOmuIv3cSy9PLn3AXTvw8DB2Lb+5hsfQDc+KnVM4Vys9IMY0n88+93ZLPpNskD4af3jlvKr4PUvktzRLw==</diagram></mxfile>
+<mxfile host="app.diagrams.net" modified="2021-12-13T17:37:14.258Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.93 Safari/537.36" etag="sZly-yc0I0HGdW0RmNav" version="15.9.4" type="github">
+  <diagram id="kgpKYQtTHZ0yAKxKKP6v" name="Page-1">
+    <mxGraphModel dx="2387" dy="1882" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="QZAKfAFqV-frmJR9LW_r-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;exitPerimeter=0;fontFamily=Helvetica;fontSize=15;" edge="1" parent="1" source="QZAKfAFqV-frmJR9LW_r-1" target="QZAKfAFqV-frmJR9LW_r-2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="70" y="175" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QZAKfAFqV-frmJR9LW_r-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Helvetica;fontSize=15;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="QZAKfAFqV-frmJR9LW_r-1" target="QZAKfAFqV-frmJR9LW_r-17">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="360" y="420" as="targetPoint" />
+            <mxPoint x="75" y="360" as="sourcePoint" />
+            <Array as="points">
+              <mxPoint x="75" y="420" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QZAKfAFqV-frmJR9LW_r-27" value="User" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=16;fontFamily=Helvetica;fontStyle=1" vertex="1" connectable="0" parent="QZAKfAFqV-frmJR9LW_r-24">
+          <mxGeometry x="0.8571" relative="1" as="geometry">
+            <mxPoint x="-220" y="-189" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QZAKfAFqV-frmJR9LW_r-1" value="" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Helvetica;fontStyle=0;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="50" y="230" width="50" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="QZAKfAFqV-frmJR9LW_r-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Helvetica;fontStyle=0;fontSize=15;" edge="1" parent="1" source="QZAKfAFqV-frmJR9LW_r-2" target="QZAKfAFqV-frmJR9LW_r-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QZAKfAFqV-frmJR9LW_r-2" value="RegistrationController" style="html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontFamily=Helvetica;fontStyle=0;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="210" y="150" width="210" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="QZAKfAFqV-frmJR9LW_r-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;fontFamily=Helvetica;fontStyle=0;fontSize=15;" edge="1" parent="1" source="QZAKfAFqV-frmJR9LW_r-4" target="QZAKfAFqV-frmJR9LW_r-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QZAKfAFqV-frmJR9LW_r-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Helvetica;fontStyle=0;fontSize=15;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="QZAKfAFqV-frmJR9LW_r-4" target="QZAKfAFqV-frmJR9LW_r-29">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="580" y="230" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QZAKfAFqV-frmJR9LW_r-4" value="RegistrationService" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontStyle=0;fontSize=15;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="520" y="80" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QZAKfAFqV-frmJR9LW_r-6" value="UserService" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontStyle=0;fontSize=15;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="800" y="-50" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QZAKfAFqV-frmJR9LW_r-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;fontSize=15;fontFamily=Helvetica;fontStyle=0" edge="1" parent="1" source="QZAKfAFqV-frmJR9LW_r-7" target="QZAKfAFqV-frmJR9LW_r-1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="550" y="280" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QZAKfAFqV-frmJR9LW_r-7" value="EmailService" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontStyle=0;fontSize=15;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="510" y="250" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QZAKfAFqV-frmJR9LW_r-12" value="Create a user" style="text;html=1;resizable=0;autosize=1;align=center;verticalAlign=middle;points=[];fillColor=none;strokeColor=none;rounded=0;fontFamily=Helvetica;fontStyle=0;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="740" y="80" width="110" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="QZAKfAFqV-frmJR9LW_r-13" value="Send a validation token Email to user to confirm" style="text;html=1;resizable=0;autosize=1;align=center;verticalAlign=middle;points=[];fillColor=none;strokeColor=none;rounded=0;fontFamily=Helvetica;fontStyle=0;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="150" y="290" width="330" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="QZAKfAFqV-frmJR9LW_r-32" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.75;entryY=1;entryDx=0;entryDy=0;fontFamily=Helvetica;fontSize=15;" edge="1" parent="1" source="QZAKfAFqV-frmJR9LW_r-17" target="QZAKfAFqV-frmJR9LW_r-29">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QZAKfAFqV-frmJR9LW_r-17" value="ConfirmEmailTokenController" style="whiteSpace=wrap;html=1;fontSize=15;fontFamily=Helvetica;fontStyle=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="370" y="390" width="250" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QZAKfAFqV-frmJR9LW_r-28" value="Confirm the email" style="text;html=1;resizable=0;autosize=1;align=center;verticalAlign=middle;points=[];fillColor=none;strokeColor=none;rounded=0;fontFamily=Helvetica;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="170" y="390" width="130" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="QZAKfAFqV-frmJR9LW_r-30" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Helvetica;fontSize=15;" edge="1" parent="1" source="QZAKfAFqV-frmJR9LW_r-29" target="QZAKfAFqV-frmJR9LW_r-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QZAKfAFqV-frmJR9LW_r-36" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;fontFamily=Helvetica;fontSize=15;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="QZAKfAFqV-frmJR9LW_r-29" target="QZAKfAFqV-frmJR9LW_r-35">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1070" y="220" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="1000" y="220" />
+              <mxPoint x="1225" y="220" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QZAKfAFqV-frmJR9LW_r-29" value="ConfirmEmailTokenService" style="whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=15;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="780" y="180" width="220" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QZAKfAFqV-frmJR9LW_r-31" value="Generate a token" style="text;html=1;resizable=0;autosize=1;align=center;verticalAlign=middle;points=[];fillColor=none;strokeColor=none;rounded=0;fontFamily=Helvetica;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="700" y="290" width="130" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="QZAKfAFqV-frmJR9LW_r-33" value="Call to validate the token" style="text;html=1;resizable=0;autosize=1;align=center;verticalAlign=middle;points=[];fillColor=none;strokeColor=none;rounded=0;fontFamily=Helvetica;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="680" y="390" width="180" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="QZAKfAFqV-frmJR9LW_r-37" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Helvetica;fontSize=15;" edge="1" parent="1" source="QZAKfAFqV-frmJR9LW_r-35" target="QZAKfAFqV-frmJR9LW_r-6">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1225" y="-20" />
+              <mxPoint x="920" y="-20" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QZAKfAFqV-frmJR9LW_r-42" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;fontFamily=Helvetica;fontSize=15;" edge="1" parent="1" source="QZAKfAFqV-frmJR9LW_r-35">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="40" y="260" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="1370" y="100" />
+              <mxPoint x="1370" y="490" />
+              <mxPoint y="490" />
+              <mxPoint y="260" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QZAKfAFqV-frmJR9LW_r-35" value="is token valid?" style="rhombus;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=15;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="1150" y="30" width="150" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="QZAKfAFqV-frmJR9LW_r-38" value="Call to enable the user" style="text;html=1;resizable=0;autosize=1;align=center;verticalAlign=middle;points=[];fillColor=none;strokeColor=none;rounded=0;fontFamily=Helvetica;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="970" y="-10" width="170" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="QZAKfAFqV-frmJR9LW_r-40" value="True" style="text;html=1;resizable=0;autosize=1;align=center;verticalAlign=middle;points=[];fillColor=none;strokeColor=none;rounded=0;fontFamily=Helvetica;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="10" width="50" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="QZAKfAFqV-frmJR9LW_r-41" value="&lt;font size=&quot;1&quot;&gt;&lt;b style=&quot;font-size: 25px&quot;&gt;User Registration Workflow&lt;/b&gt;&lt;/font&gt;" style="text;html=1;resizable=0;autosize=1;align=center;verticalAlign=middle;points=[];fillColor=none;strokeColor=none;rounded=0;fontFamily=Helvetica;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry y="-50" width="340" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="QZAKfAFqV-frmJR9LW_r-43" value="False" style="text;html=1;resizable=0;autosize=1;align=center;verticalAlign=middle;points=[];fillColor=none;strokeColor=none;rounded=0;fontFamily=Helvetica;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="1310" y="70" width="50" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="QZAKfAFqV-frmJR9LW_r-45" value="&lt;font style=&quot;font-size: 15px;&quot;&gt;Call to create a token&lt;/font&gt;" style="text;html=1;resizable=0;autosize=1;align=center;verticalAlign=middle;points=[];fillColor=none;strokeColor=none;rounded=0;fontFamily=Helvetica;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="555" y="165" width="160" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="QZAKfAFqV-frmJR9LW_r-46" value="Throw an Error" style="text;html=1;resizable=0;autosize=1;align=center;verticalAlign=middle;points=[];fillColor=none;strokeColor=none;rounded=0;fontFamily=Helvetica;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="1230" y="450" width="120" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="QZAKfAFqV-frmJR9LW_r-47" value="&lt;font style=&quot;font-size: 15px&quot;&gt;Validate the token&lt;/font&gt;" style="text;html=1;resizable=0;autosize=1;align=center;verticalAlign=middle;points=[];fillColor=none;strokeColor=none;rounded=0;fontFamily=Helvetica;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="1040" y="230" width="130" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
