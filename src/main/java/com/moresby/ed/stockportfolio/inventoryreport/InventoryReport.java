@@ -25,7 +25,7 @@ import java.math.BigDecimal;
             "       i.amount * (s.price + 10) - sum(i.avg_price * i.amount) AS income, " +
             "       ROUND( " +
             "           CAST( " +
-            "                ((i.amount * (s.price + 10) - sum(i.avg_price * i.amount)) / sum((i.avg_price * i.amount)) * 100) AS DECIMAL " +
+            "                ((i.amount * (s.price + 10) - sum(i.avg_price * i.amount)) / sum(NULLIF(i.avg_price * i.amount, 0)) * 100) AS DECIMAL " +
             "               ), 2) AS rate_of_return " +
             "FROM app_user au, inventory i, tstock s, classify c " +
             "WHERE au.id = i.user_id AND i.tstock_id = s.id AND s.classify_id = c.classify_id " +
@@ -65,6 +65,9 @@ public class InventoryReport {
     @Column(name = "income")
     private BigDecimal income;
 
-    @Column(name = "rate_of_return")
-    private double rateOfReturn;
+    @Column(
+            name = "rate_of_return",
+            nullable = true
+    )
+    private Double rateOfReturn;
 }
