@@ -1,6 +1,7 @@
 package com.moresby.ed.stockportfolio.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.moresby.ed.stockportfolio.account.Account;
 import com.moresby.ed.stockportfolio.inventory.Inventory;
 import com.moresby.ed.stockportfolio.trade.model.entity.Trade;
@@ -12,6 +13,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -20,8 +25,8 @@ import java.util.List;
 @Entity(name = "User")
 @Table(name = "app_user")
 @NoArgsConstructor
-@Getter
 @Setter
+@Getter
 @EqualsAndHashCode
 @JsonIgnoreProperties(value = {"password"})
 public class User implements UserDetails {
@@ -43,6 +48,7 @@ public class User implements UserDetails {
             columnDefinition = "TEXT",
             length = 20
     )
+    @NotBlank
     private String username;
 
     @Column(
@@ -52,12 +58,15 @@ public class User implements UserDetails {
             updatable = false,
             unique = true
     )
+    @Email
     private String email;
 
     @Column(
             name = "password",
             nullable = false
     )
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @NotBlank
     private String password;
 
     @OneToMany(
@@ -98,7 +107,6 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
-
 
     private Boolean isAccountNonLocked = false;
     private Boolean isEnabled = false;
@@ -158,4 +166,5 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return isEnabled;
     }
+
 }
