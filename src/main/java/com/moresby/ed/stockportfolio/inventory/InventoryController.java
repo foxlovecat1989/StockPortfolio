@@ -15,8 +15,8 @@ public class InventoryController {
 
     private final InventoryService inventoryService;
 
-    @GetMapping(value = "/findAll/{id}")
-    public List<Inventory> findAllByUserId(@PathVariable("id") Long userId){
+    @GetMapping(value = "/findAll/{userId}")
+    public List<Inventory> findAllByUserId(@PathVariable("userId") Long userId){
 
         return inventoryService.findAllByUserId(userId);
     }

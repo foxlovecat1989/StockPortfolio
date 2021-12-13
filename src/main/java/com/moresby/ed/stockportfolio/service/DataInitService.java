@@ -63,7 +63,7 @@ public class DataInitService {
             var user =
                     User.builder()
                         .username(username)
-                        .password(passwordEncoder.encode(username))
+                        .password(passwordEncoder.encode("password"))
                         .email(email)
                             .userRole(UserRole.USER)
                             .isAccountNonLocked(Boolean.TRUE)

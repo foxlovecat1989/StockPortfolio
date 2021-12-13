@@ -1,5 +1,6 @@
 package com.moresby.ed.stockportfolio.inventory;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.moresby.ed.stockportfolio.tstock.TStock;
 import com.moresby.ed.stockportfolio.user.User;
 import lombok.Getter;
@@ -11,6 +12,7 @@ import java.math.BigDecimal;
 @Table(name = "inventory")
 @Getter
 @Setter
+@JsonIgnoreProperties(value = {"user"})
 public class Inventory {
 
     @Id
@@ -28,7 +30,10 @@ public class Inventory {
     @Column(name = "amount")
     private Long amount;
 
-    @Column(name = "avg_price")
+    @Column(
+            name = "avg_price",
+            columnDefinition="Decimal(10,2) default '0.00'"
+    )
     private BigDecimal avgPrice;
 
     @ManyToOne
@@ -43,7 +48,7 @@ public class Inventory {
     @JoinColumn(
             name = "tstock_id",
             referencedColumnName = "id",
-            foreignKey = @ForeignKey(name = "inventory_tStock_fk")
+            foreignKey = @ForeignKey(name = "inventory_tstock_fk")
     )
     private TStock tStock;
 }

@@ -51,16 +51,28 @@ public class Trade {
     )
     private TStock tStock;
 
-    @Column(name = "amount")
+    @Column(
+            name = "amount",
+            columnDefinition="Decimal(10,2) default '0.00'"
+    )
     private BigDecimal amount;
 
-    @Column(name = "price")
+    @Column(
+            name = "price",
+            columnDefinition="Decimal(10,2) default '0.00'"
+    )
     private BigDecimal price;
 
-    @Column(name = "trade_date")
+    @Column(
+            name = "trade_date",
+            columnDefinition = "DATE"
+    )
     private Date tradeDate;
 
-    @Column(name = "trade_time")
+    @Column(
+            name = "trade_time",
+            columnDefinition = "TIME"
+    )
     private Time tradeTime;
 
     @Column(name = "trade_type")

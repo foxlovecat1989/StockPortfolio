@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Setter
 @Getter
-@JsonIgnoreProperties({"tStocks"})
+@JsonIgnoreProperties(value = {"tstocks"})
 public class Classify {
     @Id
     @SequenceGenerator(
