@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2021-12-13T18:22:42.188Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.93 Safari/537.36" etag="DptOFw2X5tQtxWTDhdlz" version="15.9.4" type="github">
+<mxfile host="app.diagrams.net" modified="2021-12-13T18:31:38.052Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.93 Safari/537.36" etag="AFObttMeyvPjwC-VwLuo" version="15.9.4" type="github">
   <diagram id="kgpKYQtTHZ0yAKxKKP6v" name="Page-1">
     <mxGraphModel dx="2387" dy="1882" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -60,18 +60,20 @@
         <mxCell id="QZAKfAFqV-frmJR9LW_r-6" value="UserService" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontStyle=0;fontSize=15;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
           <mxGeometry x="830" y="-60" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="QZAKfAFqV-frmJR9LW_r-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;fontSize=15;fontFamily=Helvetica;fontStyle=0" edge="1" parent="1" source="QZAKfAFqV-frmJR9LW_r-7" target="QZAKfAFqV-frmJR9LW_r-1">
+        <mxCell id="QZAKfAFqV-frmJR9LW_r-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;fontSize=15;fontFamily=Helvetica;fontStyle=0;strokeColor=#009900;" edge="1" parent="1" source="QZAKfAFqV-frmJR9LW_r-7" target="QZAKfAFqV-frmJR9LW_r-1">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
+              <mxPoint x="490" y="280" />
               <mxPoint x="550" y="280" />
+              <mxPoint x="550" y="275" />
             </Array>
           </mxGeometry>
         </mxCell>
         <mxCell id="QZAKfAFqV-frmJR9LW_r-7" value="EmailService" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontStyle=0;fontSize=15;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
-          <mxGeometry x="490" y="250" width="120" height="60" as="geometry" />
+          <mxGeometry x="470" y="250" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="QZAKfAFqV-frmJR9LW_r-13" value="Send a validation token Email to user to confirm" style="text;html=1;resizable=0;autosize=1;align=center;verticalAlign=middle;points=[];fillColor=none;strokeColor=none;rounded=0;fontFamily=Helvetica;fontStyle=0;fontSize=15;" vertex="1" parent="1">
-          <mxGeometry x="150" y="290" width="330" height="20" as="geometry" />
+          <mxGeometry x="130" y="280" width="330" height="20" as="geometry" />
         </mxCell>
         <mxCell id="QZAKfAFqV-frmJR9LW_r-32" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.75;entryY=1;entryDx=0;entryDy=0;fontFamily=Helvetica;fontSize=15;strokeColor=#0000FF;" edge="1" parent="1" source="QZAKfAFqV-frmJR9LW_r-17" target="QZAKfAFqV-frmJR9LW_r-29">
           <mxGeometry relative="1" as="geometry">
@@ -85,15 +87,6 @@
         </mxCell>
         <mxCell id="QZAKfAFqV-frmJR9LW_r-28" value="Confirm the email" style="text;html=1;resizable=0;autosize=1;align=center;verticalAlign=middle;points=[];fillColor=none;strokeColor=none;rounded=0;fontFamily=Helvetica;fontSize=15;" vertex="1" parent="1">
           <mxGeometry x="170" y="440" width="130" height="20" as="geometry" />
-        </mxCell>
-        <mxCell id="QZAKfAFqV-frmJR9LW_r-30" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Helvetica;fontSize=15;strokeColor=#009900;" edge="1" parent="1" source="QZAKfAFqV-frmJR9LW_r-29" target="QZAKfAFqV-frmJR9LW_r-7">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="960" y="360" />
-              <mxPoint x="670" y="360" />
-              <mxPoint x="670" y="280" />
-            </Array>
-          </mxGeometry>
         </mxCell>
         <mxCell id="QZAKfAFqV-frmJR9LW_r-36" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;fontFamily=Helvetica;fontSize=15;entryX=0.5;entryY=1;entryDx=0;entryDy=0;strokeColor=#B81A1A;" edge="1" parent="1" source="QZAKfAFqV-frmJR9LW_r-29" target="QZAKfAFqV-frmJR9LW_r-35">
           <mxGeometry relative="1" as="geometry">
@@ -117,11 +110,21 @@
             <mxPoint x="37" as="offset" />
           </mxGeometry>
         </mxCell>
+        <mxCell id="QZAKfAFqV-frmJR9LW_r-91" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;fontFamily=Helvetica;fontSize=15;strokeColor=#009900;" edge="1" parent="1" source="QZAKfAFqV-frmJR9LW_r-29" target="QZAKfAFqV-frmJR9LW_r-7">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="960" y="360" />
+              <mxPoint x="530" y="360" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QZAKfAFqV-frmJR9LW_r-92" value="&lt;span style=&quot;background-color: rgb(248 , 249 , 250)&quot;&gt;Call to send a email with token&lt;/span&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=15;fontFamily=Helvetica;" vertex="1" connectable="0" parent="QZAKfAFqV-frmJR9LW_r-91">
+          <mxGeometry x="0.1098" y="-2" relative="1" as="geometry">
+            <mxPoint x="33" as="offset" />
+          </mxGeometry>
+        </mxCell>
         <mxCell id="QZAKfAFqV-frmJR9LW_r-29" value="ConfirmEmailTokenService" style="whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=15;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
           <mxGeometry x="850" y="270" width="220" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="QZAKfAFqV-frmJR9LW_r-31" value="Call to send a email with token" style="text;html=1;resizable=0;autosize=1;align=center;verticalAlign=middle;points=[];fillColor=none;strokeColor=none;rounded=0;fontFamily=Helvetica;fontSize=15;" vertex="1" parent="1">
-          <mxGeometry x="700" y="370" width="220" height="20" as="geometry" />
         </mxCell>
         <mxCell id="QZAKfAFqV-frmJR9LW_r-33" value="Call to validate the token" style="text;html=1;resizable=0;autosize=1;align=center;verticalAlign=middle;points=[];fillColor=none;strokeColor=none;rounded=0;fontFamily=Helvetica;fontSize=15;" vertex="1" parent="1">
           <mxGeometry x="630" y="430" width="180" height="20" as="geometry" />
@@ -154,8 +157,8 @@
         <mxCell id="QZAKfAFqV-frmJR9LW_r-40" value="True" style="text;html=1;resizable=0;autosize=1;align=center;verticalAlign=middle;points=[];fillColor=none;strokeColor=none;rounded=0;fontFamily=Helvetica;fontSize=15;" vertex="1" parent="1">
           <mxGeometry x="1275" y="-30" width="50" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="QZAKfAFqV-frmJR9LW_r-41" value="&lt;font size=&quot;1&quot;&gt;&lt;b style=&quot;font-size: 25px&quot;&gt;User Registration Workflow&lt;/b&gt;&lt;/font&gt;" style="text;html=1;resizable=0;autosize=1;align=center;verticalAlign=middle;points=[];fillColor=none;strokeColor=none;rounded=0;fontFamily=Helvetica;fontSize=15;" vertex="1" parent="1">
-          <mxGeometry x="-40" y="-100" width="340" height="30" as="geometry" />
+        <mxCell id="QZAKfAFqV-frmJR9LW_r-41" value="&lt;font size=&quot;1&quot;&gt;&lt;b style=&quot;font-size: 30px&quot;&gt;User Registration Workflow&lt;/b&gt;&lt;/font&gt;" style="text;html=1;resizable=0;autosize=1;align=center;verticalAlign=middle;points=[];fillColor=none;strokeColor=none;rounded=0;fontFamily=Helvetica;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="-40" y="-100" width="410" height="30" as="geometry" />
         </mxCell>
         <mxCell id="QZAKfAFqV-frmJR9LW_r-43" value="False" style="text;html=1;resizable=0;autosize=1;align=center;verticalAlign=middle;points=[];fillColor=none;strokeColor=none;rounded=0;fontFamily=Helvetica;fontSize=15;" vertex="1" parent="1">
           <mxGeometry x="1340" y="40" width="50" height="20" as="geometry" />
