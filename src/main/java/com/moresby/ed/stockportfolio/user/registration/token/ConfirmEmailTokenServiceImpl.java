@@ -1,5 +1,6 @@
 package com.moresby.ed.stockportfolio.user.registration.token;
 
+import com.moresby.ed.stockportfolio.email.EmailService;
 import com.moresby.ed.stockportfolio.user.User;
 import com.moresby.ed.stockportfolio.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ public class ConfirmEmailTokenServiceImpl implements ConfirmEmailTokenService{
     private final static long EXPIRATION_TIME_IN_FIFTEEN_MINUTES = 15L;
     private final ConfirmEmailTokenRepository confirmEmailTokenRepository;
     private final UserService userService;
+    private final EmailService emailService;
 
     @Override
     public Optional<ConfirmEmailToken> findByToken(String token) {
@@ -36,6 +38,7 @@ public class ConfirmEmailTokenServiceImpl implements ConfirmEmailTokenService{
                         .user(user)
                         .build();
         user.addConfirmEmailToken(confirmEmailToken);
+        emailService.sendConfirmEmail(user);
 
         return confirmEmailTokenRepository.save(confirmEmailToken);
     }

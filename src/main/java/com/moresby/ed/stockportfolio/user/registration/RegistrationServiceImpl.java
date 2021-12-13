@@ -22,7 +22,6 @@ public class RegistrationServiceImpl implements RegistrationService{
     private final UserService userService;
     private final BCryptPasswordEncoder passwordEncoder;
     private final ConfirmEmailTokenService confirmEmailTokenService;
-    private final EmailService emailService;
 
     @Override
     @Transactional
@@ -47,7 +46,6 @@ public class RegistrationServiceImpl implements RegistrationService{
         account.setUser(user);
         var newUser = userService.createUser(user);
         confirmEmailTokenService.createToken(user);
-        emailService.sendConfirmEmail(user);
 
         return newUser;
     }
