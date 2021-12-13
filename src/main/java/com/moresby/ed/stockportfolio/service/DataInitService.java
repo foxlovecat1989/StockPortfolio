@@ -2,7 +2,6 @@ package com.moresby.ed.stockportfolio.service;
 
 import com.github.javafaker.Faker;
 import com.moresby.ed.stockportfolio.account.Account;
-import com.moresby.ed.stockportfolio.config.security.PasswordEncoder;
 import com.moresby.ed.stockportfolio.trade.TradeService;
 import com.moresby.ed.stockportfolio.trade.model.enumeration.TradeType;
 import com.moresby.ed.stockportfolio.trade.model.pojo.TradePOJO;
@@ -10,21 +9,19 @@ import com.moresby.ed.stockportfolio.user.User;
 import com.moresby.ed.stockportfolio.classify.ClassifyService;
 import com.moresby.ed.stockportfolio.user.UserRole;
 import com.moresby.ed.stockportfolio.user.UserService;
-import com.moresby.ed.stockportfolio.watchlist.WatchlistId;
 import com.moresby.ed.stockportfolio.tstock.TStock;
 import com.moresby.ed.stockportfolio.tstock.TStockService;
-import com.moresby.ed.stockportfolio.watch.Watch;
-import com.moresby.ed.stockportfolio.watch.WatchService;
-import com.moresby.ed.stockportfolio.watchlist.Watchlist;
-import com.moresby.ed.stockportfolio.watchlist.WatchlistService;
+import com.moresby.ed.stockportfolio.watch.Watchlist;
+import com.moresby.ed.stockportfolio.watch.WatchlistService;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
-import java.time.*;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -34,7 +31,6 @@ public class DataInitService {
     private final ClassifyService classifyService;
     private final TStockService tStockService;
     private final UserService userService;
-    private final WatchService watchService;
     private final WatchlistService watchlistService;
     private final TradeService tradeService;
     private final BCryptPasswordEncoder passwordEncoder;
@@ -49,10 +45,8 @@ public class DataInitService {
     public void initData() {
         generateUsers(TEN_TIMES);
         generateStocks();
-        generateExecuteTrades(TEN_TIMES);
-
-        generateRandomWatch(TEN_TIMES);
-        addRandomStockToWatchlist(TEN_TIMES);
+        generateExecuteTrades(HUNDRED_TIMES);
+        generateWatchlistAndAddRandomStock();
     }
 
     private void generateUsers(int times){
@@ -147,44 +141,34 @@ public class DataInitService {
         }
     }
 
-    private void generateRandomWatch(Integer times) {
-        for (int i = 0; i < times; i++) {
-            Long fakeUserId = getFakeNumberBetween(1L, 10L);
-            String fakeWatchName = faker.name().nameWithMiddle().toUpperCase();
-            var user = userService.findExistingUserById(fakeUserId);
-            addWatch(fakeWatchName, user);
-        }
-    }
+    private void generateWatchlistAndAddRandomStock(){
+        List<User> users = userService.findAllUsers();
+        users.stream().forEach(
+                user -> {
+                    var randomAmountOfWatchlist = (int) getFakeNumberBetween(1L, 10L);
+                    var randomTimesOfAddStock = (int) getFakeNumberBetween(1L, 10L);
+                    var randomDays = getFakeNumberBetween(1L, 10L);
 
-    private Watch addWatch(String watchName, User user){
-        Watch watch = new Watch();
-        watch.setName(watchName);
-        watch.setUser(user);
+                    for (int i = 0; i < randomAmountOfWatchlist; i++) {
+                        List<TStock> tStocks = new ArrayList<>();
+                        for (int j = 0; j < randomTimesOfAddStock; j++) {
+                            var randomStockId = getFakeNumberBetween(1L, 10L);
+                            tStocks.add(tStockService.findExistingStock(randomStockId));
+                        }
 
-        return  watchService.createWatch(watch);
-    }
+                        Watchlist watchlist =
+                                Watchlist.builder()
+                                .name(user.getUsername() + "'s watchlist "+ (randomAmountOfWatchlist - i) )
+                                .user(user)
+                                .lastUpdateAt(LocalDateTime.now().minusDays(randomDays))
+                                .tStocks(tStocks)
+                                .build();
 
-    private void addRandomStockToWatchlist(Integer times) {
-        for (int i = 0; i <	times ; i++) {
-            var fakeTStockId = getFakeNumberBetween(1L, 10L);
-            var fakeWatchId = getFakeNumberBetween(1L, 10L);
-            TStock tStock = tStockService.findStock(fakeTStockId).get();
-            Watch watch = watchService.findOneById(fakeWatchId).get();
-            addStockToWatchlist(tStock, watch);
-        }
-    }
+                        watchlistService.createWatch(watchlist);
+                    }
+                }
+        );
 
-    private Watchlist addStockToWatchlist(TStock tStock, Watch watch){
-        Watchlist watchlist = new Watchlist();
-        WatchlistId watchlistId = new WatchlistId();
-        watchlistId.setWatchId(watch.getId());
-        watchlistId.setTStockId(tStock.getId());
-        watchlist.setWatchlistId(watchlistId);
-        watchlist.setTStock(tStock);
-        watchlist.setWatch(watch);
-        watchlist.setLastUpdateDate(LocalDateTime.now());
-
-        return watchlistService.createOne(watchlist);
     }
 
     private long getFakeNumberBetween(Long min, Long max) {

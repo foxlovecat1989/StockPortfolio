@@ -5,6 +5,7 @@ import com.moresby.ed.stockportfolio.account.Account;
 import com.moresby.ed.stockportfolio.inventory.Inventory;
 import com.moresby.ed.stockportfolio.trade.model.entity.Trade;
 import com.moresby.ed.stockportfolio.user.registration.token.ConfirmEmailToken;
+import com.moresby.ed.stockportfolio.watch.Watchlist;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -87,6 +88,13 @@ public class User implements UserDetails {
             orphanRemoval = true
     )
     private List<ConfirmEmailToken> confirmEmailTokens;
+
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            mappedBy = "user",
+            orphanRemoval = true
+    )
+    private List<Watchlist> watchlists;
 
     @Enumerated(EnumType.STRING)
     private UserRole userRole;

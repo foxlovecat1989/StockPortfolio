@@ -11,18 +11,18 @@ import java.util.Optional;
 @RestController
 @RequestMapping(path = "api/v1/watchs")
 @RequiredArgsConstructor
-public class WatchController {
+public class WatchlistController {
 
-    private final WatchService watchService;
+    private final WatchlistService watchlistService;
 
     @GetMapping(path = "/findAll", produces = "application/json")
-    public Iterable<Watch> findAll(){
-        return watchService.findAll();
+    public Iterable<Watchlist> findAll(){
+        return watchlistService.findAll();
     }
 
     @GetMapping(path = "/{id}", produces = "application/json")
-    public ResponseEntity<Watch> findOneById(@PathVariable Long id){
-        Optional<Watch> optWatch = watchService.findOneById(id);
+    public ResponseEntity<Watchlist> findOneById(@PathVariable Long id){
+        Optional<Watchlist> optWatch = watchlistService.findOneById(id);
         if (optWatch.isEmpty())
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 
@@ -31,20 +31,20 @@ public class WatchController {
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public Watch createWatch(@RequestBody Watch watch){
-        return watchService.createWatch(watch);
+    public Watchlist createWatch(@RequestBody Watchlist watchlist){
+        return watchlistService.createWatch(watchlist);
     }
 
     @PatchMapping(consumes = "application/json")
-    public Watch updateWatch(@RequestBody Watch watch){
-        return  watchService.updateWatch(watch);
+    public Watchlist updateWatch(@RequestBody Watchlist watchlist){
+        return  watchlistService.updateWatch(watchlist);
     }
 
     @DeleteMapping(path = "/{id}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable Long id){
         try{
-            watchService.deleteById(id);
+            watchlistService.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
             e.printStackTrace();
         }
