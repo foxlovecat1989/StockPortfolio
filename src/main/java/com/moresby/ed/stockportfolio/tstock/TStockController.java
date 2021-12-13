@@ -23,11 +23,11 @@ public class TStockController {
         return tStockService.findAllStocks();
     }
 
-    @GetMapping(path = "/{id}", produces = "application/json")
-    public ResponseEntity<TStock> findStockById(@PathVariable Long id) throws InterruptedException {
+    @GetMapping(path = "/{stockId}", produces = "application/json")
+    public ResponseEntity<TStock> findStockById(@PathVariable Long stockId) throws InterruptedException {
         Thread.sleep(3000); // TODO: remove this line when production
 
-        Optional<TStock> optStock = tStockService.findStock(id);
+        Optional<TStock> optStock = tStockService.findStock(stockId);
         if(optStock.isEmpty())
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 

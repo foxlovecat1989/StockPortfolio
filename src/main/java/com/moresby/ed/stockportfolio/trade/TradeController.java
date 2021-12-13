@@ -18,8 +18,8 @@ public class TradeController {
 
     private final TradeService tradeService;
 
-    @GetMapping(path = "/{id}", produces = "application/json")
-    public ResponseEntity<Trade> findByTradeId(@PathVariable("id") Long tradeId) throws InterruptedException {
+    @GetMapping(path = "/{tradeId}", produces = "application/json")
+    public ResponseEntity<Trade> findByTradeId(@PathVariable("tradeId") Long tradeId) throws InterruptedException {
         Thread.sleep(3000); // TODO: remove this line when production
         Optional<Trade> optTrade = tradeService.findByTradeId(tradeId);
         if (optTrade.isEmpty())
