@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService {
     private final static String USER_NOT_FOUND_MSG = "User with email: %s NOT FOUND";
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findUserByEmailEquals(email)
+        return userRepository.findUserByEmail(email)
                 .orElseThrow(()-> {
                     var userEmailNotFoundException =
                             new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, email));
@@ -83,12 +83,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public Boolean isEmailTaken(String email) {
 
-        return userRepository.findUserByEmailEquals(email).isPresent();
+        return userRepository.findUserByEmail(email).isPresent();
     }
 
     @Override
     public void enableUser(String email) {
-        User user = userRepository.findUserByEmailEquals(email)
+        User user = userRepository.findUserByEmail(email)
                 .orElseThrow(
                         ()-> new IllegalStateException(String.format("Email: %s was Not Found", email))
                 );
