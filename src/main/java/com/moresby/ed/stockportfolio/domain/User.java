@@ -11,10 +11,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.io.Serializable;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity(name = "User")
 @Table(name = "app_user")
@@ -23,7 +22,8 @@ import java.util.List;
 @Getter
 @EqualsAndHashCode
 @JsonIgnoreProperties(value = {"password"})
-public class User implements UserDetails {
+public class User implements UserDetails, Serializable {
+
     @Id
     @SequenceGenerator(
             name = "user_sequence",
@@ -34,7 +34,22 @@ public class User implements UserDetails {
             strategy = GenerationType.SEQUENCE,
             generator = "user_sequence"
     )
+    @Column(
+            nullable = false,
+            updatable = false
+    )
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Long id;
+
+
+    @Column(name = "user_number")
+    private String userNumber;
+
+    @Column(name = "first_name")
+    private String firstName;
+
+    @Column(name = "last_name")
+    private String lastName;
 
     @Column(
             name = "username",
@@ -62,6 +77,18 @@ public class User implements UserDetails {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotBlank
     private String password;
+
+    @Column(name = "profile_image_url")
+    private String profileImageUrl;
+
+    @Column(name = "last_login_date")
+    private Date lastLoginDate;
+
+    @Column(name = "last_login-date_display")
+    private Date lastLoginDateDisplay;
+
+    @Column(name = "join_date")
+    private Date joinDate;
 
     @OneToMany(
             mappedBy = "user",
@@ -102,30 +129,46 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
+    @Transient
+    private List<String> authorities;
     private Boolean isAccountNonLocked = false;
     private Boolean isEnabled = false;
 
-
     @Builder
     public User(
+            String userNumber,
+            String firstName,
+            String lastName,
             String username,
             String email,
             String password,
-            Account account,
+            String profileImageUrl,
+            Date lastLoginDate,
+            Date lastLoginDateDisplay,
+            Date joinDate,
             UserRole userRole,
+            List<String> authorities,
             Boolean isAccountNonLocked,
             Boolean isEnabled,
-            List<ConfirmEmailToken> confirmEmailTokens
-            ) {
+            Account account
+    ) {
+        this.userNumber = userNumber;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.username = username;
         this.email = email;
         this.password = password;
-        this.account = account;
+        this.profileImageUrl = profileImageUrl;
+        this.lastLoginDate = lastLoginDate;
+        this.lastLoginDateDisplay = lastLoginDateDisplay;
+        this.joinDate = joinDate;
         this.userRole = userRole;
+        this.authorities = authorities;
         this.isAccountNonLocked = isAccountNonLocked;
         this.isEnabled = isEnabled;
-        this.confirmEmailTokens = confirmEmailTokens;
+        this.account = account;
     }
+
 
     public void addConfirmEmailToken(ConfirmEmailToken confirmEmailToken){
         this.confirmEmailTokens =
@@ -136,9 +179,8 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        GrantedAuthority authority = new SimpleGrantedAuthority(userRole.name());
 
-        return Collections.singletonList(authority);
+        return this.authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
 
     @Override

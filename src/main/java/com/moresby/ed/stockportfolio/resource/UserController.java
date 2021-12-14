@@ -1,6 +1,7 @@
 package com.moresby.ed.stockportfolio.resource;
 
 import com.moresby.ed.stockportfolio.domain.User;
+import com.moresby.ed.stockportfolio.exception.ExceptionHandling;
 import com.moresby.ed.stockportfolio.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,9 +18,10 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(path = "api/v1/users")
+@RequestMapping(path = "/api/v1/user")
 @RequiredArgsConstructor
-public class UserController {
+public class UserController extends ExceptionHandling {
+
     private final UserService userService;
     private static final int INDEX_OF_ROLE_ENDS = 5;
     private static final int CLEAN_COOKIE_SET_TO_ZERO = 0;
