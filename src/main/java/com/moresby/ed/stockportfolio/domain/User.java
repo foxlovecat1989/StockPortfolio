@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -20,37 +19,24 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Setter
 @Getter
-@EqualsAndHashCode
 @JsonIgnoreProperties(value = {"password"})
-public class User implements UserDetails, Serializable {
-
+public class User implements UserDetails {
     @Id
     @SequenceGenerator(
-            name = "user_sequence",
-            sequenceName = "user_sequence",
+            name = "app_user_sequence",
+            sequenceName = "app_user_sequence",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "user_sequence"
+            generator = "app_user_sequence"
     )
-    @Column(
-            nullable = false,
-            updatable = false
-    )
+    @Column(updatable = false)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Long id;
 
-
     @Column(name = "user_number")
-    private String userNumber;
-
-    @Column(name = "first_name")
-    private String firstName;
-
-    @Column(name = "last_name")
-    private String lastName;
-
+    private String user_number;
     @Column(
             name = "username",
             nullable = false,
@@ -84,7 +70,7 @@ public class User implements UserDetails, Serializable {
     @Column(name = "last_login_date")
     private Date lastLoginDate;
 
-    @Column(name = "last_login-date_display")
+    @Column(name = "last_login_date_display")
     private Date lastLoginDateDisplay;
 
     @Column(name = "join_date")
@@ -131,30 +117,25 @@ public class User implements UserDetails, Serializable {
 
     @Transient
     private List<String> authorities;
+
     private Boolean isAccountNonLocked = false;
     private Boolean isEnabled = false;
 
     @Builder
-    public User(
-            String userNumber,
-            String firstName,
-            String lastName,
-            String username,
-            String email,
-            String password,
-            String profileImageUrl,
-            Date lastLoginDate,
-            Date lastLoginDateDisplay,
-            Date joinDate,
-            UserRole userRole,
-            List<String> authorities,
-            Boolean isAccountNonLocked,
-            Boolean isEnabled,
-            Account account
-    ) {
-        this.userNumber = userNumber;
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public User(String user_number,
+                String username,
+                String email,
+                String password,
+                String profileImageUrl,
+                Date lastLoginDate,
+                Date lastLoginDateDisplay,
+                Date joinDate,
+                Account account,
+                UserRole userRole,
+                List<String> authorities,
+                Boolean isAccountNonLocked,
+                Boolean isEnabled) {
+        this.user_number = user_number;
         this.username = username;
         this.email = email;
         this.password = password;
@@ -162,13 +143,12 @@ public class User implements UserDetails, Serializable {
         this.lastLoginDate = lastLoginDate;
         this.lastLoginDateDisplay = lastLoginDateDisplay;
         this.joinDate = joinDate;
+        this.account = account;
         this.userRole = userRole;
         this.authorities = authorities;
         this.isAccountNonLocked = isAccountNonLocked;
         this.isEnabled = isEnabled;
-        this.account = account;
     }
-
 
     public void addConfirmEmailToken(ConfirmEmailToken confirmEmailToken){
         this.confirmEmailTokens =
