@@ -15,7 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping(path = "/api/v1/user")
@@ -26,14 +27,14 @@ public class UserController extends ExceptionHandling {
     private static final int INDEX_OF_ROLE_ENDS = 5;
     private static final int CLEAN_COOKIE_SET_TO_ZERO = 0;
 
-    @GetMapping(path = "/findAll", produces = "application/json")
+    @GetMapping(path = "/findAll", produces = APPLICATION_JSON_VALUE)
     public Iterable<User> findAllUsers() throws InterruptedException {
         Thread.sleep(3000); // TODO: remove when production
 
         return userService.findAllUsers();
     }
 
-    @GetMapping(path = "/{id}", produces = "application/json")
+    @GetMapping(path = "/{id}", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<User> findOneById(@PathVariable Long id) throws InterruptedException {
         Thread.sleep(3000); // TODO: remove when production
         User user = userService.findExistingUserById(id);
@@ -41,7 +42,7 @@ public class UserController extends ExceptionHandling {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @PostMapping(consumes = "application/json")
+    @PostMapping(consumes = APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public User createUser(@RequestBody User user) throws InterruptedException {
         Thread.sleep(3000); // TODO: remove when production
@@ -49,7 +50,7 @@ public class UserController extends ExceptionHandling {
         return userService.createUser(user);
     }
 
-    @PatchMapping
+    @PatchMapping(consumes = APPLICATION_JSON_VALUE)
     public User updateUser(@RequestBody User user) throws InterruptedException {
         Thread.sleep(3000); // TODO: remove when production
 
