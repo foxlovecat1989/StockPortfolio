@@ -13,5 +13,7 @@ public interface UserService extends UserDetailsService {
     User updateUser(User user);
     void deleteUserById(Long id);
     boolean isEmailTaken(String email);
+    boolean isUsernameTaken(String username);
+    boolean isUserNumberTaken(String userNumber);
     void enableUser(String email);
 }

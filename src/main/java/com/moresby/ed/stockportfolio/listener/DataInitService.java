@@ -1,19 +1,12 @@
 package com.moresby.ed.stockportfolio.listener;
 
 import com.github.javafaker.Faker;
-import com.moresby.ed.stockportfolio.domain.Account;
-import com.moresby.ed.stockportfolio.service.TradeService;
+import com.moresby.ed.stockportfolio.domain.*;
+import com.moresby.ed.stockportfolio.service.*;
 import com.moresby.ed.stockportfolio.enumeration.TradeType;
-import com.moresby.ed.stockportfolio.domain.TradePOJO;
-import com.moresby.ed.stockportfolio.domain.User;
-import com.moresby.ed.stockportfolio.service.ClassifyService;
 import com.moresby.ed.stockportfolio.enumeration.UserRole;
-import com.moresby.ed.stockportfolio.service.UserService;
-import com.moresby.ed.stockportfolio.domain.TStock;
-import com.moresby.ed.stockportfolio.service.TStockService;
-import com.moresby.ed.stockportfolio.domain.Watchlist;
-import com.moresby.ed.stockportfolio.service.WatchlistService;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -41,14 +34,14 @@ public class DataInitService {
 
 
     @EventListener(ApplicationReadyEvent.class)
-    public void initData() {
+    public void initData(){
         generateUsers(TEN_TIMES);
         generateStocks();
         generateExecuteTrades(HUNDRED_TIMES);
         generateWatchlistAndAddRandomStock();
     }
 
-    private void generateUsers(int times){
+    private void generateUsers(int times) {
         for (int i = 0; i < times; i++) {
             boolean isEmailBeTaken;
             String username;
@@ -64,10 +57,12 @@ public class DataInitService {
                         .username(username)
                         .password(passwordEncoder.encode("password"))
                         .email(email)
-                            .userRole(UserRole.ROLE_USER)
-                            .isAccountNonLocked(Boolean.TRUE)
+                            .user_number(RandomStringUtils.randomNumeric(10))
+                         .userRole(UserRole.ROLE_USER.name())
+                            .joinDate(new Date())
+                         .isAccountNonLocked(Boolean.TRUE)
                             .isEnabled(Boolean.TRUE)
-                            .build();
+                          .build();
 
             var account =
                     Account.builder()
@@ -142,7 +137,7 @@ public class DataInitService {
 
     private void generateWatchlistAndAddRandomStock(){
         List<User> users = userService.findAllUsers();
-        users.stream().forEach(
+        users.forEach(
                 user -> {
                     var randomAmountOfWatchlist = (int) getFakeNumberBetween(1L, 10L);
                     var randomTimesOfAddStock = (int) getFakeNumberBetween(1L, 10L);

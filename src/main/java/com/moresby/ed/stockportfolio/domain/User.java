@@ -2,7 +2,6 @@ package com.moresby.ed.stockportfolio.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.moresby.ed.stockportfolio.enumeration.UserRole;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,7 +18,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Setter
 @Getter
-@JsonIgnoreProperties(value = {"password"})
+@JsonIgnoreProperties(value = {"password", "isEnabled", "isAccountNonLocked"})
 public class User implements UserDetails {
     @Id
     @SequenceGenerator(
@@ -112,11 +111,10 @@ public class User implements UserDetails {
     )
     private List<Watchlist> watchlists;
 
-    @Enumerated(EnumType.STRING)
-    private UserRole userRole;
+    private String userRole;
 
     @Transient
-    private List<String> authorities;
+    private String[] authorities;
 
     private Boolean isAccountNonLocked = false;
     private Boolean isEnabled = false;
@@ -131,8 +129,8 @@ public class User implements UserDetails {
                 Date lastLoginDateDisplay,
                 Date joinDate,
                 Account account,
-                UserRole userRole,
-                List<String> authorities,
+                String userRole,
+                String[] authorities,
                 Boolean isAccountNonLocked,
                 Boolean isEnabled) {
         this.user_number = user_number;
@@ -160,7 +158,7 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
-        return this.authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+        return Arrays.asList(authorities).stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
 
     @Override

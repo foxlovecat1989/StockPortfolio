@@ -108,6 +108,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean isUsernameTaken(String username) {
+        return userRepository.findUserByUsername(username).isPresent();
+    }
+
+    @Override
+    public boolean isUserNumberTaken(String userNumber) {
+        return userRepository.findUserByUserNumber(userNumber).isPresent();
+    }
+
+    @Override
     public void enableUser(String email) {
         var user = findExistingUserByEmail(email);
         user.setIsEnabled(Boolean.TRUE);
