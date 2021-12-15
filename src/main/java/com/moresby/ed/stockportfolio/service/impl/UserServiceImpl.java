@@ -12,36 +12,50 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+import static com.moresby.ed.stockportfolio.constant.UserImplConstant.*;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final static String USER_NOT_FOUND_MSG = "User with email: %s NOT FOUND";
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findUserByEmail(email)
-                .orElseThrow(()-> {
-                    var userEmailNotFoundException =
-                            new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, email));
-                    log.warn("Error in LoadUserByEmail: {}", email, userEmailNotFoundException);
-                    return userEmailNotFoundException;
-                });
-    }
 
     @Override
     public User findExistingUserById(Long id) {
 
         return userRepository.findById(id)
                 .orElseThrow(
-                        () -> new NoSuchElementException(String.format("User Id: %s Not Found", id))
+                        () -> {
+                            var errorMsg = NO_USER_FOUND_BY_Id + id;
+                            log.error(errorMsg);
+                            return new UsernameNotFoundException(errorMsg);
+                        }
                 );
     }
 
     @Override
-    public Optional<User> findById(long id) {
-        return userRepository.findById(id);
+    public User findExistingUserByUsername(String username) {
+
+        return userRepository.findUserByUsername(username)
+                .orElseThrow(
+                        () -> {
+                            var errorMsg = NO_USER_FOUND_BY_USERNAME + username;
+                            log.error(errorMsg);
+                            return new UsernameNotFoundException(errorMsg);
+                        }
+                );
+    }
+
+    @Override
+    public User findExistingUserByEmail(String email){
+        return userRepository.findUserByEmail(email).orElseThrow(
+                () -> {
+                    var errorMsg = NO_USER_FOUND_BY_EMAIL + email;
+                    log.error(errorMsg);
+                    return new UsernameNotFoundException(errorMsg);
+                }
+        );
     }
 
     @Override
@@ -57,18 +71,15 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
-
+    // TODO: back to set what properties should be updated
     @Override
     public User updateUser(User user) {
-        User originUser = userRepository.findById(user.getId())
-                    .orElseThrow(
-                            ()-> new IllegalStateException("update user fail Exception")
-                    );
-        originUser.setUsername(
-                user.getUsername() != null ? user.getUsername() : originUser.getUsername()
+        var existingUser = findExistingUserById(user.getId());
+        existingUser.setUsername(
+                user.getUsername() != null ? user.getUsername() : existingUser.getUsername()
         );
 
-        return userRepository.save(originUser);
+        return userRepository.save(existingUser);
     }
 
     @Override
@@ -81,17 +92,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean isEmailTaken(String email) {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        var user = findExistingUserByUsername(username);
+        user.setLastLoginDateDisplay(user.getLastLoginDate());
+        user.setLastLoginDate(new Date());
+        log.info(FOUND_USER_BY_USERNAME + username);
+
+        return userRepository.save(user);
+    }
+
+    @Override
+    public boolean isEmailTaken(String email) {
 
         return userRepository.findUserByEmail(email).isPresent();
     }
 
     @Override
     public void enableUser(String email) {
-        User user = userRepository.findUserByEmail(email)
-                .orElseThrow(
-                        ()-> new IllegalStateException(String.format("Email: %s was Not Found", email))
-                );
+        var user = findExistingUserByEmail(email);
         user.setIsEnabled(Boolean.TRUE);
         userRepository.save(user);
     }
