@@ -1,6 +1,5 @@
 package com.moresby.ed.stockportfolio.config;
 
-import com.moresby.ed.stockportfolio.filter.JWTAuthenticationAndAuthorizationFilter;
 import com.moresby.ed.stockportfolio.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -60,9 +59,7 @@ public class RestSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
                 // .antMatchers(HttpMethod.GET, "/api/v1/activities/**").hasAnyRole("USER", "ADMIN")
                 // .antMatchers("/api/v1/activities/**").hasRole("ADMIN")
-                .antMatchers("/api/v1/**").permitAll()
-                .and()
-                .addFilter(new JWTAuthenticationAndAuthorizationFilter(authenticationManager()));
+                .antMatchers("/api/v1/**").permitAll();
 
     }
 }
