@@ -64,7 +64,7 @@ public class DataInitService {
                         .username(username)
                         .password(passwordEncoder.encode("password"))
                         .email(email)
-                            .userRole(UserRole.USER)
+                            .userRole(UserRole.ROLE_USER)
                             .isAccountNonLocked(Boolean.TRUE)
                             .isEnabled(Boolean.TRUE)
                             .build();

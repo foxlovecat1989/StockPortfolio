@@ -38,7 +38,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                         .username(registrationRequest.getUsername())
                         .password(passwordEncoder.encode(registrationRequest.getPassword()))
                         .email(registrationRequest.getEmail())
-                        .userRole(UserRole.USER)
+                        .userRole(UserRole.ROLE_USER)
                         .isEnabled(Boolean.FALSE)
                         .isAccountNonLocked(Boolean.TRUE)
                         .account(account)
