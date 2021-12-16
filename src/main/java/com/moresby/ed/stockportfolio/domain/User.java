@@ -110,6 +110,7 @@ public class User implements Serializable {
     private List<Watchlist> watchlists;
 
     @Column(name = "user_role")
+    @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
     private Boolean isAccountNonLocked = true;
