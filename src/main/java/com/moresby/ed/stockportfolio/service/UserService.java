@@ -22,6 +22,6 @@ public interface UserService extends UserDetailsService {
     boolean isUsernameTaken(String username);
     boolean isUserNumberTaken(String userNumber);
     void enableUser(String email);
-    void resetPassword(User user);
+    void resetPassword(String email);
     User updateProfileImage(User user, MultipartFile multipartFile);
 }

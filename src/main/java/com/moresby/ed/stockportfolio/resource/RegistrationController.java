@@ -25,6 +25,6 @@ public class RegistrationController {
             throws EmailExistException, UsernameExistException {
         var user = registrationService.registration(registrationRequest);
 
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 }

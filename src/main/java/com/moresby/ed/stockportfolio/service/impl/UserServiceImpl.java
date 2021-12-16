@@ -86,10 +86,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> findAllUsers() {
-        List<User> result = new ArrayList<>();
-        userRepository.findAll().iterator().forEachRemaining(result::add);
+        List<User> users = new ArrayList<>();
+        userRepository.findAll().iterator().forEachRemaining(users::add);
 
-        return result;
+        return users;
     }
 
     @Override
@@ -175,8 +175,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void resetPassword(User user) {
-        var originUser = findExistingUserByEmail(user.getEmail());
+    public void resetPassword(String email) {
+        var originUser = findExistingUserByEmail(email);
         var newPassword = generatePassword();
         originUser.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(originUser);
