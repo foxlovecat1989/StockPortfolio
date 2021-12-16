@@ -37,7 +37,8 @@ public class User implements Serializable {
             name = "username",
             nullable = false,
             columnDefinition = "TEXT",
-            length = 20
+            length = 20,
+            unique = true
     )
     @NotBlank
     private String username;

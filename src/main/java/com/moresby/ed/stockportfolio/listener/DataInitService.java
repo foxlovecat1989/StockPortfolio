@@ -2,17 +2,15 @@ package com.moresby.ed.stockportfolio.listener;
 
 import com.github.javafaker.Faker;
 import com.moresby.ed.stockportfolio.domain.*;
+import com.moresby.ed.stockportfolio.exception.domain.EmailExistException;
+import com.moresby.ed.stockportfolio.exception.domain.UsernameExistException;
 import com.moresby.ed.stockportfolio.service.*;
 import com.moresby.ed.stockportfolio.enumeration.TradeType;
-import com.moresby.ed.stockportfolio.enumeration.UserRole;
 import lombok.AllArgsConstructor;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Stream;
@@ -25,23 +23,22 @@ public class DataInitService {
     private final UserService userService;
     private final WatchlistService watchlistService;
     private final TradeService tradeService;
-    private final BCryptPasswordEncoder passwordEncoder;
     private Faker faker;
     private static final int TEN_TIMES = 10;
     private static final int HUNDRED_TIMES = 100;
     private static final int PER_UNIT_EQUALS_ONE_THOUSAND = 1000;
-    private static final int ONE_MILLION = 1000000;
+
 
 
     @EventListener(ApplicationReadyEvent.class)
-    public void initData(){
+    public void initData() throws EmailExistException, UsernameExistException {
         generateUsers(TEN_TIMES);
         generateStocks();
         generateExecuteTrades(HUNDRED_TIMES);
         generateWatchlistAndAddRandomStock();
     }
 
-    private void generateUsers(int times) {
+    private void generateUsers(int times) throws EmailExistException, UsernameExistException {
         for (int i = 0; i < times; i++) {
             boolean isEmailBeTaken;
             String username;
@@ -51,26 +48,13 @@ public class DataInitService {
                 email = String.format("%s@gmail.com", username);
                 isEmailBeTaken = userService.isEmailTaken(email);
             } while (isEmailBeTaken);
-
             var user =
                     User.builder()
-                        .username(username)
-                        .password(passwordEncoder.encode("password"))
-                        .email(email)
-                            .user_number(RandomStringUtils.randomNumeric(10))
-                         .userRole(UserRole.ROLE_USER)
-                            .joinDate(new Date())
-                         .isAccountNonLocked(Boolean.TRUE)
-                            .isEnabled(Boolean.TRUE)
-                          .build();
-
-            var account =
-                    Account.builder()
-                            .balance(BigDecimal.valueOf(getFakeNumberBetween(5L, 10L) * ONE_MILLION))
-                            .user(user)
+                            .username(username)
+                            .email(email)
+                            .password("password")
                             .build();
-            user.setAccount(account);
-            userService.createUser(user);
+           userService.createUser(user);
         }
     }
 

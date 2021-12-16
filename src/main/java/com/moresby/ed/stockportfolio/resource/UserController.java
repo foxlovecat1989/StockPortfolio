@@ -3,6 +3,8 @@ package com.moresby.ed.stockportfolio.resource;
 import com.moresby.ed.stockportfolio.domain.User;
 import com.moresby.ed.stockportfolio.domain.UserPrincipal;
 import com.moresby.ed.stockportfolio.exception.ExceptionHandling;
+import com.moresby.ed.stockportfolio.exception.domain.EmailExistException;
+import com.moresby.ed.stockportfolio.exception.domain.UsernameExistException;
 import com.moresby.ed.stockportfolio.service.UserService;
 import com.moresby.ed.stockportfolio.utility.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -41,10 +43,11 @@ public class UserController extends ExceptionHandling {
     }
 
     @PatchMapping(consumes = APPLICATION_JSON_VALUE)
-    public User updateUser(@RequestBody User user) throws InterruptedException {
+    public User updateUser(@RequestBody User user)
+            throws InterruptedException, EmailExistException, UsernameExistException {
         Thread.sleep(3000); // TODO: remove when production
 
-        return userService.updateUser(user);
+        return userService.updateUsername(user);
     }
 
     @DeleteMapping(path = "/{id}")

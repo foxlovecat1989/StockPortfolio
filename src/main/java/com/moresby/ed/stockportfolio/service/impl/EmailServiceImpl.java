@@ -36,18 +36,18 @@ public class EmailServiceImpl implements EmailService {
     }
     @Async
     @Override
-    public void sendNewPasswordEmail(User user){
-        generateNewPasswordEmail(user);
+    public void sendNewPasswordEmail(User user, String password){
+        generateNewPasswordEmail(user, password);
         sendEmail();
     }
-    private void generateNewPasswordEmail(User user) {
+    private void generateNewPasswordEmail(User user, String password) {
         String to = user.getEmail();
         String title = "MyStock Website - New Password";
         String contentHtml =
                 String.format(
                         "Hello %s, \n \n Your new account password is: %s \n \n The Support Team",
                         user.getUsername(),
-                        user.getPassword()
+                        password
                 );
         customEmail =
                 CustomEmail.builder()
