@@ -154,7 +154,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isEmailTaken(String email) {
-
         return userRepository.findUserByEmail(email).isPresent();
     }
 
@@ -238,12 +237,6 @@ public class UserServiceImpl implements UserService {
         return userNumber;
     }
 
-    private String getTemporaryProfileImageUrl(String username) {
-        return ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(DEFAULT_USER_IMAGE_PATH + username)
-                .toUriString();
-    }
-
     private void validateLoginAttempt(User user) {
         var username = user.getUsername();
         if(user.getIsAccountNonLocked()) {
@@ -253,6 +246,7 @@ public class UserServiceImpl implements UserService {
         else
             loginAttemptService.removeUserFromLoginAttemptCache(username);
     }
+
     private String generatePassword() {
         return RandomStringUtils.randomAlphanumeric(10);
     }
@@ -278,9 +272,16 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    private String getTemporaryProfileImageUrl(String username) {
+        return ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path(DEFAULT_USER_IMAGE_PATH + username)
+                .toUriString();
+    }
+
     private String setProfileImageUrl(String username) {
-        return ServletUriComponentsBuilder.fromCurrentContextPath().path(USER_IMAGE_PATH + username + FORWARD_SLASH
-                + username + DOT + JPG_EXTENSION).toUriString();
+        return ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path(USER_IMAGE_PATH + username + FORWARD_SLASH + username + DOT + JPG_EXTENSION)
+                .toUriString();
     }
 
 }
