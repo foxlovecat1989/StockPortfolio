@@ -1,8 +1,8 @@
 jwt:
   secret: "'[a-zA-Z0-9._]^+$Guidelines89797987forAlphabeticalArraNumeralsandOtherSymbo$'"
-
 server:
   port: 8080
+
 #  error:
 #    whitelabel:
 #      enabled: false
