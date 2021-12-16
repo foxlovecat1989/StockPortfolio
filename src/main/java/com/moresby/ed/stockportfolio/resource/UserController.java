@@ -40,14 +40,6 @@ public class UserController extends ExceptionHandling {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @PostMapping(consumes = APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.CREATED)
-    public User createUser(@RequestBody User user) throws InterruptedException {
-        Thread.sleep(3000); // TODO: remove when production
-
-        return userService.createUser(user);
-    }
-
     @PatchMapping(consumes = APPLICATION_JSON_VALUE)
     public User updateUser(@RequestBody User user) throws InterruptedException {
         Thread.sleep(3000); // TODO: remove when production
@@ -65,7 +57,7 @@ public class UserController extends ExceptionHandling {
     @PostMapping("/login")
     public ResponseEntity<User> login(@RequestBody User user) {
         authenticate(user.getUsername(), user.getPassword());
-        User loginUser = userService.findExistingUserByUsername(user.getUsername());
+        var loginUser = userService.findExistingUserByUsername(user.getUsername());
         UserPrincipal userPrincipal = new UserPrincipal(loginUser);
         HttpHeaders jwtHeader = getJwtHeader(userPrincipal);
 
@@ -76,9 +68,10 @@ public class UserController extends ExceptionHandling {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
     }
 
-    private HttpHeaders getJwtHeader(UserPrincipal user) {
+    private HttpHeaders getJwtHeader(UserPrincipal userPrincipal) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add(JWT_TOKEN_HEADER, jwtTokenProvider.generateJwtToken(user));
+        headers.add(JWT_TOKEN_HEADER, jwtTokenProvider.generateJwtToken(userPrincipal));
+
         return headers;
     }
 }

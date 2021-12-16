@@ -1,5 +1,8 @@
 package com.moresby.ed.stockportfolio.enumeration;
 
+import com.google.common.collect.Sets;
+
+import java.util.Set;
 
 import static com.moresby.ed.stockportfolio.constant.Authority.*;
 
@@ -8,13 +11,13 @@ public enum UserRole {
     ROLE_MANAGER(MANAGER_AUTHORITIES),
     ROLE_ADMIN(ADMIN_AUTHORITIES);
 
-    private String[] authorities;
+    private Set<String> authorities;
 
     UserRole(String... authorities) {
-        this.authorities = authorities;
+        this.authorities =  Sets.newHashSet(authorities);
     }
 
-    public String[] getAuthorities() {
+    public Set<String> getAuthorities() {
         return authorities;
     }
 }
