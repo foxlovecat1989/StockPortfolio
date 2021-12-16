@@ -5,6 +5,7 @@ import com.moresby.ed.stockportfolio.filter.JwtAuthenticationAndAuthorizationFil
 import com.moresby.ed.stockportfolio.filter.JwtAuthenticationEntryPoint;
 import com.moresby.ed.stockportfolio.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -52,7 +53,7 @@ public class RestSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     @Override
-    public AuthenticationManager authenticationManager() throws Exception {
-        return super.authenticationManager();
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 }

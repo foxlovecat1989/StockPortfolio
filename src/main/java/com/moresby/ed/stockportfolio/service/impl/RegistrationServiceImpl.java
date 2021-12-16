@@ -22,7 +22,8 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     @Transactional
-    public User registration(RegistrationRequest registrationRequest) throws UsernameExistException, EmailExistException {
+    public User registration(RegistrationRequest registrationRequest)
+            throws UsernameExistException, EmailExistException {
         var user = userService.register(registrationRequest);
         confirmEmailTokenService.createToken(user);
 

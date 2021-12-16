@@ -111,7 +111,7 @@ public class User implements Serializable {
     @Column(name = "user_role")
     private UserRole userRole;
 
-    private Boolean isAccountNonLocked = false;
+    private Boolean isAccountNonLocked = true;
     private Boolean isEnabled = false;
 
     @Builder

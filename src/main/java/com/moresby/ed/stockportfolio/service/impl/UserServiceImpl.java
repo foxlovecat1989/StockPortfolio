@@ -8,6 +8,7 @@ import com.moresby.ed.stockportfolio.enumeration.UserRole;
 import com.moresby.ed.stockportfolio.exception.domain.EmailExistException;
 import com.moresby.ed.stockportfolio.exception.domain.UsernameExistException;
 import com.moresby.ed.stockportfolio.repository.UserRepository;
+import com.moresby.ed.stockportfolio.service.LoginAttemptService;
 import com.moresby.ed.stockportfolio.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +25,6 @@ import java.util.*;
 
 import static com.moresby.ed.stockportfolio.constant.FileConstant.DEFAULT_USER_IMAGE_PATH;
 import static com.moresby.ed.stockportfolio.constant.UserImplConstant.*;
-import static com.moresby.ed.stockportfolio.constant.FileConstant.DEFAULT_USER_IMAGE_PATH;
 import static com.moresby.ed.stockportfolio.constant.UserImplConstant.EMAIL_ALREADY_EXISTS;
 import static com.moresby.ed.stockportfolio.constant.UserImplConstant.USERNAME_ALREADY_EXISTS;
 
@@ -35,6 +35,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final LoginAttemptService loginAttemptService;
 
     @Override
     public User findExistingUserById(Long id) {
@@ -101,7 +102,8 @@ public class UserServiceImpl implements UserService {
                         .email(registrationRequest.getEmail())
                         .userRole(UserRole.ROLE_USER)
                         .joinDate(new Date())
-                        // .profileImageUrl(getTemporaryProfileImageUrl(registrationRequest.getUsername()))
+                        .profileImageUrl(getTemporaryProfileImageUrl(registrationRequest.getUsername()))
+                        // TODO: set isEnabled = false when production
                         .isEnabled(Boolean.TRUE)
                         .isAccountNonLocked(Boolean.TRUE)
                         .account(account)
@@ -134,6 +136,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         var user = findExistingUserByUsername(username);
+        validateLoginAttempt(user);
         user.setLastLoginDateDisplay(
                 user.getLastLoginDate() != null ? user.getLastLoginDate() : new Date()
         );
@@ -164,7 +167,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void enableUser(String email) {
         var user = findExistingUserByEmail(email);
-        user.setIsEnabled(Boolean.TRUE);
+        user.setIsEnabled(true);
         userRepository.save(user);
     }
 
@@ -190,8 +193,18 @@ public class UserServiceImpl implements UserService {
     }
 
     private String getTemporaryProfileImageUrl(String username) {
-
-        return ServletUriComponentsBuilder.fromCurrentContextPath().path(DEFAULT_USER_IMAGE_PATH + username).toUriString();
+        return ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path(DEFAULT_USER_IMAGE_PATH + username)
+                .toUriString();
     }
 
+    private void validateLoginAttempt(User user) {
+        var username = user.getUsername();
+        if(user.getIsAccountNonLocked()) {
+            if(loginAttemptService.hasExceededMaxAttempts(username))
+                user.setIsAccountNonLocked(false);
+        }
+        else
+            loginAttemptService.removeUserFromLoginAttemptCache(username);
+    }
 }
