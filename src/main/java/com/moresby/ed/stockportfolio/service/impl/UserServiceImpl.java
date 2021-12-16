@@ -1,6 +1,7 @@
 package com.moresby.ed.stockportfolio.service.impl;
 
 import com.moresby.ed.stockportfolio.domain.User;
+import com.moresby.ed.stockportfolio.domain.UserPrincipal;
 import com.moresby.ed.stockportfolio.repository.UserRepository;
 import com.moresby.ed.stockportfolio.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -96,9 +97,11 @@ public class UserServiceImpl implements UserService {
         var user = findExistingUserByUsername(username);
         user.setLastLoginDateDisplay(user.getLastLoginDate());
         user.setLastLoginDate(new Date());
+        userRepository.save(user);
+        UserPrincipal userPrincipal = new UserPrincipal(user);
         log.info(FOUND_USER_BY_USERNAME + username);
 
-        return userRepository.save(user);
+        return userPrincipal;
     }
 
     @Override

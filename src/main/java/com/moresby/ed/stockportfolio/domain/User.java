@@ -2,24 +2,21 @@ package com.moresby.ed.stockportfolio.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.moresby.ed.stockportfolio.enumeration.UserRole;
 import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Entity(name = "User")
 @Table(name = "app_user")
 @NoArgsConstructor
 @Setter
 @Getter
-@JsonIgnoreProperties(value = {"password", "isEnabled", "isAccountNonLocked"})
-public class User implements UserDetails {
+@JsonIgnoreProperties(value = {"isEnabled", "isAccountNonLocked"})
+public class User implements Serializable {
     @Id
     @SequenceGenerator(
             name = "app_user_sequence",
@@ -111,10 +108,8 @@ public class User implements UserDetails {
     )
     private List<Watchlist> watchlists;
 
-    private String userRole;
-
-    @Transient
-    private String[] authorities;
+    @Column(name = "user_role")
+    private UserRole userRole;
 
     private Boolean isAccountNonLocked = false;
     private Boolean isEnabled = false;
@@ -129,8 +124,7 @@ public class User implements UserDetails {
                 Date lastLoginDateDisplay,
                 Date joinDate,
                 Account account,
-                String userRole,
-                String[] authorities,
+                UserRole userRole,
                 Boolean isAccountNonLocked,
                 Boolean isEnabled) {
         this.user_number = user_number;
@@ -143,7 +137,6 @@ public class User implements UserDetails {
         this.joinDate = joinDate;
         this.account = account;
         this.userRole = userRole;
-        this.authorities = authorities;
         this.isAccountNonLocked = isAccountNonLocked;
         this.isEnabled = isEnabled;
     }
@@ -152,33 +145,6 @@ public class User implements UserDetails {
         this.confirmEmailTokens =
                 this.getConfirmEmailTokens() != null ? this.getConfirmEmailTokens() : new ArrayList<>();
         this.confirmEmailTokens.add(confirmEmailToken);
-    }
-
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-
-        return Arrays.asList(authorities).stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return !isAccountNonLocked;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return isEnabled;
     }
 
 }

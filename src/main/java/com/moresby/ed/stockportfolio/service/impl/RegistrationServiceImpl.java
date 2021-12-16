@@ -18,6 +18,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Date;
 
 import static com.moresby.ed.stockportfolio.constant.FileConstant.DEFAULT_USER_IMAGE_PATH;
@@ -36,9 +37,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     @Transactional
     public User registration(RegistrationRequest registrationRequest) throws UsernameExistException, EmailExistException {
-
         validateNewUsernameAndEmail(registrationRequest);
-
         Account account =
                 Account.builder()
                         .balance(BigDecimal.ZERO)
@@ -47,24 +46,20 @@ public class RegistrationServiceImpl implements RegistrationService {
                 User.builder()
                         .user_number(generateUserNumber())
                         .username(registrationRequest.getUsername())
-                        // TODO: SWITCH THIS WHEN PRODUCTION
-                        //  .password(passwordEncoder.encode(registrationRequest.getPassword()))
-                        .password(passwordEncoder.encode("password"))
+                        .password(passwordEncoder.encode(registrationRequest.getPassword()))
                         .email(registrationRequest.getEmail())
-                        .userRole(UserRole.ROLE_USER.name())
-                        .authorities(UserRole.ROLE_USER.getAuthorities())
+                        .userRole(UserRole.ROLE_USER)
                         .joinDate(new Date())
                         .profileImageUrl(getTemporaryProfileImageUrl(registrationRequest.getUsername()))
-                        .isEnabled(Boolean.FALSE)
+                        .isEnabled(Boolean.TRUE)
                         .isAccountNonLocked(Boolean.TRUE)
                         .account(account)
                         .build();
 
         account.setUser(user);
-        var newUser = userService.createUser(user);
-        confirmEmailTokenService.createToken(user);
+        // confirmEmailTokenService.createToken(user);
 
-        return newUser;
+        return userService.createUser(user);
     }
 
 

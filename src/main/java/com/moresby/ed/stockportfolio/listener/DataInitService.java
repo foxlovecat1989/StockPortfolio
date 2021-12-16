@@ -58,7 +58,7 @@ public class DataInitService {
                         .password(passwordEncoder.encode("password"))
                         .email(email)
                             .user_number(RandomStringUtils.randomNumeric(10))
-                         .userRole(UserRole.ROLE_USER.name())
+                         .userRole(UserRole.ROLE_USER)
                             .joinDate(new Date())
                          .isAccountNonLocked(Boolean.TRUE)
                             .isEnabled(Boolean.TRUE)
