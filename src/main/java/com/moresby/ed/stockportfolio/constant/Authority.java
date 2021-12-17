@@ -6,8 +6,8 @@ public class Authority {
             "stock:read"
     };
     public static final String[] MANAGER_AUTHORITIES = {
-            "user:read", "user:update",
-            "stock:read", "stock:update"
+            "user:read", "user:create", "user:update",
+            "stock:read", "stock:create", "stock:update"
     };
     public static final String[] ADMIN_AUTHORITIES = {
             "user:read", "user:create", "user:update", "user:delete",
