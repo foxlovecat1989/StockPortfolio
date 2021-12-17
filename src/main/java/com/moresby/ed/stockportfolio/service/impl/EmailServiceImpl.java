@@ -45,7 +45,7 @@ public class EmailServiceImpl implements EmailService {
         String title = "MyStock Website - New Password";
         String contentHtml =
                 String.format(
-                        "Hello %s, \n \n Your new account password is: %s \n \n The Support Team",
+                        "Hello %s, <br> Your new account password is: %s <br> The Support Team",
                         user.getUsername(),
                         password
                 );

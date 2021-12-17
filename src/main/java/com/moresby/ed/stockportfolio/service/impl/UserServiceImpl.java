@@ -86,10 +86,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> findAllUsers() {
-        List<User> users = new ArrayList<>();
-        userRepository.findAll().iterator().forEachRemaining(users::add);
 
-        return users;
+        return userRepository.findAll();
     }
 
     @Override
@@ -185,8 +183,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateProfileImage(User user, MultipartFile multipartFile) {
-        return null;
+    public User updateProfileImage(String username, MultipartFile multipartFile)
+            throws IOException, NotAnImageFileException {
+        var user = findExistingUserByUsername(username);
+        saveProfileImage(user, multipartFile);
+
+        return user;
     }
 
     private User buildUser(User user) {
@@ -204,7 +206,8 @@ public class UserServiceImpl implements UserService {
                         .email(user.getEmail())
                         .userRole(UserRole.ROLE_USER)
                         .joinDate(new Date())
-                        // TODO: de-comment when production .profileImageUrl(getTemporaryProfileImageUrl(user.getUsername()))
+                        // TODO: de-comment when production
+                        .profileImageUrl(getTemporaryProfileImageUrl(user.getUsername()))
                         .isEnabled(true)
                         // TODO: set .isEnabled(false) when production
                         .isAccountNonLocked(true)

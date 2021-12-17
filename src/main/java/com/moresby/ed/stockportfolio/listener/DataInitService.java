@@ -32,10 +32,10 @@ public class DataInitService {
 
     @EventListener(ApplicationReadyEvent.class)
     public void initData() throws EmailExistException, UsernameExistException {
-        generateUsers(TEN_TIMES);
-        generateStocks();
-        generateExecuteTrades(HUNDRED_TIMES);
-        generateWatchlistAndAddRandomStock();
+//        generateUsers(TEN_TIMES);
+//        generateStocks();
+//        generateExecuteTrades(HUNDRED_TIMES);
+//        generateWatchlistAndAddRandomStock();
     }
 
     private void generateUsers(int times) throws EmailExistException, UsernameExistException {

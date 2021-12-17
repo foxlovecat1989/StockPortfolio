@@ -36,7 +36,6 @@ public class JwtTokenProvider {
         String[] claims = getClaimsFromUser(userPrincipal);
         return JWT.create()
                 .withIssuer(MY_STOCK_WEB_APP)
-                .withAudience(MY_STOCK_ADMINISTRATION)
                 .withIssuedAt(new Date())
                 .withSubject(userPrincipal.getUsername())
                 .withArrayClaim(AUTHORITIES, claims)

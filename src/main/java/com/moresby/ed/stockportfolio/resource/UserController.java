@@ -5,10 +5,12 @@ import com.moresby.ed.stockportfolio.domain.User;
 import com.moresby.ed.stockportfolio.domain.UserPrincipal;
 import com.moresby.ed.stockportfolio.exception.ExceptionHandling;
 import com.moresby.ed.stockportfolio.exception.domain.EmailExistException;
+import com.moresby.ed.stockportfolio.exception.domain.NotAnImageFileException;
 import com.moresby.ed.stockportfolio.exception.domain.UsernameExistException;
 import com.moresby.ed.stockportfolio.service.UserService;
 import com.moresby.ed.stockportfolio.utility.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,15 +18,26 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 
+import static com.moresby.ed.stockportfolio.constant.FileConstant.*;
 import static com.moresby.ed.stockportfolio.constant.SecurityConstant.JWT_TOKEN_HEADER;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.IMAGE_JPEG_VALUE;
 
 @RestController
 @RequestMapping(path = "/api/v1/user")
 @RequiredArgsConstructor
+@Slf4j
 public class UserController extends ExceptionHandling {
 
     private final UserService userService;
@@ -59,8 +72,23 @@ public class UserController extends ExceptionHandling {
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
 
+    @PostMapping("/updateProfileImage")
+    public ResponseEntity<User> updateProfileImage(
+            @RequestParam("username") String username,
+            @RequestParam(value = "profileImage") MultipartFile profileImage
+    )
+            throws
+            UsernameExistException,
+            EmailExistException,
+            IOException,
+            NotAnImageFileException {
+        User user = userService.updateProfileImage(username, profileImage);
+
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
     @PatchMapping(consumes = APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> updateUser(@RequestBody User user)
+    public ResponseEntity<User> updateUserName(@RequestBody User user)
             throws InterruptedException, EmailExistException, UsernameExistException {
         Thread.sleep(3000); // TODO: remove when production
         var updateUser = userService.updateUsername(user);
@@ -70,12 +98,35 @@ public class UserController extends ExceptionHandling {
 
     @DeleteMapping(path = "/{id}")
     @PreAuthorize("hasAnyAuthority('user:delete')")
-    @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public ResponseEntity<HttpResponse> deleteUser(@PathVariable Long id) throws InterruptedException {
         Thread.sleep(3000); // TODO: remove when production
         userService.deleteUserById(id);
 
-        return response(HttpStatus.OK, USER_DELETED_SUCCESSFULLY);
+        return response(HttpStatus.NO_CONTENT, USER_DELETED_SUCCESSFULLY);
+    }
+
+    @GetMapping(path = "/image/{username}/{fileName}", produces = IMAGE_JPEG_VALUE)
+    public byte[] getProfileImage(
+            @PathVariable("username") String username,
+            @PathVariable("fileName") String fileName) throws IOException {
+
+        return Files.readAllBytes(Paths.get(USER_FOLDER + username + FORWARD_SLASH + fileName));
+    }
+
+    @GetMapping(path = "/image/profile/{username}", produces = IMAGE_JPEG_VALUE)
+    public byte[] getTempProfileImage(@PathVariable("username") String username) throws IOException {
+        URL url = new URL(TEMP_PROFILE_IMAGE_BASE_URL + username);
+        log.info(url.toString());
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        try (InputStream inputStream = url.openStream()) {
+            int bytesRead;
+            byte[] chunk = new byte[1024];
+            while((bytesRead = inputStream.read(chunk)) > 0) {
+                byteArrayOutputStream.write(chunk, 0, bytesRead);
+            }
+        }
+
+        return byteArrayOutputStream.toByteArray();
     }
 
     @GetMapping(path = "/resetPassword/{email}")

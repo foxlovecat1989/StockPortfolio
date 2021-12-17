@@ -5,7 +5,6 @@ public class SecurityConstant {
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String JWT_TOKEN_HEADER = "Jwt-Token";
     public static final String MY_STOCK_WEB_APP = "MyStock Web App";
-    public static final String MY_STOCK_ADMINISTRATION = "User Management";
     public static final String AUTHORITIES = "authorities";
     public static final String TOKEN_CANNOT_BE_VERIFIED = "Token cannot be verified";
     public static final String FORBIDDEN_MESSAGE = "You need to log in to access this page";
