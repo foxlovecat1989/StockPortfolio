@@ -32,7 +32,7 @@ public class User implements Serializable {
     private Long id;
 
     @Column(name = "user_number")
-    private String user_number;
+    private String userNumber;
     @Column(
             name = "username",
             nullable = false,
@@ -129,7 +129,7 @@ public class User implements Serializable {
                 UserRole userRole,
                 Boolean isAccountNonLocked,
                 Boolean isEnabled) {
-        this.user_number = user_number;
+        this.userNumber = userNumber;
         this.username = username;
         this.email = email;
         this.password = password;
