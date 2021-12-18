@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Arrays;
@@ -25,18 +24,8 @@ public class CORSConfig implements WebMvcConfigurer {
 		corsConfiguration.setExposedHeaders(Arrays.asList("Origin", "Content-Type", "Accept", "Jwt-token", "Authorization",
 				"Access-Control-Allow-Origin", "Access-Control-Allow-Credentials", "Filename"));
 		corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
-		urlBasedCorsConfigurationSource.registerCorsConfiguration("/api/**", corsConfiguration);
+		urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
 
 		return new CorsFilter(urlBasedCorsConfigurationSource);
 	}
-//	@Override
-//	public void addCorsMappings(CorsRegistry registry) {
-//		registry.addMapping("/api/**")
-//				.allowedMethods("GET","POST","PUT","DELETE","OPTIONS", "PATCH")
-//				.allowedHeaders("*")
-//				.allowedOrigins("http://localhost:4200")
-//				.allowCredentials(true);
-//
-//		//TODO: Need to change the URL for the production URL when we deploy
-//	}
 }
