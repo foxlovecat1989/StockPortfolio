@@ -98,9 +98,9 @@ public class UserController extends ExceptionHandling {
 
     @DeleteMapping(path = "/{id}")
     @PreAuthorize("hasAnyAuthority('user:delete')")
-    public ResponseEntity<HttpResponse> deleteUser(@PathVariable Long id) throws InterruptedException {
+    public ResponseEntity<HttpResponse> deleteUser(@PathVariable String username) throws InterruptedException {
         Thread.sleep(3000); // TODO: remove when production
-        userService.deleteUserById(id);
+        userService.deleteUserByUsername(username);
 
         return response(HttpStatus.NO_CONTENT, USER_DELETED_SUCCESSFULLY);
     }

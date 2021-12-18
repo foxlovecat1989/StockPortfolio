@@ -19,7 +19,7 @@ public interface UserService extends UserDetailsService {
     User register(RegistrationRequest registrationRequest) throws EmailExistException, UsernameExistException;
     User createUser(User user) throws EmailExistException, UsernameExistException;
     User updateUsername(User user) throws EmailExistException, UsernameExistException;
-    void deleteUserById(Long id);
+    void deleteUserByUsername(String username);
     boolean isEmailTaken(String email);
     boolean isUsernameTaken(String username);
     boolean isUserNumberTaken(String userNumber);
