@@ -206,10 +206,8 @@ public class UserServiceImpl implements UserService {
                         .email(user.getEmail())
                         .userRole(UserRole.ROLE_USER)
                         .joinDate(new Date())
-                        // TODO: de-comment when production
                         .profileImageUrl(getTemporaryProfileImageUrl(user.getUsername()))
-                        .isEnabled(true)
-                        // TODO: set .isEnabled(false) when production
+                        .isEnabled(false)
                         .isAccountNonLocked(true)
                         .account(account)
                         .build();
