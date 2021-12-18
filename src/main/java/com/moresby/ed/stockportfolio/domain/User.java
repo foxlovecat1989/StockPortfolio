@@ -117,7 +117,7 @@ public class User implements Serializable {
     private Boolean isEnabled = false;
 
     @Builder
-    public User(String user_number,
+    public User(String userNumber,
                 String username,
                 String email,
                 String password,

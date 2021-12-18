@@ -200,7 +200,7 @@ public class UserServiceImpl implements UserService {
                         .build();
         User newUser =
                 User.builder()
-                        .user_number(generateUserNumber())
+                        .userNumber(generateUserNumber())
                         .username(user.getUsername())
                         .password(passwordEncoder.encode(user.getPassword()))
                         .email(user.getEmail())
