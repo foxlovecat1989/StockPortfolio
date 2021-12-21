@@ -1,5 +1,6 @@
 package com.moresby.ed.stockportfolio.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.moresby.ed.stockportfolio.domain.TStock;
 import com.moresby.ed.stockportfolio.domain.User;
 import lombok.Builder;
@@ -16,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
+@JsonIgnoreProperties(value = {"user"})
 public class Watchlist {
     @Id
     @SequenceGenerator(

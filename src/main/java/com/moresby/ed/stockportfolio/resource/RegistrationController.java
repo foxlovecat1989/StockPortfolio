@@ -2,8 +2,8 @@ package com.moresby.ed.stockportfolio.resource;
 
 import com.moresby.ed.stockportfolio.domain.User;
 import com.moresby.ed.stockportfolio.domain.RegistrationRequest;
-import com.moresby.ed.stockportfolio.exception.domain.EmailExistException;
-import com.moresby.ed.stockportfolio.exception.domain.UsernameExistException;
+import com.moresby.ed.stockportfolio.exception.domain.user.EmailExistException;
+import com.moresby.ed.stockportfolio.exception.domain.user.UsernameExistException;
 import com.moresby.ed.stockportfolio.service.RegistrationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

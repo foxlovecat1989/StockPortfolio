@@ -3,10 +3,10 @@ package com.moresby.ed.stockportfolio.resource;
 import com.moresby.ed.stockportfolio.domain.HttpResponse;
 import com.moresby.ed.stockportfolio.domain.User;
 import com.moresby.ed.stockportfolio.domain.UserPrincipal;
-import com.moresby.ed.stockportfolio.exception.ExceptionHandling;
-import com.moresby.ed.stockportfolio.exception.domain.EmailExistException;
-import com.moresby.ed.stockportfolio.exception.domain.NotAnImageFileException;
-import com.moresby.ed.stockportfolio.exception.domain.UsernameExistException;
+import com.moresby.ed.stockportfolio.exception.handler.UserExceptionHandling;
+import com.moresby.ed.stockportfolio.exception.domain.user.EmailExistException;
+import com.moresby.ed.stockportfolio.exception.domain.user.NotAnImageFileException;
+import com.moresby.ed.stockportfolio.exception.domain.user.UsernameExistException;
 import com.moresby.ed.stockportfolio.service.UserService;
 import com.moresby.ed.stockportfolio.utility.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +38,7 @@ import static org.springframework.http.MediaType.IMAGE_JPEG_VALUE;
 @RequestMapping(path = "/api/v1/user")
 @RequiredArgsConstructor
 @Slf4j
-public class UserController extends ExceptionHandling {
+public class UserController extends UserExceptionHandling {
 
     private final UserService userService;
     private final JwtTokenProvider jwtTokenProvider;
@@ -96,9 +96,10 @@ public class UserController extends ExceptionHandling {
         return new ResponseEntity<>(updateUser, HttpStatus.OK);
     }
 
-    @DeleteMapping(path = "/{id}")
+    @DeleteMapping(path = "/{username}")
     @PreAuthorize("hasAnyAuthority('user:delete')")
-    public ResponseEntity<HttpResponse> deleteUser(@PathVariable String username) throws InterruptedException {
+    public ResponseEntity<HttpResponse> deleteUser(@PathVariable("username") String username)
+            throws InterruptedException {
         Thread.sleep(3000); // TODO: remove when production
         userService.deleteUserByUsername(username);
 
