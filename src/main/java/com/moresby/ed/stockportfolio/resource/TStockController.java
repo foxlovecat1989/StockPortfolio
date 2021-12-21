@@ -1,23 +1,18 @@
 package com.moresby.ed.stockportfolio.resource;
 
 import com.moresby.ed.stockportfolio.domain.TStock;
-import com.moresby.ed.stockportfolio.exception.domain.stock.StockExistException;
-import com.moresby.ed.stockportfolio.exception.domain.stock.StockNotfoundException;
-import com.moresby.ed.stockportfolio.exception.handler.StockExceptionHandling;
 import com.moresby.ed.stockportfolio.service.TStockService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.transaction.Transactional;
-import java.util.List;
-
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import java.util.Optional;
 
 @RestController
-@RequestMapping(path = "/api/v1/stock")
+@RequestMapping(path = "api/v1/stocks")
 @AllArgsConstructor
-public class TStockController extends StockExceptionHandling {
+public class TStockController {
 
     private final TStockService tStockService;
 
