@@ -1,19 +1,22 @@
 package com.moresby.ed.stockportfolio.service;
 
 import com.moresby.ed.stockportfolio.domain.TStock;
+import com.moresby.ed.stockportfolio.exception.domain.stock.StockExistException;
+import com.moresby.ed.stockportfolio.exception.domain.stock.StockNotfoundException;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public interface TStockService {
-    Iterable<TStock> findAllStocks();
-    Optional<TStock> findStock(Long id);
-    Iterable<TStock> createStocks(Iterable<TStock> stocks);
-    TStock createStock(TStock TStock);
-    TStock updateStock(TStock TStock);
-    void deleteStock(Long id);
+    List<TStock> findAllStocks();
+    TStock findExistingStockById(Long id) throws StockNotfoundException;
+    TStock createStock(TStock TStock) throws StockExistException;
+    TStock updateStock(TStock TStock) throws StockNotfoundException;
+
     Iterable<TStock> refreshPriceOfStocks();
+
     void updatePrice(
             Long tStockId,
             BigDecimal changePrice,
@@ -23,5 +26,6 @@ public interface TStockService {
             LocalDateTime lastUpDateTime,
             Long volume
     );
-    TStock findExistingStock(Long stockId);
+
+    TStock findExistingStockBySymbol(String symbol) throws StockNotfoundException;
 }

@@ -28,7 +28,7 @@ public class User implements Serializable {
             generator = "app_user_sequence"
     )
     @Column(updatable = false)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    // @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Long id;
 
     @Column(name = "user_number")

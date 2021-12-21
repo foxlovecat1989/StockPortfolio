@@ -5,9 +5,9 @@ import com.moresby.ed.stockportfolio.domain.RegistrationRequest;
 import com.moresby.ed.stockportfolio.domain.User;
 import com.moresby.ed.stockportfolio.domain.UserPrincipal;
 import com.moresby.ed.stockportfolio.enumeration.UserRole;
-import com.moresby.ed.stockportfolio.exception.domain.EmailExistException;
-import com.moresby.ed.stockportfolio.exception.domain.NotAnImageFileException;
-import com.moresby.ed.stockportfolio.exception.domain.UsernameExistException;
+import com.moresby.ed.stockportfolio.exception.domain.user.EmailExistException;
+import com.moresby.ed.stockportfolio.exception.domain.user.NotAnImageFileException;
+import com.moresby.ed.stockportfolio.exception.domain.user.UsernameExistException;
 import com.moresby.ed.stockportfolio.repository.UserRepository;
 import com.moresby.ed.stockportfolio.service.EmailService;
 import com.moresby.ed.stockportfolio.service.LoginAttemptService;
@@ -206,7 +206,7 @@ public class UserServiceImpl implements UserService {
                         .email(user.getEmail())
                         .userRole(UserRole.ROLE_USER)
                         .joinDate(new Date())
-                        .profileImageUrl(getTemporaryProfileImageUrl(user.getUsername()))
+                        // .profileImageUrl(getTemporaryProfileImageUrl(user.getUsername()))
                         .isEnabled(false)
                         .isAccountNonLocked(true)
                         .account(account)

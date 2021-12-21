@@ -1,4 +1,4 @@
-package com.moresby.ed.stockportfolio.exception.domain;
+package com.moresby.ed.stockportfolio.exception.domain.user;
 
 public class NotAnImageFileException extends Exception{
     public NotAnImageFileException(String message) {

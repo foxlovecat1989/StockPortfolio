@@ -2,8 +2,10 @@ package com.moresby.ed.stockportfolio.listener;
 
 import com.github.javafaker.Faker;
 import com.moresby.ed.stockportfolio.domain.*;
-import com.moresby.ed.stockportfolio.exception.domain.EmailExistException;
-import com.moresby.ed.stockportfolio.exception.domain.UsernameExistException;
+import com.moresby.ed.stockportfolio.exception.domain.stock.StockExistException;
+import com.moresby.ed.stockportfolio.exception.domain.stock.StockNotfoundException;
+import com.moresby.ed.stockportfolio.exception.domain.user.EmailExistException;
+import com.moresby.ed.stockportfolio.exception.domain.user.UsernameExistException;
 import com.moresby.ed.stockportfolio.service.*;
 import com.moresby.ed.stockportfolio.enumeration.TradeType;
 import lombok.AllArgsConstructor;
@@ -64,7 +66,7 @@ public class DataInitService {
         var classifyForeignExchange = classifyService.findClassifyByName("Foreign Exchange");
         var classifyTWSE = classifyService.findClassifyByName("TWSE");
 
-        Iterable<TStock> tStocks = List.of(
+        List<TStock> tStocks = List.of(
                 new TStock("2303.TW", "聯電", classifyStock),
                 new TStock("2317.TW", "鴻海", classifyStock),
                 new TStock("4938.TW", "和碩", classifyStock),
@@ -79,9 +81,19 @@ public class DataInitService {
                 new TStock("CNYTWD=x", "人民幣對台幣", classifyForeignExchange),
                 new TStock("^TWII", "台灣加權指數", classifyTWSE)
         );
-
-        tStockService.createStocks(tStocks);
+        createStocks(tStocks);
         tStockService.refreshPriceOfStocks();
+    }
+
+    private void createStocks(List<TStock> tStocks){
+        tStocks.stream()
+                .forEach(tStock -> {
+                    try {
+                        tStockService.createStock(tStock);
+                    } catch (StockExistException e) {
+                        e.printStackTrace();
+                    }
+                });
     }
 
     private void generateClassify() {
@@ -89,13 +101,13 @@ public class DataInitService {
         Stream.of("Ordinary Stock", "Futures", "Fund", "Foreign Exchange", "TWSE").forEach(classifyService::createClassifyByName);
     }
 
-    private void generateExecuteTrades(int times){
+    private void generateExecuteTrades(int times) throws StockNotfoundException {
         for (int i = 0; i < times; i++) {
             Long userId = getFakeNumberBetween(1L, 10L);
             Long stockId = getFakeNumberBetween(1L, 10L);
             Long amount = getFakeNumberBetween(1L, 10L) * PER_UNIT_EQUALS_ONE_THOUSAND;
             var user = userService.findExistingUserById(userId);
-            var stock = tStockService.findExistingStock(stockId);
+            var stock = tStockService.findExistingStockById(stockId);
             TradePOJO trade =
                     TradePOJO.builder()
                             .user(user)
@@ -131,7 +143,11 @@ public class DataInitService {
                         List<TStock> tStocks = new ArrayList<>();
                         for (int j = 0; j < randomTimesOfAddStock; j++) {
                             var randomStockId = getFakeNumberBetween(1L, 10L);
-                            tStocks.add(tStockService.findExistingStock(randomStockId));
+                            try {
+                                tStocks.add(tStockService.findExistingStockById(randomStockId));
+                            } catch (StockNotfoundException e) {
+                                e.printStackTrace();
+                            }
                         }
 
                         Watchlist watchlist =

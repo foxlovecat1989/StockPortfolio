@@ -1,6 +1,7 @@
 package com.moresby.ed.stockportfolio.repository;
 
 import com.moresby.ed.stockportfolio.domain.TStock;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -8,9 +9,10 @@ import org.springframework.data.repository.query.Param;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 
-public interface TStockRepository extends CrudRepository<TStock, Long> {
+public interface TStockRepository extends JpaRepository<TStock, Long> {
 
 //    @Transactional
 //    @Modifying
@@ -42,4 +44,7 @@ public interface TStockRepository extends CrudRepository<TStock, Long> {
             @Param("lastUpDateTime") LocalDateTime lastUpDateTime,
             @Param("volume") Long volume
     );
+
+    @Query(value = "SELECT t FROM TStock t WHERE t.symbol=?1")
+    Optional<TStock> findTStockBySymbol(String symbol);
 }
