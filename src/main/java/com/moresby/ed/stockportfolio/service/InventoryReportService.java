@@ -5,5 +5,5 @@ import com.moresby.ed.stockportfolio.domain.InventoryReport;
 import java.util.List;
 
 public interface InventoryReportService {
-    List<InventoryReport> getReportByUserId(Long userId);
+    List<InventoryReport> getReportsByUserId(Long userId);
 }

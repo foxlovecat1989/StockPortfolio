@@ -12,6 +12,7 @@ import java.util.Optional;
 public interface TStockService {
     List<TStock> findAllStocks();
     TStock findExistingStockById(Long id) throws StockNotfoundException;
+    TStock findExistingStockByName(String name) throws StockNotfoundException;
     TStock createStock(TStock TStock) throws StockExistException;
     TStock updateStock(TStock TStock) throws StockNotfoundException;
 

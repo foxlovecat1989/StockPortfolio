@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.transaction.Transactional;
+import javax.websocket.server.PathParam;
 import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -30,10 +31,19 @@ public class TStockController extends StockExceptionHandling {
     }
 
     @GetMapping(path = "/{symbol}", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<TStock> findStockBySymbol(@PathVariable String symbol)
+    public ResponseEntity<TStock> findStockBySymbol(@PathVariable("symbol") String symbol)
             throws InterruptedException, StockNotfoundException {
         Thread.sleep(3000); // TODO: remove this line when production
         TStock stock = tStockService.findExistingStockBySymbol(symbol);
+
+        return new ResponseEntity<>(stock, HttpStatus.OK);
+    }
+
+    @GetMapping(produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<TStock> findStockByName(@PathParam("stockName") String stockName)
+            throws InterruptedException, StockNotfoundException {
+        Thread.sleep(3000); // TODO: remove this line when production
+        TStock stock = tStockService.findExistingStockByName(stockName);
 
         return new ResponseEntity<>(stock, HttpStatus.OK);
     }

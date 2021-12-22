@@ -47,4 +47,7 @@ public interface TStockRepository extends JpaRepository<TStock, Long> {
 
     @Query(value = "SELECT t FROM TStock t WHERE t.symbol=?1")
     Optional<TStock> findTStockBySymbol(String symbol);
+
+    @Query(value = "SELECT t FROM TStock t WHERE t.name=?1")
+    Optional<TStock> findTStockByName(String name);
 }

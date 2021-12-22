@@ -38,6 +38,17 @@ public class TStockServiceImpl implements TStockService {
     }
 
     @Override
+    public TStock findExistingStockByName(String name) throws StockNotfoundException {
+        return tStockRepository.findTStockByName(name).orElseThrow(
+                () -> {
+                    var errorMsg = String.format(NO_STOCK_FOUND_BY_NAME, name);
+                    log.error(errorMsg);
+                    return new StockNotfoundException(errorMsg);
+                }
+        );
+    }
+
+    @Override
     public List<TStock> findAllStocks() {
 
         return tStockRepository.findAll();
@@ -136,7 +147,7 @@ public class TStockServiceImpl implements TStockService {
         boolean isStockAlreadyExist = isStockAlreadyExist(tStock);
         if(isStockAlreadyExist){
             var errorMsg = String.format(STOCK_ALREADY_EXISTS, tStock.getSymbol());
-            log.warn(errorMsg);
+            log.error(errorMsg);
             throw new StockExistException(errorMsg);
         }
 

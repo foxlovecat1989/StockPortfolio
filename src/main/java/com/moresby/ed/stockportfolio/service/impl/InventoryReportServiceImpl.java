@@ -14,7 +14,7 @@ public class InventoryReportServiceImpl implements InventoryReportService {
     private final InventoryReportRepository inventoryReportRepository;
 
     @Override
-    public List<InventoryReport> getReportByUserId(Long userId) {
+    public List<InventoryReport> getReportsByUserId(Long userId) {
         return inventoryReportRepository.findAllByUserId(userId);
     }
 }
