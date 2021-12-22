@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-import static com.moresby.ed.stockportfolio.constant.TradeConstant.*;
+import static com.moresby.ed.stockportfolio.constant.TradeImplConstant.*;
 
 @Slf4j
 @Service

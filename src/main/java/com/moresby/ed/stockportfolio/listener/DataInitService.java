@@ -8,8 +8,7 @@ import com.moresby.ed.stockportfolio.exception.domain.trade.BankAccountNotFoundE
 import com.moresby.ed.stockportfolio.exception.domain.trade.InSufficientAmountInInventoryException;
 import com.moresby.ed.stockportfolio.exception.domain.trade.InSufficientBalanceException;
 import com.moresby.ed.stockportfolio.exception.domain.trade.InputNumberNegativeException;
-import com.moresby.ed.stockportfolio.exception.domain.user.EmailExistException;
-import com.moresby.ed.stockportfolio.exception.domain.user.UsernameExistException;
+import com.moresby.ed.stockportfolio.exception.domain.user.UserNotFoundException;
 import com.moresby.ed.stockportfolio.service.*;
 import com.moresby.ed.stockportfolio.enumeration.TradeType;
 import lombok.AllArgsConstructor;
@@ -37,14 +36,18 @@ public class DataInitService {
 
 
     @EventListener(ApplicationReadyEvent.class)
-    public void initData() throws EmailExistException, UsernameExistException {
-//        generateUsers(TEN_TIMES);
-//        generateStocks();
-//        generateExecuteTrades(HUNDRED_TIMES);
-//        generateWatchlistAndAddRandomStock();
+    public void initData() {
+        generateUsers(TEN_TIMES);
+        generateStocks();
+        try {
+            generateExecuteTrades(HUNDRED_TIMES);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        generateWatchlistAndAddRandomStock();
     }
 
-    private void generateUsers(int times) throws EmailExistException, UsernameExistException {
+    private void generateUsers(int times){
         for (int i = 0; i < times; i++) {
             boolean isEmailBeTaken;
             String username;
@@ -60,7 +63,11 @@ public class DataInitService {
                             .email(email)
                             .password("password")
                             .build();
-           userService.createUser(user);
+            try {
+                userService.createUser(user);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -90,7 +97,7 @@ public class DataInitService {
     }
 
     private void createStocks(List<TStock> tStocks){
-        tStocks.stream()
+        tStocks
                 .forEach(tStock -> {
                     try {
                         tStockService.createStock(tStock);
@@ -105,7 +112,14 @@ public class DataInitService {
         Stream.of("Ordinary Stock", "Futures", "Fund", "Foreign Exchange", "TWSE").forEach(classifyService::createClassifyByName);
     }
 
-    private void generateExecuteTrades(int times) throws StockNotfoundException, BankAccountNotFoundException, InSufficientBalanceException, InSufficientAmountInInventoryException, InputNumberNegativeException {
+    private void generateExecuteTrades(int times)
+            throws
+            StockNotfoundException,
+            BankAccountNotFoundException,
+            InSufficientBalanceException,
+            InSufficientAmountInInventoryException,
+            InputNumberNegativeException,
+            UserNotFoundException {
         for (int i = 0; i < times; i++) {
             Long userId = getFakeNumberBetween(1L, 10L);
             Long stockId = getFakeNumberBetween(1L, 10L);
