@@ -17,7 +17,7 @@ import java.util.List;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
-@RequestMapping(path = "/api/v1/trades")
+@RequestMapping(path = "/api/v1/trade")
 @AllArgsConstructor
 @Slf4j
 public class TradeController extends TradeExceptionHandling {
