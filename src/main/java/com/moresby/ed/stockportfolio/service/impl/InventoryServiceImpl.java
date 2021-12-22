@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-import static com.moresby.ed.stockportfolio.constant.TradeConstant.*;
+import static com.moresby.ed.stockportfolio.constant.TradeImplConstant.*;
 
 @Slf4j
 @Service
@@ -44,15 +44,13 @@ public class InventoryServiceImpl implements InventoryService {
         var stock = tradePOJO.getTStock();
         var amount = tradePOJO.getAmount();
         Optional<Inventory> optInventory = findInventoryByUserNumberAndStockId(tradePOJO.getUser().getUserNumber(), tradePOJO.getTStock().getId());
-        double avgPrice =
-                (optInventory.isEmpty() ?
+
+        return (optInventory.isEmpty() ?
                         stock.getPrice().doubleValue() :
                         (optInventory.get().getAvgPrice().doubleValue()
                                 * optInventory.get().getAmount() + stock.getPrice().doubleValue()
                                 * amount)
                                 / (optInventory.get().getAmount() + amount));
-
-        return avgPrice;
     }
 
     @Override
@@ -62,7 +60,7 @@ public class InventoryServiceImpl implements InventoryService {
                         tradePOJO.getUser().getUserNumber(),
                         tradePOJO.getTStock().getId());
         Inventory inventory =
-                optInventory.isPresent() ? optInventory.get() : new Inventory();
+                optInventory.orElseGet(Inventory::new);
         inventory.setUser(tradePOJO.getUser());
         inventory.setTStock(tradePOJO.getTStock());
 
@@ -76,7 +74,7 @@ public class InventoryServiceImpl implements InventoryService {
            if(inventory.getAmount() - tradePOJO.getAmount() < 0){
                var errorMsg = String.format(INSUFFICIENT_AMOUNT_IN_INVENTORY, inventory.getAmount());
                log.warn(errorMsg);
-               throw new InSufficientAmountInInventoryException(INSUFFICIENT_AMOUNT_IN_INVENTORY);
+               throw new InSufficientAmountInInventoryException(errorMsg);
            }
             inventory.setAmount(
                     inventory.getAmount() - tradePOJO.getAmount()

@@ -4,12 +4,6 @@ import com.github.javafaker.Faker;
 import com.moresby.ed.stockportfolio.domain.*;
 import com.moresby.ed.stockportfolio.exception.domain.stock.StockExistException;
 import com.moresby.ed.stockportfolio.exception.domain.stock.StockNotfoundException;
-import com.moresby.ed.stockportfolio.exception.domain.trade.BankAccountNotFoundException;
-import com.moresby.ed.stockportfolio.exception.domain.trade.InSufficientAmountInInventoryException;
-import com.moresby.ed.stockportfolio.exception.domain.trade.InSufficientBalanceException;
-import com.moresby.ed.stockportfolio.exception.domain.trade.InputNumberNegativeException;
-import com.moresby.ed.stockportfolio.exception.domain.user.EmailExistException;
-import com.moresby.ed.stockportfolio.exception.domain.user.UsernameExistException;
 import com.moresby.ed.stockportfolio.service.*;
 import com.moresby.ed.stockportfolio.enumeration.TradeType;
 import lombok.AllArgsConstructor;
@@ -24,6 +18,7 @@ import java.util.stream.Stream;
 @Service
 @AllArgsConstructor
 public class DataInitService {
+
     private final ClassifyService classifyService;
     private final TStockService tStockService;
     private final UserService userService;
@@ -34,17 +29,19 @@ public class DataInitService {
     private static final int HUNDRED_TIMES = 100;
     private static final int PER_UNIT_EQUALS_ONE_THOUSAND = 1000;
 
-
-
     @EventListener(ApplicationReadyEvent.class)
-    public void initData() throws EmailExistException, UsernameExistException {
-//        generateUsers(TEN_TIMES);
-//        generateStocks();
-//        generateExecuteTrades(HUNDRED_TIMES);
-//        generateWatchlistAndAddRandomStock();
+    public void initData() {
+        generateUsers(TEN_TIMES);
+        generateStocks();
+        try {
+            generateExecuteTrades(HUNDRED_TIMES);
+        } catch (Exception e) {
+            e.getMessage();
+        }
+        generateWatchlistAndAddRandomStock();
     }
 
-    private void generateUsers(int times) throws EmailExistException, UsernameExistException {
+    private void generateUsers(int times){
         for (int i = 0; i < times; i++) {
             boolean isEmailBeTaken;
             String username;
@@ -60,7 +57,11 @@ public class DataInitService {
                             .email(email)
                             .password("password")
                             .build();
-           userService.createUser(user);
+            try {
+                userService.createUser(user);
+            } catch (Exception e) {
+                e.getMessage();
+            }
         }
     }
 
@@ -90,12 +91,12 @@ public class DataInitService {
     }
 
     private void createStocks(List<TStock> tStocks){
-        tStocks.stream()
+        tStocks
                 .forEach(tStock -> {
                     try {
                         tStockService.createStock(tStock);
                     } catch (StockExistException e) {
-                        e.printStackTrace();
+                       e.getMessage();
                     }
                 });
     }
@@ -105,12 +106,15 @@ public class DataInitService {
         Stream.of("Ordinary Stock", "Futures", "Fund", "Foreign Exchange", "TWSE").forEach(classifyService::createClassifyByName);
     }
 
-    private void generateExecuteTrades(int times) throws StockNotfoundException, BankAccountNotFoundException, InSufficientBalanceException, InSufficientAmountInInventoryException, InputNumberNegativeException {
+    private void generateExecuteTrades(int times) {
         for (int i = 0; i < times; i++) {
             Long userId = getFakeNumberBetween(1L, 10L);
             Long stockId = getFakeNumberBetween(1L, 10L);
             Long amount = getFakeNumberBetween(1L, 10L) * PER_UNIT_EQUALS_ONE_THOUSAND;
-            var user = userService.findExistingUserById(userId);
+            User user;
+            try {
+                user = userService.findExistingUserById(userId);
+
             var stock = tStockService.findExistingStockById(stockId);
             TradePOJO trade =
                     TradePOJO.builder()
@@ -119,20 +123,15 @@ public class DataInitService {
                             .amount(amount)
                             .tradeType(TradeType.BUY)
                             .build();
-            try{
                 tradeService.executeTrade(trade);
                 boolean toSellIt = faker.number().numberBetween(0, 7) % 2 == 0;
                 if(toSellIt){
                     trade.setTradeType(TradeType.SELL);
                     tradeService.executeTrade(trade);
                 }
-            } catch (RuntimeException e){
-                System.out.println("Transaction failed");
-                System.out.println(e.getMessage());
+            } catch (Exception e){
+                e.getMessage();}
             }
-
-
-        }
     }
 
     private void generateWatchlistAndAddRandomStock(){
@@ -149,8 +148,8 @@ public class DataInitService {
                             var randomStockId = getFakeNumberBetween(1L, 10L);
                             try {
                                 tStocks.add(tStockService.findExistingStockById(randomStockId));
-                            } catch (StockNotfoundException e) {
-                                e.printStackTrace();
+                            } catch (Exception e) {
+                                e.getMessage();
                             }
                         }
 

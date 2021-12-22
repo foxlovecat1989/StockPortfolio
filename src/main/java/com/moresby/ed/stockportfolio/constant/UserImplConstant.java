@@ -1,10 +1,11 @@
 package com.moresby.ed.stockportfolio.constant;
 
 public class UserImplConstant {
-    public static final String USERNAME_ALREADY_EXISTS = "Username already exists";
-    public static final String EMAIL_ALREADY_EXISTS = "Email already exists";
-    public static final String NO_USER_FOUND_BY_USERNAME = "No user found by username: ";
-    public static final String NO_USER_FOUND_BY_Id = "No user found by id: ";
+    public static final String USERNAME_ALREADY_EXISTS = "Username Already Exists";
+    public static final String EMAIL_ALREADY_EXISTS = "Email Already Exists";
+    public static final String NO_USER_FOUND_BY_USERNAME = "No User Found by Username: %s";
+    public static final String NO_USER_FOUND_BY_USER_NUMBER = "No User Found by UserNumber: %s";
+    public static final String NO_USER_FOUND_BY_ID = "No User Found by ID: %s";
     public static final String FOUND_USER_BY_USERNAME = "Returning found user by username: ";
-    public static final String NO_USER_FOUND_BY_EMAIL = "No user found for email: ";
+    public static final String NO_USER_FOUND_BY_EMAIL = "No User Found for Email: %s";
 }

@@ -3,6 +3,7 @@ package com.moresby.ed.stockportfolio.resource;
 import com.moresby.ed.stockportfolio.domain.HttpResponse;
 import com.moresby.ed.stockportfolio.domain.User;
 import com.moresby.ed.stockportfolio.domain.UserPrincipal;
+import com.moresby.ed.stockportfolio.exception.domain.user.UserNotFoundException;
 import com.moresby.ed.stockportfolio.exception.handler.UserExceptionHandling;
 import com.moresby.ed.stockportfolio.exception.domain.user.EmailExistException;
 import com.moresby.ed.stockportfolio.exception.domain.user.NotAnImageFileException;
@@ -55,10 +56,10 @@ public class UserController extends UserExceptionHandling {
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
-    @GetMapping(path = "/{id}", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> findOneById(@PathVariable Long id) throws InterruptedException {
+    @GetMapping(path = "/{userNumber}", produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> findUserByUserNumber(@PathVariable String userNumber) throws InterruptedException, UserNotFoundException {
         Thread.sleep(3000); // TODO: remove when production
-        User user = userService.findExistingUserById(id);
+        var user = userService.findExistingUserByUserNumber(userNumber);
 
         return new ResponseEntity<>(user, HttpStatus.OK);
     }

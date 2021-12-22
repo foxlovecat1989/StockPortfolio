@@ -7,6 +7,7 @@ import com.moresby.ed.stockportfolio.domain.UserPrincipal;
 import com.moresby.ed.stockportfolio.enumeration.UserRole;
 import com.moresby.ed.stockportfolio.exception.domain.user.EmailExistException;
 import com.moresby.ed.stockportfolio.exception.domain.user.NotAnImageFileException;
+import com.moresby.ed.stockportfolio.exception.domain.user.UserNotFoundException;
 import com.moresby.ed.stockportfolio.exception.domain.user.UsernameExistException;
 import com.moresby.ed.stockportfolio.repository.UserRepository;
 import com.moresby.ed.stockportfolio.service.EmailService;
@@ -15,7 +16,6 @@ import com.moresby.ed.stockportfolio.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -48,14 +48,25 @@ public class UserServiceImpl implements UserService {
     private final LoginAttemptService loginAttemptService;
 
     @Override
-    public User findExistingUserById(Long id) {
-
+    public User findExistingUserById(Long id) throws UserNotFoundException {
         return userRepository.findById(id)
                 .orElseThrow(
                         () -> {
-                            var errorMsg = NO_USER_FOUND_BY_Id + id;
+                            var errorMsg = String.format(NO_USER_FOUND_BY_ID, id);
                             log.error(errorMsg);
-                            return new UsernameNotFoundException(errorMsg);
+                            return new UserNotFoundException(errorMsg);
+                        }
+                );
+    }
+
+    @Override
+    public User findExistingUserByUserNumber(String userNumber) throws UserNotFoundException {
+        return userRepository.findUserByUserNumber(userNumber)
+                .orElseThrow(
+                        () -> {
+                            var errorMsg = String.format(NO_USER_FOUND_BY_USER_NUMBER, userNumber);
+                            log.error(errorMsg);
+                            return new UserNotFoundException(errorMsg);
                         }
                 );
     }
@@ -66,7 +77,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.findUserByUsername(username)
                 .orElseThrow(
                         () -> {
-                            var errorMsg = NO_USER_FOUND_BY_USERNAME + username;
+                            var errorMsg = String.format(NO_USER_FOUND_BY_USERNAME, username);
                             log.error(errorMsg);
                             return new UsernameNotFoundException(errorMsg);
                         }
@@ -77,7 +88,7 @@ public class UserServiceImpl implements UserService {
     public User findExistingUserByEmail(String email){
         return userRepository.findUserByEmail(email).orElseThrow(
                 () -> {
-                    var errorMsg = NO_USER_FOUND_BY_EMAIL + email;
+                    var errorMsg = String.format(NO_USER_FOUND_BY_EMAIL, email);
                     log.error(errorMsg);
                     return new UsernameNotFoundException(errorMsg);
                 }
@@ -128,11 +139,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUserByUsername(String username) {
-        try{
-            userRepository.deleteUserByUsername(username);
-        } catch(EmptyResultDataAccessException e){
-            e.printStackTrace();
-        }
+        var user = findExistingUserByUsername(username);
+        userRepository.delete(user);
     }
 
     @Override
@@ -192,7 +200,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private User buildUser(User user) {
-        var FIVE_MILLION = 5_000_000;
+        final int FIVE_MILLION = 5_000_000;
         Account account =
                 Account.builder()
                         .balance(BigDecimal.valueOf(FIVE_MILLION))
@@ -268,8 +276,8 @@ public class UserServiceImpl implements UserService {
                     userFolder.resolve(user.getUsername() + DOT + JPG_EXTENSION), REPLACE_EXISTING
             );
             user.setProfileImageUrl(setProfileImageUrl(user.getUsername()));
-            userRepository.save(user);
             log.info(FILE_SAVED_IN_FILE_SYSTEM + profileImage.getOriginalFilename());
+            userRepository.save(user);
         }
     }
 
