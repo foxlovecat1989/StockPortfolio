@@ -32,6 +32,8 @@ import java.util.List;
 
 import static com.moresby.ed.stockportfolio.constant.FileConstant.*;
 import static com.moresby.ed.stockportfolio.constant.SecurityConstant.JWT_TOKEN_HEADER;
+import static com.moresby.ed.stockportfolio.constant.UserImplConstant.EMAIL_SENT;
+import static com.moresby.ed.stockportfolio.constant.UserImplConstant.USER_DELETED_SUCCESSFULLY;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.IMAGE_JPEG_VALUE;
 
@@ -44,9 +46,6 @@ public class UserController extends UserExceptionHandling {
     private final UserService userService;
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
-
-    public static final String EMAIL_SENT = "An email with a new password was sent to: ";
-    public static final String USER_DELETED_SUCCESSFULLY = "User deleted successfully";
 
     @GetMapping(path = "/findAll", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<List<User>> findAllUsers() throws InterruptedException {
@@ -159,6 +158,7 @@ public class UserController extends UserExceptionHandling {
 
         return headers;
     }
+
     private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
         return new ResponseEntity<>(
                 new HttpResponse(

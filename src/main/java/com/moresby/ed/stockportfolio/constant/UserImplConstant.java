@@ -8,4 +8,6 @@ public class UserImplConstant {
     public static final String NO_USER_FOUND_BY_ID = "No User Found by ID: %s";
     public static final String FOUND_USER_BY_USERNAME = "Returning found user by username: ";
     public static final String NO_USER_FOUND_BY_EMAIL = "No User Found for Email: %s";
+    public static final String EMAIL_SENT = "An email with a new password was sent to: ";
+    public static final String USER_DELETED_SUCCESSFULLY = "User deleted successfully";
 }

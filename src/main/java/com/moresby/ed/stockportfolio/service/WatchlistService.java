@@ -1,14 +1,20 @@
 package com.moresby.ed.stockportfolio.service;
 
+import com.moresby.ed.stockportfolio.domain.TStock;
 import com.moresby.ed.stockportfolio.domain.Watchlist;
+import com.moresby.ed.stockportfolio.exception.domain.stock.StockNotfoundException;
+import com.moresby.ed.stockportfolio.exception.domain.watchlist.WachlistNotFoundException;
 
-import java.util.Optional;
+import java.util.List;
 
 public interface WatchlistService {
     Watchlist createWatch(Watchlist watchlist);
-    Optional<Watchlist> findOneById(Long id);
-    Iterable<Watchlist> findAllByUserId(Long userId);
-    Iterable<Watchlist> findAll();
-    Watchlist updateWatch(Watchlist watchlist);
-    void deleteById(Long id);
+    Watchlist findExistWatchlistById(Long watchlistId) throws WachlistNotFoundException;
+    List<Watchlist> findAllByUserId(Long userId);
+    List<Watchlist> findAll();
+    Watchlist updateWatchlistName(Long watchlistId, String watchlistName) throws WachlistNotFoundException;
+    Watchlist addStockToWatchlist(TStock tStock, Long watchlistId) throws StockNotfoundException, WachlistNotFoundException;
+    Watchlist removeStockToWatchlist(TStock tStock, Long watchlistId) throws WachlistNotFoundException, StockNotfoundException;
+    Watchlist updateWatchlistStocks(Watchlist watchlist) throws WachlistNotFoundException;
+    void deleteById(Long watchlistId) throws WachlistNotFoundException;
 }
