@@ -18,7 +18,6 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.List;
-import java.util.Optional;
 
 import static com.moresby.ed.stockportfolio.constant.TradeConstant.NO_TRADE_FOUND_BY_TRADE_ID;
 
