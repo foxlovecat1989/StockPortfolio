@@ -1,6 +1,6 @@
 package com.moresby.ed.stockportfolio.constant;
 
-public class TradeConstant {
+public class TradeImplConstant {
     public static final String INSUFFICIENT_BALANCE = "InSufficient Amount in Your Account, Your Remaining Balance is: %s";
     public static final String NO_ACCOUNT_FOUND_BY_USER_NUMBER = "No Bank Account Found by UserNumber: %s";
     public static final String INPUT_AMOUNT_CANNOT_BE_NEGATIVE = "Input Amount Cannot be Negative Number";
