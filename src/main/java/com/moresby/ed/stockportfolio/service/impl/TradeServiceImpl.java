@@ -1,15 +1,16 @@
 package com.moresby.ed.stockportfolio.service.impl;
 
 import com.github.javafaker.Faker;
+import com.moresby.ed.stockportfolio.exception.domain.trade.*;
 import com.moresby.ed.stockportfolio.repository.TradeRepository;
 import com.moresby.ed.stockportfolio.service.AccountService;
-import com.moresby.ed.stockportfolio.exception.InsufficientAmount;
 import com.moresby.ed.stockportfolio.service.InventoryService;
 import com.moresby.ed.stockportfolio.domain.Trade;
 import com.moresby.ed.stockportfolio.enumeration.TradeType;
 import com.moresby.ed.stockportfolio.domain.TradePOJO;
 import com.moresby.ed.stockportfolio.service.TradeService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,8 +20,11 @@ import java.sql.Time;
 import java.util.List;
 import java.util.Optional;
 
+import static com.moresby.ed.stockportfolio.constant.TradeConstant.NO_TRADE_FOUND_BY_TRADE_ID;
+
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class TradeServiceImpl implements TradeService {
 
     private final TradeRepository tradeRepository;
@@ -30,8 +34,15 @@ public class TradeServiceImpl implements TradeService {
     private static final int MILLISECONDS_IN_ONE_DAY = 86400 * 1000;
 
     @Override
-    public Optional<Trade> findByTradeId(Long tradeId) {
-        return tradeRepository.findById(tradeId);
+    public Trade findExistingTradeByTradeId(Long tradeId) throws TradeNotFoundException {
+        return tradeRepository.findById(tradeId)
+                .orElseThrow(
+                        () -> {
+                            var errorMsg = String.format(NO_TRADE_FOUND_BY_TRADE_ID, tradeId);
+                            log.error(errorMsg);
+                            return new TradeNotFoundException(errorMsg);
+                        }
+                );
     }
 
     @Override
@@ -40,14 +51,18 @@ public class TradeServiceImpl implements TradeService {
     }
 
     @Override
-    public Iterable<Trade> findAll() {
+    public List<Trade> findAll() {
         return tradeRepository.findAll();
     }
 
     @Override
     @Transactional
     public Trade executeTrade(TradePOJO tradePOJO)
-            throws InsufficientAmount {
+            throws
+            InSufficientBalanceException,
+            BankAccountNotFoundException,
+            InSufficientAmountInInventoryException,
+            InputNumberNegativeException {
 
         inventoryService.updateInventory(tradePOJO);
 
@@ -57,6 +72,7 @@ public class TradeServiceImpl implements TradeService {
             accountService.withdrawal(tradePOJO.getUser(), tradeAmount);
         else
             accountService.deposit(tradePOJO.getUser(), tradeAmount);
+
 
         return createTrade(tradePOJO);
     }
@@ -83,6 +99,7 @@ public class TradeServiceImpl implements TradeService {
         trade.setTradeDate(tradeDate);
         trade.setTradeTime(Time.valueOf(String.format("%d:00:00", faker.number().numberBetween(9, 12))));
         tradeRepository.save(trade);
+
 
         return trade;
     }

@@ -8,9 +8,9 @@ import java.util.Optional;
 
 public interface InventoryRepository extends CrudRepository<Inventory, Long> {
 
-    @Query(value ="SELECT i FROM Inventory i WHERE i.user.id = ?1")
-    List<Inventory> findAllByUserId(Long userId);
+    @Query(value ="SELECT i FROM Inventory i WHERE i.user.userNumber = ?1")
+    List<Inventory> findAllByUserNumber(String userNumber);
 
-    @Query(value = "SELECT i FROM Inventory i WHERE i.user.id = ?1 AND i.tStock.id = ?2")
-    Optional<Inventory> findOneByUserIdAndTStockId(Long userId, Long tStcokId);
+    @Query(value = "SELECT i FROM Inventory i WHERE i.user.userNumber = ?1 AND i.tStock.id = ?2")
+    Optional<Inventory> findInventoryByUserNumberAndStockId(String userNumber, Long stockId);
 }

@@ -1,20 +1,23 @@
 package com.moresby.ed.stockportfolio.service.impl;
 
 import com.moresby.ed.stockportfolio.domain.Inventory;
-import com.moresby.ed.stockportfolio.exception.InsufficientAmount;
+import com.moresby.ed.stockportfolio.exception.domain.trade.InSufficientAmountInInventoryException;
+import com.moresby.ed.stockportfolio.exception.domain.trade.InventoryNotFoundException;
 import com.moresby.ed.stockportfolio.repository.InventoryRepository;
 import com.moresby.ed.stockportfolio.service.InventoryService;
 import com.moresby.ed.stockportfolio.enumeration.TradeType;
 import com.moresby.ed.stockportfolio.domain.TradePOJO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.EmptyResultDataAccessException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import static com.moresby.ed.stockportfolio.constant.TradeConstant.*;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class InventoryServiceImpl implements InventoryService {
@@ -32,47 +35,15 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public List<Inventory> findAllByUserId(Long userId) {
-        return inventoryRepository.findAllByUserId(userId);
-    }
-
-    @Override
-    public Inventory update(Inventory inventory) {
-        Inventory originInventory = inventoryRepository.findById(inventory.getId())
-                .orElseThrow(
-                        ()-> new NoSuchElementException(
-                                String.format("Inventory ID: %s Not Found", inventory.getId()))
-                );
-
-//        originInventory.setTStock(
-//                inventory.getTStock() != null ? inventory.getTStock() : originInventory.getTStock()
-//        );
-//        originInventory.setUser(
-//                inventory.getUser() != null ? inventory.getUser() : originInventory.getUser()
-//        );
-//        originInventory.setAvgPrice(inventory.getAvgPrice());
-//        originInventory.setTotalCost(inventory.getTotalCost());
-//        originInventory.setAmount(inventory.getAmount());
-//        originInventory.setLastUpdate( new java.sql.Date(new Date().getTime()));
-
-
-        return inventoryRepository.save(originInventory);
-    }
-
-    @Override
-    public void remove(Inventory inventory) {
-        try{
-            inventoryRepository.deleteById(inventory.getId());
-        } catch(EmptyResultDataAccessException e){
-            e.printStackTrace();
-        }
+    public List<Inventory> findAllByUserNumber(String userNumber) {
+        return inventoryRepository.findAllByUserNumber(userNumber);
     }
 
     @Override
     public double calculateAvgPriceInInventory(TradePOJO tradePOJO) {
         var stock = tradePOJO.getTStock();
         var amount = tradePOJO.getAmount();
-        Optional<Inventory> optInventory = findInventoryByUseIdAndStockId(tradePOJO.getUser().getId(), tradePOJO.getTStock().getId());
+        Optional<Inventory> optInventory = findInventoryByUserNumberAndStockId(tradePOJO.getUser().getUserNumber(), tradePOJO.getTStock().getId());
         double avgPrice =
                 (optInventory.isEmpty() ?
                         stock.getPrice().doubleValue() :
@@ -85,9 +56,11 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public Inventory updateInventory(TradePOJO tradePOJO) throws InsufficientAmount,IllegalArgumentException {
+    public Inventory updateInventory(TradePOJO tradePOJO) throws InSufficientAmountInInventoryException {
         Optional<Inventory> optInventory =
-                inventoryRepository.findOneByUserIdAndTStockId(tradePOJO.getUser().getId(), tradePOJO.getTStock().getId());
+                inventoryRepository.findInventoryByUserNumberAndStockId(
+                        tradePOJO.getUser().getUserNumber(),
+                        tradePOJO.getTStock().getId());
         Inventory inventory =
                 optInventory.isPresent() ? optInventory.get() : new Inventory();
         inventory.setUser(tradePOJO.getUser());
@@ -99,9 +72,12 @@ public class InventoryServiceImpl implements InventoryService {
             );
             double avgPrice = calculateAvgPriceInInventory(tradePOJO);
             inventory.setAvgPrice(BigDecimal.valueOf(avgPrice));
-        }else {                                             // undersell mode
-           if(inventory.getAmount() - tradePOJO.getAmount() < 0)
-               throw new InsufficientAmount("Insufficient amount in your inventory");
+        }else {                                             // under sell mode
+           if(inventory.getAmount() - tradePOJO.getAmount() < 0){
+               var errorMsg = String.format(INSUFFICIENT_AMOUNT_IN_INVENTORY, inventory.getAmount());
+               log.warn(errorMsg);
+               throw new InSufficientAmountInInventoryException(INSUFFICIENT_AMOUNT_IN_INVENTORY);
+           }
             inventory.setAmount(
                     inventory.getAmount() - tradePOJO.getAmount()
             );
@@ -114,15 +90,21 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public Inventory findExistingInventoryByUseIdAndStockId(Long userId, Long stockId){
-      return inventoryRepository.findOneByUserIdAndTStockId(userId, stockId).orElseThrow(
-              () -> new NoSuchElementException(
-                      String.format("Inventory with UserId: %s  & Stock Id: %s Not Found", userId, stockId))
-      );
+    public Optional<Inventory> findInventoryByUserNumberAndStockId(String userNumber, Long stockId){
+        return inventoryRepository.findInventoryByUserNumberAndStockId(userNumber, stockId);
     }
 
     @Override
-    public Optional<Inventory> findInventoryByUseIdAndStockId(Long userId, Long stockId){
-        return inventoryRepository.findOneByUserIdAndTStockId(userId, stockId);
+    public Inventory findExistingInventoryByUserNumberAndStockId(String userNumber, Long stockId)
+            throws InventoryNotFoundException {
+        return inventoryRepository.findInventoryByUserNumberAndStockId(userNumber, stockId)
+                .orElseThrow(
+                        () -> {
+                            var errorMsg =
+                                    String.format(NO_INVENTORY_FOUND_BY_USER_NUMBER_AND_STOCK_ID, userNumber, stockId);
+                            log.error(errorMsg);
+                            return new InventoryNotFoundException(errorMsg);
+                        }
+                );
     }
 }

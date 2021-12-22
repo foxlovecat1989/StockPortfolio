@@ -4,6 +4,10 @@ import com.github.javafaker.Faker;
 import com.moresby.ed.stockportfolio.domain.*;
 import com.moresby.ed.stockportfolio.exception.domain.stock.StockExistException;
 import com.moresby.ed.stockportfolio.exception.domain.stock.StockNotfoundException;
+import com.moresby.ed.stockportfolio.exception.domain.trade.BankAccountNotFoundException;
+import com.moresby.ed.stockportfolio.exception.domain.trade.InSufficientAmountInInventoryException;
+import com.moresby.ed.stockportfolio.exception.domain.trade.InSufficientBalanceException;
+import com.moresby.ed.stockportfolio.exception.domain.trade.InputNumberNegativeException;
 import com.moresby.ed.stockportfolio.exception.domain.user.EmailExistException;
 import com.moresby.ed.stockportfolio.exception.domain.user.UsernameExistException;
 import com.moresby.ed.stockportfolio.service.*;
@@ -101,7 +105,7 @@ public class DataInitService {
         Stream.of("Ordinary Stock", "Futures", "Fund", "Foreign Exchange", "TWSE").forEach(classifyService::createClassifyByName);
     }
 
-    private void generateExecuteTrades(int times) throws StockNotfoundException {
+    private void generateExecuteTrades(int times) throws StockNotfoundException, BankAccountNotFoundException, InSufficientBalanceException, InSufficientAmountInInventoryException, InputNumberNegativeException {
         for (int i = 0; i < times; i++) {
             Long userId = getFakeNumberBetween(1L, 10L);
             Long stockId = getFakeNumberBetween(1L, 10L);

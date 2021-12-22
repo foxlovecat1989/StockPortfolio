@@ -8,6 +8,6 @@ import java.util.Optional;
 
 public interface AccountRepository extends CrudRepository<Account, Long> {
 
-    @Query(value = "SELECT a FROM Account a WHERE a.user.id = ?1")
-    Optional<Account> findOneByUserId(Long userId);
+    @Query(value = "SELECT a FROM Account a WHERE a.user.userNumber = ?1")
+    Optional<Account> findOneByUserNumber(String userNumber);
 }
