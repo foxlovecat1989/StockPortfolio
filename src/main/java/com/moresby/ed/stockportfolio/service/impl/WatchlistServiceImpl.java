@@ -79,10 +79,10 @@ public class WatchlistServiceImpl implements WatchlistService {
     }
 
     @Override
-    public Watchlist addStockToWatchlist(TStock tStock, Long watchlistId)
+    public Watchlist addStockToWatchlist(Long stockId, Long watchlistId)
             throws StockNotfoundException, WachlistNotFoundException {
         var watchlist = findExistWatchlistById(watchlistId);
-        var stock = tStockService.findExistingStockBySymbol(tStock.getSymbol());
+        var stock = tStockService.findExistingStockById(stockId);
         var stocks = watchlist.getTStocks();
         Set<TStock> setOfStocks = new HashSet<>(stocks);
         setOfStocks.add(stock);
@@ -90,27 +90,6 @@ public class WatchlistServiceImpl implements WatchlistService {
         watchlist.setTStocks(stocks);
 
         return watchlistRepository.save(watchlist);
-    }
-
-    @Override
-    public Watchlist removeStockToWatchlist(TStock tStock, Long watchlistId)
-            throws WachlistNotFoundException, StockNotfoundException {
-        var watchlist = findExistWatchlistById(watchlistId);
-        var stock = tStockService.findExistingStockBySymbol(tStock.getSymbol());
-        var stocks = watchlist.getTStocks();
-        stocks.remove(stock);
-        watchlist.setTStocks(stocks);
-
-        return watchlistRepository.save(watchlist);
-    }
-
-
-    @Override
-    public Watchlist updateWatchlistStocks(Watchlist watchlist) throws WachlistNotFoundException {
-        var updateWatchlist = findExistWatchlistById(watchlist.getId());
-        updateWatchlist.setTStocks(watchlist.getTStocks() != null ? watchlist.getTStocks() : updateWatchlist.getTStocks());
-
-        return watchlistRepository.save(updateWatchlist);
     }
 
     @Override

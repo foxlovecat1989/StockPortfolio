@@ -15,8 +15,6 @@ public interface WatchlistService {
     List<Watchlist> findAllByUserId(Long userId);
     List<Watchlist> findAll();
     Watchlist updateWatchlistName(Long watchlistId, String watchlistName) throws WachlistNotFoundException;
-    Watchlist addStockToWatchlist(TStock tStock, Long watchlistId) throws StockNotfoundException, WachlistNotFoundException;
-    Watchlist removeStockToWatchlist(TStock tStock, Long watchlistId) throws WachlistNotFoundException, StockNotfoundException;
-    Watchlist updateWatchlistStocks(Watchlist watchlist) throws WachlistNotFoundException;
+    Watchlist addStockToWatchlist(Long stockId, Long watchlistId) throws StockNotfoundException, WachlistNotFoundException;
     void deleteById(Long watchlistId) throws WachlistNotFoundException;
 }

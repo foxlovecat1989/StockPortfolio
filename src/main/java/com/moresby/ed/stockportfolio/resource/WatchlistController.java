@@ -1,7 +1,6 @@
 package com.moresby.ed.stockportfolio.resource;
 
 import com.moresby.ed.stockportfolio.domain.HttpResponse;
-import com.moresby.ed.stockportfolio.domain.TStock;
 import com.moresby.ed.stockportfolio.domain.Watchlist;
 import com.moresby.ed.stockportfolio.exception.domain.stock.StockNotfoundException;
 import com.moresby.ed.stockportfolio.exception.domain.user.UserNotFoundException;
@@ -13,7 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import javax.websocket.server.PathParam;
 import java.util.List;
 
 import static com.moresby.ed.stockportfolio.constant.WatchlistImplConstant.WATCHLIST_DELETED_SUCCESSFULLY;
@@ -54,18 +53,22 @@ public class WatchlistController {
         return new ResponseEntity<>(newWatchlist, HttpStatus.OK);
     }
 
-    @GetMapping(path = "", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Watchlist> updateWatchlistName(@RequestParam Long watchlistId, @RequestParam String watchlistName)
+    @PatchMapping(produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<Watchlist> updateWatchlistName(
+            @RequestParam("watchlistId") Long watchlistId,
+            @RequestParam("watchlistName") String watchlistName)
             throws WachlistNotFoundException {
         var updateWatchlist = watchlistService.updateWatchlistName(watchlistId, watchlistName);
 
         return new ResponseEntity<>(updateWatchlist, HttpStatus.OK);
     }
 
-    @PatchMapping(consumes = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Watchlist> addStockToWatchlist(@RequestBody TStock tStock, @RequestParam Long watchlistId)
+    @PostMapping(path = "/add")
+    public ResponseEntity<Watchlist> addStockToWatchlist(
+            @RequestParam("stockId") Long stockId, @RequestParam("watchlistId") Long watchlistId)
             throws WachlistNotFoundException, StockNotfoundException {
-        var watchlist = watchlistService.addStockToWatchlist(tStock, watchlistId);
+        var watchlist = watchlistService.addStockToWatchlist(stockId, watchlistId);
+        System.out.println("here");
 
         return new ResponseEntity<>(watchlist, HttpStatus.OK);
     }
