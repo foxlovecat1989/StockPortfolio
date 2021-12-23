@@ -70,11 +70,10 @@ public class WatchlistController {
         return new ResponseEntity<>(watchlist, HttpStatus.OK);
     }
 
-    @DeleteMapping(path = "/{userNumber}")
-    public ResponseEntity<HttpResponse> deleteById(@PathVariable String userNumber)
-            throws UserNotFoundException, WachlistNotFoundException {
-        var user = userService.findExistingUserByUserNumber(userNumber);
-        watchlistService.deleteById(user.getId());
+    @DeleteMapping(path = "/{watchlistId}")
+    public ResponseEntity<HttpResponse> deleteById(@PathVariable("watchlistId") Long watchlistId)
+            throws WachlistNotFoundException {
+        watchlistService.deleteById(watchlistId);
 
         return response(HttpStatus.NO_CONTENT, WATCHLIST_DELETED_SUCCESSFULLY);
     }
