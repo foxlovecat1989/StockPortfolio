@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.moresby.ed.stockportfolio.constant.WatchlistImplConstant.WATCHLIST_DELETED_SUCCESSFULLY;
@@ -42,9 +43,13 @@ public class WatchlistController {
         return new ResponseEntity<>(watchlists, HttpStatus.OK);
     }
 
-    @PostMapping(consumes = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Watchlist> createWatch(@RequestBody Watchlist watchlist){
-        var newWatchlist = watchlistService.createWatch(watchlist);
+    @PostMapping
+    public ResponseEntity<Watchlist> createWatch(
+            @RequestParam("name") String name,
+            @RequestParam("userId") Long userId)
+            throws UserNotFoundException {
+
+        var newWatchlist = watchlistService.createWatch(name, userId);
 
         return new ResponseEntity<>(newWatchlist, HttpStatus.OK);
     }

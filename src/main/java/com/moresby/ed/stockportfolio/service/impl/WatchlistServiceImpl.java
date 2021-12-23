@@ -3,14 +3,17 @@ package com.moresby.ed.stockportfolio.service.impl;
 import com.moresby.ed.stockportfolio.domain.TStock;
 import com.moresby.ed.stockportfolio.domain.Watchlist;
 import com.moresby.ed.stockportfolio.exception.domain.stock.StockNotfoundException;
+import com.moresby.ed.stockportfolio.exception.domain.user.UserNotFoundException;
 import com.moresby.ed.stockportfolio.exception.domain.watchlist.WachlistNotFoundException;
 import com.moresby.ed.stockportfolio.repository.WatchlistRepository;
 import com.moresby.ed.stockportfolio.service.TStockService;
+import com.moresby.ed.stockportfolio.service.UserService;
 import com.moresby.ed.stockportfolio.service.WatchlistService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -25,6 +28,7 @@ public class WatchlistServiceImpl implements WatchlistService {
 
     private final WatchlistRepository watchlistRepository;
     private final TStockService tStockService;
+    private final UserService userService;
 
     @Override
     public Watchlist findExistWatchlistById(Long watchlistId) throws WachlistNotFoundException {
@@ -49,7 +53,20 @@ public class WatchlistServiceImpl implements WatchlistService {
     }
 
     @Override
-    public Watchlist createWatch(Watchlist watchlist) {
+    public Watchlist createWatch(String name, Long userId) throws UserNotFoundException {
+        var user = userService.findExistingUserById(userId);
+        var watchlist =
+                Watchlist.builder()
+                        .name(name)
+                        .user(user)
+                        .lastUpdateAt(LocalDateTime.now())
+                        .build();
+
+        return watchlistRepository.save(watchlist);
+    }
+
+    @Override
+    public Watchlist create(Watchlist watchlist){
         return watchlistRepository.save(watchlist);
     }
 

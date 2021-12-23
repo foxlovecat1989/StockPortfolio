@@ -1,8 +1,6 @@
 package com.moresby.ed.stockportfolio.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.moresby.ed.stockportfolio.domain.Classify;
-import com.moresby.ed.stockportfolio.domain.Trade;
 import lombok.*;
 import javax.persistence.*;
 import java.math.BigDecimal;
