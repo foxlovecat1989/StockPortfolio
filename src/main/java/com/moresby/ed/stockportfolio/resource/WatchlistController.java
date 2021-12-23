@@ -65,9 +65,10 @@ public class WatchlistController {
 
     @PostMapping(path = "/add")
     public ResponseEntity<Watchlist> addStockToWatchlist(
-            @RequestParam("stockId") Long stockId, @RequestParam("watchlistId") Long watchlistId)
+            @RequestParam("stockId") String stockId,
+            @RequestParam("watchlistId") String watchlistId)
             throws WachlistNotFoundException, StockNotfoundException {
-        var watchlist = watchlistService.addStockToWatchlist(stockId, watchlistId);
+        var watchlist = watchlistService.addStockToWatchlist(Long.valueOf(stockId), Long.valueOf(watchlistId));
         System.out.println("here");
 
         return new ResponseEntity<>(watchlist, HttpStatus.OK);
