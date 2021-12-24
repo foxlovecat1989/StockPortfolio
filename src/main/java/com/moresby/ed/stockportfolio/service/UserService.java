@@ -21,7 +21,7 @@ public interface UserService extends UserDetailsService {
     List<User> findAllUsers();
     User register(RegistrationRequest registrationRequest) throws EmailExistException, UsernameExistException;
     User createUser(User user) throws EmailExistException, UsernameExistException;
-    User updateUsername(User user) throws EmailExistException, UsernameExistException;
+    User updateUser(String currentUserNumber, User user) throws EmailExistException, UsernameExistException, UserNotFoundException;
     void deleteUserByUsername(String username);
     boolean isEmailTaken(String email);
     boolean isUsernameTaken(String username);

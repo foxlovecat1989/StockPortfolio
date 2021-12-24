@@ -87,11 +87,11 @@ public class UserController extends UserExceptionHandling {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @PatchMapping(consumes = APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> updateUserName(@RequestBody User user)
-            throws InterruptedException, EmailExistException, UsernameExistException {
+    @PatchMapping(path = "{userNumber}",consumes = APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> updateUserName(@RequestBody User user, @PathVariable("userNumber") String userNumber)
+            throws InterruptedException, EmailExistException, UsernameExistException, UserNotFoundException {
         Thread.sleep(3000); // TODO: remove when production
-        var updateUser = userService.updateUsername(user);
+        var updateUser = userService.updateUser(userNumber, user);
 
         return new ResponseEntity<>(updateUser, HttpStatus.OK);
     }

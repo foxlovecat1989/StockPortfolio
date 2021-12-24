@@ -124,17 +124,33 @@ public class UserServiceImpl implements UserService {
         return buildUser(newUser);
     }
 
-    // TODO: back to set what properties should be updated
-
     @Override
-    public User updateUsername(User user) throws EmailExistException, UsernameExistException {
-        validateNewUsernameAndEmail(user.getUsername(), null);
-        var existingUser = findExistingUserByEmail(user.getEmail());
-        existingUser.setUsername(
-                user.getUsername() != null ? user.getUsername() : existingUser.getUsername()
+    public User updateUser(String currentUserNumber, User user) throws EmailExistException, UsernameExistException, UserNotFoundException {
+        var currentUser = findExistingUserByUserNumber(currentUserNumber);
+        boolean isUsernameModified = currentUser.getUsername() == user.getUsername();
+        boolean isEmailModified = currentUser.getEmail() == user.getEmail();
+
+        if (isUsernameModified){
+            validateNewUsernameAndEmail(null, user.getUsername());
+            currentUser.setUsername(user.getUsername());
+        }
+
+        if(isEmailModified){
+            validateNewUsernameAndEmail(user.getEmail(), null);
+            currentUser.setEmail(user.getEmail());
+        }
+
+        currentUser.setIsEnabled(
+                user.getIsEnabled() != null ? user.getIsEnabled() : currentUser.getIsEnabled()
+        );
+        currentUser.setIsAccountNonLocked(
+                user.getIsAccountNonLocked() != null ? user.getIsAccountNonLocked() : currentUser.getIsAccountNonLocked()
+        );
+        currentUser.setUserRole(
+                user.getUserRole() != null ? user.getUserRole() : currentUser.getUserRole()
         );
 
-        return userRepository.save(existingUser);
+        return userRepository.save(currentUser);
     }
 
     @Override
