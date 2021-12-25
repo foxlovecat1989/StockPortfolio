@@ -2,6 +2,7 @@ package com.moresby.ed.stockportfolio.service.impl;
 
 import com.github.javafaker.Faker;
 import com.moresby.ed.stockportfolio.exception.domain.trade.*;
+import com.moresby.ed.stockportfolio.exception.domain.user.UserNotFoundException;
 import com.moresby.ed.stockportfolio.repository.TradeRepository;
 import com.moresby.ed.stockportfolio.service.AccountService;
 import com.moresby.ed.stockportfolio.service.InventoryService;
@@ -9,6 +10,7 @@ import com.moresby.ed.stockportfolio.domain.Trade;
 import com.moresby.ed.stockportfolio.enumeration.TradeType;
 import com.moresby.ed.stockportfolio.domain.TradePOJO;
 import com.moresby.ed.stockportfolio.service.TradeService;
+import com.moresby.ed.stockportfolio.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalDate;
 import java.util.List;
 
 import static com.moresby.ed.stockportfolio.constant.TradeImplConstant.NO_TRADE_FOUND_BY_TRADE_ID;
@@ -29,8 +32,10 @@ public class TradeServiceImpl implements TradeService {
     private final TradeRepository tradeRepository;
     private final InventoryService inventoryService;
     private final AccountService accountService;
+    private final UserService userService;
     private final Faker faker;
-    private static final int MILLISECONDS_IN_ONE_DAY = 86400 * 1000;
+    private static final int MILLISECONDS_IN_ONE_DAY = 86_400_000;
+    private static final int SEVEN_DAYS = 7;
 
     @Override
     public Trade findExistingTradeByTradeId(Long tradeId) throws TradeNotFoundException {
@@ -47,6 +52,18 @@ public class TradeServiceImpl implements TradeService {
     @Override
     public List<Trade> findOneByUserIdAndTradeDate(Long userId, Date tradeDate) {
         return tradeRepository.findAllByUserIdAndTradeDateEquals(userId, tradeDate);
+    }
+
+    @Override
+    public List<Trade> findRecentTrade(String userNumber) throws UserNotFoundException {
+        var user = userService.findExistingUserByUserNumber(userNumber);
+
+        return tradeRepository
+                .findAllTradesByUserIdAndTradeDateBetween(
+                        user.getId(),
+                        new Date(new java.util.Date().getTime() - MILLISECONDS_IN_ONE_DAY * SEVEN_DAYS),
+                        new Date(new java.util.Date().getTime())
+                );
     }
 
     @Override

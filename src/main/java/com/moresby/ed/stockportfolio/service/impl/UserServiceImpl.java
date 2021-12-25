@@ -230,7 +230,7 @@ public class UserServiceImpl implements UserService {
                         .email(user.getEmail())
                         .userRole(UserRole.ROLE_USER)
                         .joinDate(new Date())
-                        // .profileImageUrl(getTemporaryProfileImageUrl(user.getUsername()))
+                        .profileImageUrl(getTemporaryProfileImageUrl(user.getUsername()))
                         .isEnabled(false)
                         .isAccountNonLocked(true)
                         .account(account)

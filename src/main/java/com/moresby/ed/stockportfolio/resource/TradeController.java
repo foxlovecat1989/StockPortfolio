@@ -3,6 +3,7 @@ package com.moresby.ed.stockportfolio.resource;
 import com.moresby.ed.stockportfolio.domain.Trade;
 import com.moresby.ed.stockportfolio.domain.TradePOJO;
 import com.moresby.ed.stockportfolio.exception.domain.trade.*;
+import com.moresby.ed.stockportfolio.exception.domain.user.UserNotFoundException;
 import com.moresby.ed.stockportfolio.exception.handler.TradeExceptionHandling;
 import com.moresby.ed.stockportfolio.service.TradeService;
 import lombok.AllArgsConstructor;
@@ -49,6 +50,15 @@ public class TradeController extends TradeExceptionHandling {
             ) throws InterruptedException {
         Thread.sleep(3000); // TODO: remove this line when production
         var trades = tradeService.findOneByUserIdAndTradeDate(userId, tradeDate);
+
+        return new ResponseEntity<>(trades, HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/recentTrade/findAll/{userNumber}", produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Trade>> findAllByUserIdAndTradeDate(@PathVariable("userNumber") String userNumber)
+            throws InterruptedException, UserNotFoundException {
+        Thread.sleep(3000); // TODO: remove this line when production
+        var trades = tradeService.findRecentTrade(userNumber);
 
         return new ResponseEntity<>(trades, HttpStatus.OK);
     }
