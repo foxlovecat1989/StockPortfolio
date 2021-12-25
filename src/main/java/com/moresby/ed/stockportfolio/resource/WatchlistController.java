@@ -5,6 +5,7 @@ import com.moresby.ed.stockportfolio.domain.Watchlist;
 import com.moresby.ed.stockportfolio.exception.domain.stock.StockNotfoundException;
 import com.moresby.ed.stockportfolio.exception.domain.user.UserNotFoundException;
 import com.moresby.ed.stockportfolio.exception.domain.watchlist.WachlistNotFoundException;
+import com.moresby.ed.stockportfolio.exception.handler.ClassifyExceptionHandling;
 import com.moresby.ed.stockportfolio.service.UserService;
 import com.moresby.ed.stockportfolio.service.WatchlistService;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.websocket.server.PathParam;
 import java.util.List;
 
 import static com.moresby.ed.stockportfolio.constant.WatchlistImplConstant.WATCHLIST_DELETED_SUCCESSFULLY;
@@ -21,7 +21,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
 @RequestMapping(path = "/api/v1/watchlist")
 @RequiredArgsConstructor
-public class WatchlistController {
+public class WatchlistController extends ClassifyExceptionHandling {
 
     private final WatchlistService watchlistService;
     private final UserService userService;

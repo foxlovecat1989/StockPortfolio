@@ -2,8 +2,9 @@ package com.moresby.ed.stockportfolio.listener;
 
 import com.github.javafaker.Faker;
 import com.moresby.ed.stockportfolio.domain.*;
+import com.moresby.ed.stockportfolio.exception.domain.classify.ClassifyNameExistException;
+import com.moresby.ed.stockportfolio.exception.domain.classify.ClassifyNotFoundException;
 import com.moresby.ed.stockportfolio.exception.domain.stock.StockExistException;
-import com.moresby.ed.stockportfolio.exception.domain.stock.StockNotfoundException;
 import com.moresby.ed.stockportfolio.service.*;
 import com.moresby.ed.stockportfolio.enumeration.TradeType;
 import lombok.AllArgsConstructor;
@@ -31,14 +32,14 @@ public class DataInitService {
 
     @EventListener(ApplicationReadyEvent.class)
     public void initData() {
-        generateUsers(TEN_TIMES);
-        generateStocks();
-        try {
-            generateExecuteTrades(HUNDRED_TIMES);
-        } catch (Exception e) {
-            e.getMessage();
-        }
-        generateWatchlistAndAddRandomStock();
+//        generateUsers(TEN_TIMES);
+//        generateStocks();
+//        try {
+//            generateExecuteTrades(HUNDRED_TIMES);
+//        } catch (Exception e) {
+//            e.getMessage();
+//        }
+//        generateWatchlistAndAddRandomStock();
     }
 
     private void generateUsers(int times){
@@ -67,9 +68,16 @@ public class DataInitService {
 
     private void generateStocks() {
         generateClassify();
-        var classifyStock = classifyService.findClassifyByName("Ordinary Stock");
-        var classifyForeignExchange = classifyService.findClassifyByName("Foreign Exchange");
-        var classifyTWSE = classifyService.findClassifyByName("TWSE");
+        Classify classifyStock = null;
+        Classify classifyForeignExchange = null;
+        Classify classifyTWSE = null;
+        try {
+            classifyStock = classifyService.findExistClassifyByName("Ordinary Stock");
+             classifyForeignExchange = classifyService.findExistClassifyByName("Foreign Exchange");
+            classifyTWSE = classifyService.findExistClassifyByName("TWSE");
+        } catch (ClassifyNotFoundException e) {
+            e.printStackTrace();
+        }
 
         List<TStock> tStocks = List.of(
                 new TStock("2303.TW", "聯電", classifyStock),
@@ -103,7 +111,14 @@ public class DataInitService {
 
     private void generateClassify() {
         // List.of("Ordinary Stock/普通股", "Futures/期貨", "Fund/基金", "Foreign Exchange/外匯")
-        Stream.of("Ordinary Stock", "Futures", "Fund", "Foreign Exchange", "TWSE").forEach(classifyService::createClassifyByName);
+        Stream.of("Ordinary Stock", "Futures", "Fund", "Foreign Exchange", "TWSE")
+                .forEach(next -> {
+                    try {
+                        classifyService.createClassifyByName(next);
+                    } catch (ClassifyNameExistException e) {
+                        e.printStackTrace();
+                    }
+                });
     }
 
     private void generateExecuteTrades(int times) {
@@ -161,7 +176,7 @@ public class DataInitService {
                                 .tStocks(tStocks)
                                 .build();
 
-                        watchlistService.createWatch(watchlist);
+                        watchlistService.create(watchlist);
                     }
                 }
         );
