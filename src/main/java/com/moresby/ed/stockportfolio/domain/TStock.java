@@ -40,7 +40,6 @@ public class TStock {
     @Column(
             name = "name",
             nullable = false,
-            updatable = false,
             unique = true,
             columnDefinition = "TEXT"
     )
