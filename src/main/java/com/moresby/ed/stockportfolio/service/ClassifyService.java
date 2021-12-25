@@ -12,6 +12,7 @@ public interface ClassifyService {
     Classify createClassify(Classify classify) throws ClassifyNameExistException;
     Classify createClassifyByName(String classifyName) throws ClassifyNameExistException;
     Classify findExistClassifyByName(String name) throws ClassifyNotFoundException;
+    Classify findExistClassifyById(Integer classifyId) throws ClassifyNotFoundException;
     List<TStock> findStocksByClassifyName(String name);
     List<Classify> findAllClassify();
     Classify updateClassifyName(Classify classify) throws ClassifyNotFoundException;

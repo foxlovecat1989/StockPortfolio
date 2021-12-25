@@ -12,8 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.moresby.ed.stockportfolio.constant.ClassifyImplConstant.CLASSIFY_NAME_ALREADY_EXISTS;
-import static com.moresby.ed.stockportfolio.constant.ClassifyImplConstant.CLASSIFY_NOT_FOUND_BY_CLASSIFY_NAME;
+import static com.moresby.ed.stockportfolio.constant.ClassifyImplConstant.*;
 
 @Service
 @RequiredArgsConstructor
@@ -50,6 +49,17 @@ public class ClassifyServiceImpl implements ClassifyService {
     }
 
     @Override
+    public Classify findExistClassifyById(Integer classifyId) throws ClassifyNotFoundException {
+        return classifyRepository.findById(classifyId).orElseThrow(
+                () -> {
+                    var errorMsg = String.format(CLASSIFY_NOT_FOUND_BY_CLASSIFY_ID, classifyId);
+                    log.error(errorMsg);
+                    return new ClassifyNotFoundException(errorMsg);
+                }
+        );
+    }
+
+    @Override
     public List<TStock> findStocksByClassifyName(String name) {
         return classifyRepository.findStocksByClassifyName(name);
     }
@@ -62,7 +72,7 @@ public class ClassifyServiceImpl implements ClassifyService {
 
     @Override
     public Classify updateClassifyName(Classify classify) throws ClassifyNotFoundException {
-        var originClassify = findExistClassifyByName(classify.getName());
+        var originClassify = findExistClassifyById(classify.getClassifyId());
         originClassify.setName(classify.getName() != null ? classify.getName() : originClassify.getName());
 
         return classifyRepository.save(originClassify);

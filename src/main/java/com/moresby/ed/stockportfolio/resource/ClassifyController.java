@@ -3,10 +3,12 @@ package com.moresby.ed.stockportfolio.resource;
 import com.moresby.ed.stockportfolio.domain.HttpResponse;
 import com.moresby.ed.stockportfolio.exception.domain.classify.ClassifyNameExistException;
 import com.moresby.ed.stockportfolio.exception.domain.classify.ClassifyNotFoundException;
+import com.moresby.ed.stockportfolio.exception.handler.ClassifyExceptionHandling;
 import com.moresby.ed.stockportfolio.service.ClassifyService;
 import com.moresby.ed.stockportfolio.domain.Classify;
 import com.moresby.ed.stockportfolio.domain.TStock;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,10 +18,9 @@ import static com.moresby.ed.stockportfolio.constant.WatchlistImplConstant.WATCH
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
-@RequestMapping(path = "api/v1/classify")
-@CrossOrigin(origins = "*")
-@AllArgsConstructor
-public class ClassifyController {
+@RequestMapping(path = "/api/v1/classify")
+@RequiredArgsConstructor
+public class ClassifyController extends ClassifyExceptionHandling {
 
     private final ClassifyService classifyService;
 
