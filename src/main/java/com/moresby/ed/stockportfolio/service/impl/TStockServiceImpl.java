@@ -76,7 +76,7 @@ public class TStockServiceImpl implements TStockService {
     @Override
     public TStock updateStock(TStock tStock) throws StockNotfoundException {
         var originTStock = findExistingStockBySymbol(tStock.getSymbol());
-        var isNameModified = tStock.getName() != originTStock.getName();
+        var isNameModified = !tStock.getName().equals(originTStock.getName());
         if(isNameModified)
             originTStock.setName(tStock.getName() != null ? tStock.getName() : originTStock.getName());
 
