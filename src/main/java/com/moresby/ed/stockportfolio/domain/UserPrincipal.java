@@ -1,5 +1,6 @@
 package com.moresby.ed.stockportfolio.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -38,7 +39,7 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return this.user.getIsAccountNonLocked();
+        return this.user.getAccountNonLocked();
     }
 
     @Override
@@ -48,6 +49,6 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return this.user.getIsEnabled();
+        return this.user.getEnabled();
     }
 }

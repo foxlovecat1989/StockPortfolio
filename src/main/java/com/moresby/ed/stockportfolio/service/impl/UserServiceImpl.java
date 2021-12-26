@@ -140,11 +140,11 @@ public class UserServiceImpl implements UserService {
             currentUser.setEmail(user.getEmail());
         }
 
-        currentUser.setIsEnabled(
-                user.getIsEnabled() != null ? user.getIsEnabled() : currentUser.getIsEnabled()
+        currentUser.setEnabled(
+                user.getEnabled() != null ? user.getEnabled() : currentUser.getEnabled()
         );
-        currentUser.setIsAccountNonLocked(
-                user.getIsAccountNonLocked() != null ? user.getIsAccountNonLocked() : currentUser.getIsAccountNonLocked()
+        currentUser.setAccountNonLocked(
+                user.getAccountNonLocked() != null ? user.getAccountNonLocked() : currentUser.getAccountNonLocked()
         );
         currentUser.setUserRole(
                 user.getUserRole() != null ? user.getUserRole() : currentUser.getUserRole()
@@ -192,7 +192,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void enableUser(String email) {
         var user = findExistingUserByEmail(email);
-        user.setIsEnabled(true);
+        user.setEnabled(true);
         userRepository.save(user);
     }
 
@@ -264,9 +264,9 @@ public class UserServiceImpl implements UserService {
 
     private void validateLoginAttempt(User user) {
         var username = user.getUsername();
-        if(user.getIsAccountNonLocked()) {
+        if(user.getAccountNonLocked()) {
             if(loginAttemptService.hasExceededMaxAttempts(username))
-                user.setIsAccountNonLocked(false);
+                user.setAccountNonLocked(false);
         }
         else
             loginAttemptService.removeUserFromLoginAttemptCache(username);

@@ -13,8 +13,6 @@ import java.util.*;
 @Entity(name = "User")
 @Table(name = "app_user")
 @NoArgsConstructor
-@Setter
-@Getter
 @JsonIgnoreProperties(value = {"isEnabled", "isAccountNonLocked"})
 public class User implements Serializable {
     @Id
@@ -118,7 +116,10 @@ public class User implements Serializable {
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
+    @Column(name = "is_account_non_locker")
     private Boolean isAccountNonLocked = true;
+
+    @Column(name = "is_enabled")
     private Boolean isEnabled = false;
 
     @Builder
@@ -154,4 +155,139 @@ public class User implements Serializable {
         this.confirmEmailTokens.add(confirmEmailToken);
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getUserNumber() {
+        return userNumber;
+    }
+
+    public void setUserNumber(String userNumber) {
+        this.userNumber = userNumber;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getProfileImageUrl() {
+        return profileImageUrl;
+    }
+
+    public void setProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
+    }
+
+    public Date getLastLoginDate() {
+        return lastLoginDate;
+    }
+
+    public void setLastLoginDate(Date lastLoginDate) {
+        this.lastLoginDate = lastLoginDate;
+    }
+
+    public Date getLastLoginDateDisplay() {
+        return lastLoginDateDisplay;
+    }
+
+    public void setLastLoginDateDisplay(Date lastLoginDateDisplay) {
+        this.lastLoginDateDisplay = lastLoginDateDisplay;
+    }
+
+    public Date getJoinDate() {
+        return joinDate;
+    }
+
+    public void setJoinDate(Date joinDate) {
+        this.joinDate = joinDate;
+    }
+
+    public List<Inventory> getInventories() {
+        return inventories;
+    }
+
+    public void setInventories(List<Inventory> inventories) {
+        this.inventories = inventories;
+    }
+
+    public List<Trade> getTrades() {
+        return trades;
+    }
+
+    public void setTrades(List<Trade> trades) {
+        this.trades = trades;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
+    public List<ConfirmEmailToken> getConfirmEmailTokens() {
+        return confirmEmailTokens;
+    }
+
+    public void setConfirmEmailTokens(List<ConfirmEmailToken> confirmEmailTokens) {
+        this.confirmEmailTokens = confirmEmailTokens;
+    }
+
+    public List<Watchlist> getWatchlists() {
+        return watchlists;
+    }
+
+    public void setWatchlists(List<Watchlist> watchlists) {
+        this.watchlists = watchlists;
+    }
+
+    public UserRole getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(UserRole userRole) {
+        this.userRole = userRole;
+    }
+
+    public Boolean getAccountNonLocked() {
+        return isAccountNonLocked;
+    }
+
+    public void setAccountNonLocked(Boolean accountNonLocked) {
+        isAccountNonLocked = accountNonLocked;
+    }
+
+    public Boolean getEnabled() {
+        return isEnabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        isEnabled = enabled;
+    }
 }
