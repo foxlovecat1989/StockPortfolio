@@ -244,9 +244,12 @@ public class UserServiceImpl implements UserService {
                         .email(user.getEmail())
                         .userRole(UserRole.ROLE_USER)
                         .joinDate(new Date())
-                        .profileImageUrl(getTemporaryProfileImageUrl(user.getUsername()))
-                        .isEnabled(false)
-                        .isAccountNonLocked(true)
+                        .profileImageUrl(
+                                user.getProfileImageUrl() != null ?
+                                        user.getProfileImageUrl() : getTemporaryProfileImageUrl(user.getUsername())
+                        )
+                        .isEnabled(user.getEnabled())
+                        .isAccountNonLocked(user.getAccountNonLocked())
                         .account(account)
                         .build();
 
