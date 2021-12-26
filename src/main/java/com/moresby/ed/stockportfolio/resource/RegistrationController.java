@@ -4,6 +4,7 @@ import com.moresby.ed.stockportfolio.domain.User;
 import com.moresby.ed.stockportfolio.domain.RegistrationRequest;
 import com.moresby.ed.stockportfolio.exception.domain.user.EmailExistException;
 import com.moresby.ed.stockportfolio.exception.domain.user.UsernameExistException;
+import com.moresby.ed.stockportfolio.exception.handler.UserExceptionHandling;
 import com.moresby.ed.stockportfolio.service.RegistrationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(path = "/api/v1/registration")
 @RequiredArgsConstructor
-public class RegistrationController {
+public class RegistrationController extends UserExceptionHandling {
 
     private final RegistrationService registrationService;
 
