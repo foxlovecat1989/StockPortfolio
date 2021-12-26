@@ -11,7 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 public interface UserService extends UserDetailsService {
     User findExistingUserById(Long id) throws UserNotFoundException;
@@ -21,7 +20,8 @@ public interface UserService extends UserDetailsService {
     List<User> findAllUsers();
     User register(RegistrationRequest registrationRequest) throws EmailExistException, UsernameExistException;
     User createUser(User user) throws EmailExistException, UsernameExistException;
-    User updateUser(String currentUserNumber, User user) throws EmailExistException, UsernameExistException, UserNotFoundException;
+    User updateUser(User user) throws EmailExistException, UsernameExistException, UserNotFoundException;
+    User updateUserNameOrEmail(User user) throws UserNotFoundException, EmailExistException, UsernameExistException;
     void deleteUserByUsername(String username);
     boolean isEmailTaken(String email);
     boolean isUsernameTaken(String username);

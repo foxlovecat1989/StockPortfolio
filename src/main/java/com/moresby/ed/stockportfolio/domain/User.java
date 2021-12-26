@@ -40,7 +40,6 @@ public class User implements Serializable {
             name = "username",
             nullable = false,
             columnDefinition = "TEXT",
-            length = 20,
             unique = true
     )
     @NotBlank
@@ -50,7 +49,6 @@ public class User implements Serializable {
             name = "email",
             nullable = false,
             columnDefinition = "TEXT",
-            updatable = false,
             unique = true
     )
     @Email

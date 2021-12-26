@@ -126,27 +126,40 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(String currentUserNumber, User user) throws EmailExistException, UsernameExistException, UserNotFoundException {
-        var currentUser = findExistingUserByUserNumber(currentUserNumber);
-        boolean isUsernameModified = currentUser.getUsername() == user.getUsername();
-        boolean isEmailModified = currentUser.getEmail() == user.getEmail();
+    public User updateUserNameOrEmail(User user)
+            throws UserNotFoundException, EmailExistException, UsernameExistException {
+        var currentUser = findExistingUserByUserNumber(user.getUserNumber());
+        var username = user.getUsername();
+        var email = user.getEmail();
+        boolean isUsernameModified = !currentUser.getUsername().equals(username);
+        boolean isEmailModified = !currentUser.getEmail().equals(email);
 
         if (isUsernameModified){
-            validateNewUsernameAndEmail(null, user.getUsername());
-            currentUser.setUsername(user.getUsername());
+            validateNewUsernameAndEmail(user.getUsername(), null);
+            currentUser.setUsername(username != null ? username : currentUser.getUsername());
         }
 
         if(isEmailModified){
-            validateNewUsernameAndEmail(user.getEmail(), null);
-            currentUser.setEmail(user.getEmail());
+            validateNewUsernameAndEmail(null, email);
+            currentUser.setEmail(email != null ? email : currentUser.getEmail());
         }
+
+        return userRepository.save(currentUser);
+    }
+
+    @Override
+    public User updateUser(User user) throws
+            EmailExistException, UsernameExistException, UserNotFoundException {
+        var currentUser = updateUserNameOrEmail(user);
 
         currentUser.setEnabled(
                 user.getEnabled() != null ? user.getEnabled() : currentUser.getEnabled()
         );
+
         currentUser.setAccountNonLocked(
                 user.getAccountNonLocked() != null ? user.getAccountNonLocked() : currentUser.getAccountNonLocked()
         );
+
         currentUser.setUserRole(
                 user.getUserRole() != null ? user.getUserRole() : currentUser.getUserRole()
         );
