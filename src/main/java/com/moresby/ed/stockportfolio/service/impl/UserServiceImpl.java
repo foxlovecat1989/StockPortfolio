@@ -104,6 +104,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User createUser(User user) throws EmailExistException, UsernameExistException {
         validateNewUsernameAndEmail(user.getUsername(), user.getEmail());
+        user.setPassword("password");
 
         return buildUser(user);
     }
