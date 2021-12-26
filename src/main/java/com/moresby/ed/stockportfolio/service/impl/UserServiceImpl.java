@@ -120,6 +120,8 @@ public class UserServiceImpl implements UserService {
                         .username(username)
                         .email(email)
                         .password(registrationRequest.getPassword())
+                        .isAccountNonLocked(true)
+                        .isEnabled(false)
                         .build();
 
         return buildUser(newUser);
