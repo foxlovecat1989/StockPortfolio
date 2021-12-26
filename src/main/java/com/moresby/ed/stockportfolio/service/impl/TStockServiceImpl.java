@@ -67,21 +67,23 @@ public class TStockServiceImpl implements TStockService {
     }
 
     @Override
-    public TStock createStock(TStock tStock) throws StockExistException {
-        checkIsStockAlreadyExist(tStock);
+    public TStock createStock(TStock stock) throws StockExistException {
+        checkIsStockSymbolAlreadyExist(stock.getSymbol());
+        checkIsStockNameAlreadyExist(stock.getName());
 
-        return tStockRepository.save(tStock);
+        return tStockRepository.save(stock);
     }
 
     @Override
-    public TStock updateStock(TStock tStock) throws StockNotfoundException {
-        var originTStock = findExistingStockBySymbol(tStock.getSymbol());
-        var isNameModified = !tStock.getName().equals(originTStock.getName());
-        if(isNameModified)
-            originTStock.setName(tStock.getName() != null ? tStock.getName() : originTStock.getName());
-
+    public TStock updateStock(TStock stock) throws StockNotfoundException, StockExistException {
+        var originTStock = findExistingStockBySymbol(stock.getSymbol());
+        var isNameModified = !stock.getName().equals(originTStock.getName());
+        if(isNameModified){
+            checkIsStockNameAlreadyExist(stock.getName());
+            originTStock.setName(stock.getName() != null ? stock.getName() : originTStock.getName());
+        }
         originTStock.setClassify(
-                tStock.getClassify()!= null ? tStock.getClassify() : originTStock.getClassify()
+                stock.getClassify()!= null ? stock.getClassify() : originTStock.getClassify()
         );
 
         return  tStockRepository.save(originTStock);
@@ -135,20 +137,34 @@ public class TStockServiceImpl implements TStockService {
         return tStocks;
     }
 
-    private boolean isStockAlreadyExist(TStock tStock){
-        Optional<TStock> optTStock = tStockRepository.findTStockBySymbol(tStock.getSymbol());
+    private boolean isStockSymbolAlreadyExist(String symbol){
+        Optional<TStock> optTStock = tStockRepository.findTStockBySymbol(symbol);
 
         return optTStock.isPresent();
     }
 
-    private void checkIsStockAlreadyExist(TStock tStock) throws StockExistException {
-        boolean isStockAlreadyExist = isStockAlreadyExist(tStock);
+    private void checkIsStockSymbolAlreadyExist(String symbol) throws StockExistException {
+        boolean isStockAlreadyExist = isStockSymbolAlreadyExist(symbol);
         if(isStockAlreadyExist){
-            var errorMsg = String.format(STOCK_ALREADY_EXISTS, tStock.getSymbol());
+            var errorMsg = String.format(STOCK_SYMBOL_ALREADY_EXISTS, symbol);
             log.error(errorMsg);
             throw new StockExistException(errorMsg);
         }
+    }
 
+    private boolean isStockNameAlreadyExist(String name){
+        Optional<TStock> optTStock = tStockRepository.findTStockByName(name);
+
+        return optTStock.isPresent();
+    }
+
+    private void checkIsStockNameAlreadyExist(String name) throws StockExistException {
+        boolean isStockNameAlreadyExist = isStockNameAlreadyExist(name);
+        if(isStockNameAlreadyExist){
+            var errorMsg = String.format(STOCK_NAME_ALREADY_EXISTS, name);
+            log.error(errorMsg);
+            throw new StockExistException(errorMsg);
+        }
     }
 
 }

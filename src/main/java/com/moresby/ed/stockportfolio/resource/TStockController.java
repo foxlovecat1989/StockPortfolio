@@ -59,7 +59,7 @@ public class TStockController extends StockExceptionHandling {
 
     @PatchMapping(consumes = APPLICATION_JSON_VALUE)
     public TStock updateStock(@RequestBody TStock TStock)
-            throws InterruptedException, StockNotfoundException {
+            throws InterruptedException, StockNotfoundException, StockExistException {
         Thread.sleep(3000); // TODO: remove this line when production
 
         return tStockService.updateStock(TStock);

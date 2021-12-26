@@ -14,7 +14,7 @@ public interface TStockService {
     TStock findExistingStockById(Long id) throws StockNotfoundException;
     TStock findExistingStockByName(String name) throws StockNotfoundException;
     TStock createStock(TStock TStock) throws StockExistException;
-    TStock updateStock(TStock TStock) throws StockNotfoundException;
+    TStock updateStock(TStock TStock) throws StockNotfoundException, StockExistException;
 
     Iterable<TStock> refreshPriceOfStocks();
 
