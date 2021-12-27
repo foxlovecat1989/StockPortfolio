@@ -170,8 +170,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUserByUsername(String username) {
-        var user = findExistingUserByUsername(username);
+    public void deleteUserByUserNumber(String userNumber) throws UserNotFoundException {
+        var user = findExistingUserByUserNumber(userNumber);
         userRepository.delete(user);
     }
 

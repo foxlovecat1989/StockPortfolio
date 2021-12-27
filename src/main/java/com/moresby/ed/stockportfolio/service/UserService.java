@@ -22,7 +22,7 @@ public interface UserService extends UserDetailsService {
     User createUser(User user) throws EmailExistException, UsernameExistException;
     User updateUser(User user) throws EmailExistException, UsernameExistException, UserNotFoundException;
     User updateUserNameOrEmail(User user) throws UserNotFoundException, EmailExistException, UsernameExistException;
-    void deleteUserByUsername(String username);
+    void deleteUserByUserNumber(String userNumber) throws UserNotFoundException;
     boolean isEmailTaken(String email);
     boolean isUsernameTaken(String username);
     boolean isUserNumberTaken(String userNumber);
