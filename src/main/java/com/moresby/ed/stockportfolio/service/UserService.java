@@ -2,10 +2,7 @@ package com.moresby.ed.stockportfolio.service;
 
 import com.moresby.ed.stockportfolio.domain.RegistrationRequest;
 import com.moresby.ed.stockportfolio.domain.User;
-import com.moresby.ed.stockportfolio.exception.domain.user.EmailExistException;
-import com.moresby.ed.stockportfolio.exception.domain.user.NotAnImageFileException;
-import com.moresby.ed.stockportfolio.exception.domain.user.UserNotFoundException;
-import com.moresby.ed.stockportfolio.exception.domain.user.UsernameExistException;
+import com.moresby.ed.stockportfolio.exception.domain.user.*;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,5 +25,6 @@ public interface UserService extends UserDetailsService {
     boolean isUserNumberTaken(String userNumber);
     void enableUser(String email);
     void resetPassword(String email);
-    User updateProfileImage(String username, MultipartFile multipartFile) throws EmailExistException, UsernameExistException, IOException, NotAnImageFileException;
+    User updateProfileImage(String username, MultipartFile multipartFile)
+            throws EmailExistException, UsernameExistException, IOException, NotAnImageFileException;
 }

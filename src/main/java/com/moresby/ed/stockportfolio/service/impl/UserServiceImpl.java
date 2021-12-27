@@ -5,10 +5,7 @@ import com.moresby.ed.stockportfolio.domain.RegistrationRequest;
 import com.moresby.ed.stockportfolio.domain.User;
 import com.moresby.ed.stockportfolio.domain.UserPrincipal;
 import com.moresby.ed.stockportfolio.enumeration.UserRole;
-import com.moresby.ed.stockportfolio.exception.domain.user.EmailExistException;
-import com.moresby.ed.stockportfolio.exception.domain.user.NotAnImageFileException;
-import com.moresby.ed.stockportfolio.exception.domain.user.UserNotFoundException;
-import com.moresby.ed.stockportfolio.exception.domain.user.UsernameExistException;
+import com.moresby.ed.stockportfolio.exception.domain.user.*;
 import com.moresby.ed.stockportfolio.repository.UserRepository;
 import com.moresby.ed.stockportfolio.service.EmailService;
 import com.moresby.ed.stockportfolio.service.LoginAttemptService;
@@ -295,13 +292,13 @@ public class UserServiceImpl implements UserService {
         return RandomStringUtils.randomAlphanumeric(10);
     }
 
-    private void saveProfileImage(User user, MultipartFile profileImage) throws IOException, NotAnImageFileException {
-        if (profileImage != null) {
-            if(!Arrays.asList(IMAGE_JPEG_VALUE, IMAGE_PNG_VALUE, IMAGE_GIF_VALUE).contains(profileImage.getContentType()))
+    private void saveProfileImage(User user, MultipartFile profileImage)
+            throws IOException, NotAnImageFileException {
+        if (profileImage == null) {
+            if (!Arrays.asList(IMAGE_JPEG_VALUE, IMAGE_PNG_VALUE, IMAGE_GIF_VALUE).contains(profileImage.getContentType()))
                 throw new NotAnImageFileException(profileImage.getOriginalFilename() + NOT_AN_IMAGE_FILE);
-
             Path userFolder = Paths.get(USER_FOLDER + user.getUsername()).toAbsolutePath().normalize();
-            if(!Files.exists(userFolder)) {
+            if (!Files.exists(userFolder)) {
                 Files.createDirectories(userFolder);
                 log.info(DIRECTORY_CREATED + userFolder);
             }
@@ -312,6 +309,7 @@ public class UserServiceImpl implements UserService {
             );
             user.setProfileImageUrl(setProfileImageUrl(user.getUsername()));
             log.info(FILE_SAVED_IN_FILE_SYSTEM + profileImage.getOriginalFilename());
+
             userRepository.save(user);
         }
     }
