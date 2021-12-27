@@ -12,8 +12,8 @@ import java.util.List;
 public interface UserService extends UserDetailsService {
     User findExistingUserById(Long id) throws UserNotFoundException;
     User findExistingUserByUserNumber(String userNumber) throws UserNotFoundException;
-    User findExistingUserByUsername(String username);
-    User findExistingUserByEmail(String email);
+    User findExistingUserByUsername(String username) throws UserNotFoundException;
+    User findExistingUserByEmail(String email) throws UserNotFoundException;
     List<User> findAllUsers();
     User register(RegistrationRequest registrationRequest) throws EmailExistException, UsernameExistException;
     User createUser(User user) throws EmailExistException, UsernameExistException;
@@ -23,8 +23,8 @@ public interface UserService extends UserDetailsService {
     boolean isEmailTaken(String email);
     boolean isUsernameTaken(String username);
     boolean isUserNumberTaken(String userNumber);
-    void enableUser(String email);
-    void resetPassword(String email);
+    void enableUser(String email) throws UserNotFoundException;
+    void resetPassword(String email) throws UserNotFoundException;
     User updateProfileImage(String username, MultipartFile multipartFile)
-            throws EmailExistException, UsernameExistException, IOException, NotAnImageFileException;
+            throws EmailExistException, UsernameExistException, IOException, NotAnImageFileException, UserNotFoundException;
 }

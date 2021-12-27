@@ -1,6 +1,7 @@
 package com.moresby.ed.stockportfolio.service.impl;
 
 import com.moresby.ed.stockportfolio.domain.ConfirmEmailToken;
+import com.moresby.ed.stockportfolio.exception.domain.user.UserNotFoundException;
 import com.moresby.ed.stockportfolio.repository.ConfirmEmailTokenRepository;
 import com.moresby.ed.stockportfolio.service.ConfirmEmailTokenService;
 import com.moresby.ed.stockportfolio.service.EmailService;
@@ -47,7 +48,7 @@ public class ConfirmEmailTokenServiceImpl implements ConfirmEmailTokenService {
     }
 
     @Override
-    public String confirmToken(String token) {
+    public String confirmToken(String token) throws UserNotFoundException {
         // get token from db
         ConfirmEmailToken confirmEmailToken = getToken(token).orElseThrow(
                 () -> {

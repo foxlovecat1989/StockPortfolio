@@ -69,25 +69,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findExistingUserByUsername(String username) {
+    public User findExistingUserByUsername(String username) throws UserNotFoundException {
 
         return userRepository.findUserByUsername(username)
                 .orElseThrow(
                         () -> {
                             var errorMsg = String.format(NO_USER_FOUND_BY_USERNAME, username);
                             log.error(errorMsg);
-                            return new UsernameNotFoundException(errorMsg);
+                            return new UserNotFoundException(errorMsg);
                         }
                 );
     }
 
     @Override
-    public User findExistingUserByEmail(String email){
+    public User findExistingUserByEmail(String email) throws UserNotFoundException {
         return userRepository.findUserByEmail(email).orElseThrow(
                 () -> {
                     var errorMsg = String.format(NO_USER_FOUND_BY_EMAIL, email);
                     log.error(errorMsg);
-                    return new UsernameNotFoundException(errorMsg);
+                    return new UserNotFoundException(errorMsg);
                 }
         );
     }
@@ -174,7 +174,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        var user = findExistingUserByUsername(username);
+        User user = null;
+        try {
+            user = findExistingUserByUsername(username);
+        } catch (UserNotFoundException e) {
+            throw new UsernameNotFoundException(e.getMessage());
+        }
         validateLoginAttempt(user);
         user.setLastLoginDateDisplay(
                 user.getLastLoginDate() != null ? user.getLastLoginDate() : new Date()
@@ -203,14 +208,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void enableUser(String email) {
+    public void enableUser(String email) throws UserNotFoundException {
         var user = findExistingUserByEmail(email);
         user.setEnabled(true);
         userRepository.save(user);
     }
 
     @Override
-    public void resetPassword(String email) {
+    public void resetPassword(String email) throws UserNotFoundException {
         var originUser = findExistingUserByEmail(email);
         var newPassword = generatePassword();
         originUser.setPassword(passwordEncoder.encode(newPassword));
@@ -221,7 +226,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateProfileImage(String username, MultipartFile multipartFile)
-            throws IOException, NotAnImageFileException {
+            throws IOException, NotAnImageFileException, UserNotFoundException {
         var user = findExistingUserByUsername(username);
         saveProfileImage(user, multipartFile);
 

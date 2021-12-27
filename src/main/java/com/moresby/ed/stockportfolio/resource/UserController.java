@@ -78,7 +78,7 @@ public class UserController extends UserExceptionHandling {
             UsernameExistException,
             EmailExistException,
             IOException,
-            NotAnImageFileException {
+            NotAnImageFileException, UserNotFoundException {
         User user = userService.updateProfileImage(username, profileImage);
 
         return new ResponseEntity<>(user, HttpStatus.OK);
@@ -135,17 +135,19 @@ public class UserController extends UserExceptionHandling {
 
         return byteArrayOutputStream.toByteArray();
     }
-
-    @GetMapping(path = "/resetPassword/{email}")
-    public ResponseEntity<HttpResponse> restPassword(@PathVariable("email") String email) throws InterruptedException {
+    @GetMapping(path = "/reset/password/{email}")
+    public ResponseEntity<HttpResponse> resetPassword(@PathVariable("email") String email)
+            throws InterruptedException, UserNotFoundException {
         Thread.sleep(3000); // TODO: remove when production
+        System.out.println(email);
+
         userService.resetPassword(email);
 
         return response(HttpStatus.OK, EMAIL_SENT + email);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody User user) {
+    public ResponseEntity<User> login(@RequestBody User user) throws UserNotFoundException {
         authenticate(user.getUsername(), user.getPassword());
         var loginUser = userService.findExistingUserByUsername(user.getUsername());
         UserPrincipal userPrincipal = new UserPrincipal(loginUser);
