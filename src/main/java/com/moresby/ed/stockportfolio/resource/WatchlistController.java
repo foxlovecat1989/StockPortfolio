@@ -32,13 +32,13 @@ public class WatchlistController extends WatchlistExceptionHandling {
         return new ResponseEntity<>(watchlists, HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping(path = "/create/{userNumber}", consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<Watchlist> createWatch(
-            @RequestParam("name") String name,
-            @RequestParam("userId") Long userId)
+            @PathVariable("userNumber") String userNumber,
+            @RequestBody Watchlist watchlist)
             throws UserNotFoundException {
 
-        var newWatchlist = watchlistService.createWatch(name, userId);
+        var newWatchlist = watchlistService.createWatch(watchlist.getName(), userNumber);
 
         return new ResponseEntity<>(newWatchlist, HttpStatus.OK);
     }
@@ -53,14 +53,14 @@ public class WatchlistController extends WatchlistExceptionHandling {
         return new ResponseEntity<>(updateWatchlist, HttpStatus.OK);
     }
 
-    @PostMapping(path = "/add")
+    @PostMapping(path = "/add/{symbol}", consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<Watchlist> addStockToWatchlist(
-            @RequestParam("symbol") String symbol,
-            @RequestParam("watchlistId") String watchlistId)
+            @PathVariable("symbol") String symbol,
+            @RequestBody Watchlist watchlist)
             throws WatchlistNotFoundException, StockNotfoundException {
-        var watchlist = watchlistService.addStockToWatchlist(symbol, Long.valueOf(watchlistId));
+        var resultWatchlist = watchlistService.addStockToWatchlist(symbol, watchlist.getId());
 
-        return new ResponseEntity<>(watchlist, HttpStatus.OK);
+        return new ResponseEntity<>(resultWatchlist, HttpStatus.OK);
     }
 
     @DeleteMapping(path = "/{watchlistId}")

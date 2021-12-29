@@ -27,11 +27,6 @@ public class UserExceptionHandling extends CommonExceptionHandling {
         return createHttpResponse(BAD_REQUEST, exception.getMessage());
     }
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<HttpResponse> userNotFoundException(UserNotFoundException exception) {
-        return createHttpResponse(BAD_REQUEST, exception.getMessage());
-    }
-
     @ExceptionHandler(NotAnImageFileException.class)
     public ResponseEntity<HttpResponse> notAnImageFileException(NotAnImageFileException exception) {
         log.error(exception.getMessage());

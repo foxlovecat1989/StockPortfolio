@@ -2,6 +2,8 @@ package com.moresby.ed.stockportfolio.exception.handler;
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.moresby.ed.stockportfolio.domain.HttpResponse;
+import com.moresby.ed.stockportfolio.exception.domain.stock.StockNotfoundException;
+import com.moresby.ed.stockportfolio.exception.domain.user.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -57,17 +59,6 @@ public class CommonExceptionHandling {
         return createHttpResponse(UNAUTHORIZED, exception.getMessage());
     }
 
-    protected ResponseEntity<HttpResponse> createHttpResponse(HttpStatus httpStatus, String message) {
-        return new ResponseEntity<>(
-                new HttpResponse(
-                        httpStatus.value(),
-                        httpStatus,
-                        httpStatus.getReasonPhrase().toUpperCase(),
-                        message),
-                httpStatus
-        );
-    }
-
     @ExceptionHandler(NoResultException.class)
     public ResponseEntity<HttpResponse> notFoundException(NoResultException exception) {
         log.error(exception.getMessage());
@@ -90,5 +81,26 @@ public class CommonExceptionHandling {
     public ResponseEntity<HttpResponse> internalServerErrorException(Exception exception) {
         log.error(exception.getMessage());
         return createHttpResponse(INTERNAL_SERVER_ERROR, INTERNAL_SERVER_ERROR_MSG);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<HttpResponse> userNotFoundException(UserNotFoundException exception) {
+        return createHttpResponse(BAD_REQUEST, exception.getMessage());
+    }
+
+    @ExceptionHandler(StockNotfoundException.class)
+    public ResponseEntity<HttpResponse> stockNotFoundException(Exception exception) {
+        return createHttpResponse(BAD_REQUEST, exception.getMessage());
+    }
+
+    protected ResponseEntity<HttpResponse> createHttpResponse(HttpStatus httpStatus, String message) {
+        return new ResponseEntity<>(
+                new HttpResponse(
+                        httpStatus.value(),
+                        httpStatus,
+                        httpStatus.getReasonPhrase().toUpperCase(),
+                        message),
+                httpStatus
+        );
     }
 }

@@ -8,7 +8,7 @@ import com.moresby.ed.stockportfolio.exception.domain.watchlist.WatchlistNotFoun
 import java.util.List;
 
 public interface WatchlistService {
-    Watchlist createWatch(String name, Long userId) throws UserNotFoundException;
+    Watchlist createWatch(String name, String userNumber) throws UserNotFoundException;
     Watchlist create(Watchlist watchlist);
     Watchlist findExistWatchlistById(Long watchlistId) throws WatchlistNotFoundException;
     List<Watchlist> findAllByUserNumber(String userNumber) throws UserNotFoundException;

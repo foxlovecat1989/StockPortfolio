@@ -18,11 +18,6 @@ public class StockExceptionHandling extends CommonExceptionHandling{
         return createHttpResponse(BAD_REQUEST, exception.getMessage());
     }
 
-    @ExceptionHandler(StockNotfoundException.class)
-    public ResponseEntity<HttpResponse> stockNotFoundException(Exception exception) {
-        return createHttpResponse(BAD_REQUEST, exception.getMessage());
-    }
-
     @ExceptionHandler(NullPointerException.class)
     public ResponseEntity<HttpResponse> inputEmptyException(NullPointerException exception) {
         return createHttpResponse(BAD_REQUEST, exception.getMessage());

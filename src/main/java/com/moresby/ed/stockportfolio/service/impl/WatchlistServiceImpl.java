@@ -55,8 +55,8 @@ public class WatchlistServiceImpl implements WatchlistService {
     }
 
     @Override
-    public Watchlist createWatch(String name, Long userId) throws UserNotFoundException {
-        var user = userService.findExistingUserById(userId);
+    public Watchlist createWatch(String name, String userNumber) throws UserNotFoundException {
+        var user = userService.findExistingUserByUserNumber(userNumber);
         var watchlist =
                 Watchlist.builder()
                         .name(name)
