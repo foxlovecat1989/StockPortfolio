@@ -4,6 +4,7 @@ import com.moresby.ed.stockportfolio.domain.TStock;
 import com.moresby.ed.stockportfolio.domain.Watchlist;
 import com.moresby.ed.stockportfolio.exception.domain.stock.StockNotfoundException;
 import com.moresby.ed.stockportfolio.exception.domain.user.UserNotFoundException;
+import com.moresby.ed.stockportfolio.exception.domain.watchlist.StockAlreadyExistInTheWatchlistException;
 import com.moresby.ed.stockportfolio.exception.domain.watchlist.WatchlistNotFoundException;
 import com.moresby.ed.stockportfolio.repository.WatchlistRepository;
 import com.moresby.ed.stockportfolio.service.TStockService;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 import static com.moresby.ed.stockportfolio.constant.WatchlistImplConstant.NO_WATCHLIST_FOUND_BY_ID;
+import static com.moresby.ed.stockportfolio.constant.WatchlistImplConstant.STOCK_IS_ALREADY_IN_THE_WATCHLIST;
 
 @Service
 @RequiredArgsConstructor
@@ -82,10 +84,17 @@ public class WatchlistServiceImpl implements WatchlistService {
 
     @Override
     public Watchlist addStockToWatchlist(String symbol, Long watchlistId)
-            throws StockNotfoundException, WatchlistNotFoundException {
+            throws StockNotfoundException, WatchlistNotFoundException, StockAlreadyExistInTheWatchlistException {
         var watchlist = findExistWatchlistById(watchlistId);
         var stock = tStockService.findExistingStockBySymbol(symbol);
         var stocks = watchlist.getTStocks();
+        boolean isDuplicated =
+                stocks.stream().filter(next -> stock.getSymbol().equals(next.getSymbol())).findAny().isPresent();
+
+        if(isDuplicated)
+            throw new StockAlreadyExistInTheWatchlistException(
+                    String.format(STOCK_IS_ALREADY_IN_THE_WATCHLIST, stock.getSymbol(), watchlist.getName()));
+
         Set<TStock> setOfStocks = new HashSet<>(stocks);
         setOfStocks.add(stock);
         stocks = new ArrayList<>(setOfStocks);
