@@ -31,7 +31,7 @@ public class AccountServiceImpl implements AccountService {
             BankAccountNotFoundException {
 
         if(amount < 0)
-            throw new InputNumberNegativeException(INPUT_AMOUNT_CANNOT_BE_NEGATIVE);
+            throw new InputNumberNegativeException(String.format(INPUT_AMOUNT_CANNOT_BE_NEGATIVE, amount));
 
         Account account = findExistingAccountByUserNumber(user.getUserNumber());
         if(account.getBalance().doubleValue() - amount < 0){

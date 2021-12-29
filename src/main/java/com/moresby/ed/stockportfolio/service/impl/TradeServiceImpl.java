@@ -22,6 +22,7 @@ import java.sql.Time;
 import java.time.LocalDate;
 import java.util.List;
 
+import static com.moresby.ed.stockportfolio.constant.TradeImplConstant.INPUT_AMOUNT_CANNOT_BE_NEGATIVE;
 import static com.moresby.ed.stockportfolio.constant.TradeImplConstant.NO_TRADE_FOUND_BY_TRADE_ID;
 
 @Service
@@ -84,6 +85,7 @@ public class TradeServiceImpl implements TradeService {
 
         var tradeAmount =
                 Math.round(tradePOJO.getTStock().getPrice().doubleValue() * tradePOJO.getAmount());
+
         if (tradePOJO.getTradeType() == TradeType.BUY)
             accountService.withdrawal(tradePOJO.getUser(), tradeAmount);
         else

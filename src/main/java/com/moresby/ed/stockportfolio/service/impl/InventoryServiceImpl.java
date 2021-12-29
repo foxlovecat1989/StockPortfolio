@@ -2,6 +2,7 @@ package com.moresby.ed.stockportfolio.service.impl;
 
 import com.moresby.ed.stockportfolio.domain.Inventory;
 import com.moresby.ed.stockportfolio.exception.domain.trade.InSufficientAmountInInventoryException;
+import com.moresby.ed.stockportfolio.exception.domain.trade.InputNumberNegativeException;
 import com.moresby.ed.stockportfolio.exception.domain.trade.InventoryNotFoundException;
 import com.moresby.ed.stockportfolio.repository.InventoryRepository;
 import com.moresby.ed.stockportfolio.service.InventoryService;
@@ -54,7 +55,12 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public Inventory updateInventory(TradePOJO tradePOJO) throws InSufficientAmountInInventoryException {
+    public Inventory updateInventory(TradePOJO tradePOJO)
+            throws InSufficientAmountInInventoryException, InputNumberNegativeException {
+
+        if(tradePOJO.getAmount() < 0)
+            throw new InputNumberNegativeException(String.format(INPUT_AMOUNT_CANNOT_BE_NEGATIVE, tradePOJO.getAmount()));
+
         Optional<Inventory> optInventory =
                 inventoryRepository.findInventoryByUserNumberAndStockId(
                         tradePOJO.getUser().getUserNumber(),
