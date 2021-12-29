@@ -1,6 +1,7 @@
 package com.moresby.ed.stockportfolio.service.impl;
 
 import com.moresby.ed.stockportfolio.domain.TStock;
+import com.moresby.ed.stockportfolio.exception.domain.stock.ConnectErrorException;
 import com.moresby.ed.stockportfolio.exception.domain.stock.StockExistException;
 import com.moresby.ed.stockportfolio.exception.domain.stock.StockNotfoundException;
 import com.moresby.ed.stockportfolio.repository.TStockRepository;
@@ -10,10 +11,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import yahoofinance.Stock;
 import yahoofinance.YahooFinance;
+import yahoofinance.histquotes.HistoricalQuote;
+import yahoofinance.histquotes.Interval;
+
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -103,7 +109,7 @@ public class TStockServiceImpl implements TStockService {
     }
 
     @Override
-    public List<TStock> refreshPriceOfStocks() {
+    public void refreshPriceOfStocks() {
         List<TStock> tStocks = findAllStocks();
         for (TStock tStock : tStocks) {
             // retrieve stock information from yahoo finance
@@ -133,8 +139,6 @@ public class TStockServiceImpl implements TStockService {
                 e.printStackTrace();
             }
         }
-
-        return tStocks;
     }
 
     private boolean isStockSymbolAlreadyExist(String symbol){
@@ -165,6 +169,32 @@ public class TStockServiceImpl implements TStockService {
             log.error(errorMsg);
             throw new StockExistException(errorMsg);
         }
+    }
+
+    @Override
+    public List<HistoricalQuote> getHistoricalQuotes(String symbol, Integer month)
+            throws ConnectErrorException {
+        List<HistoricalQuote> historicalQuotes;
+        var inputSymbol =
+                Optional.of(symbol).orElseThrow(
+                                        () -> {
+                                            log.error(EMPTY_INPUT);
+                                            return new NullPointerException(EMPTY_INPUT);
+               });
+
+        try {
+            Calendar from = Calendar.getInstance();
+            Calendar to = Calendar.getInstance();
+            from.add(Calendar.MONTH, -month); // -1 indicate from 1 month ago
+
+            Stock stock = YahooFinance.get(inputSymbol);
+            historicalQuotes = stock.getHistory(from, to, Interval.DAILY);
+        } catch (IOException e) {
+            log.error(e.getMessage());
+            throw new ConnectErrorException(CONNECT_ERROR);
+        }
+
+        return historicalQuotes;
     }
 
 }

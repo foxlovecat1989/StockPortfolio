@@ -1,13 +1,14 @@
 package com.moresby.ed.stockportfolio.service;
 
 import com.moresby.ed.stockportfolio.domain.TStock;
+import com.moresby.ed.stockportfolio.exception.domain.stock.ConnectErrorException;
 import com.moresby.ed.stockportfolio.exception.domain.stock.StockExistException;
 import com.moresby.ed.stockportfolio.exception.domain.stock.StockNotfoundException;
+import yahoofinance.histquotes.HistoricalQuote;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 public interface TStockService {
     List<TStock> findAllStocks();
@@ -16,7 +17,7 @@ public interface TStockService {
     TStock createStock(TStock TStock) throws StockExistException;
     TStock updateStock(TStock TStock) throws StockNotfoundException, StockExistException;
 
-    Iterable<TStock> refreshPriceOfStocks();
+    void refreshPriceOfStocks();
 
     void updatePrice(
             Long tStockId,
@@ -29,4 +30,6 @@ public interface TStockService {
     );
 
     TStock findExistingStockBySymbol(String symbol) throws StockNotfoundException;
+
+    List<HistoricalQuote> getHistoricalQuotes(String symbol, Integer month) throws ConnectErrorException;
 }

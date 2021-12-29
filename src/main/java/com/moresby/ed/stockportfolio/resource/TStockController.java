@@ -1,6 +1,7 @@
 package com.moresby.ed.stockportfolio.resource;
 
 import com.moresby.ed.stockportfolio.domain.TStock;
+import com.moresby.ed.stockportfolio.exception.domain.stock.ConnectErrorException;
 import com.moresby.ed.stockportfolio.exception.domain.stock.StockExistException;
 import com.moresby.ed.stockportfolio.exception.domain.stock.StockNotfoundException;
 import com.moresby.ed.stockportfolio.exception.handler.StockExceptionHandling;
@@ -9,6 +10,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import yahoofinance.histquotes.HistoricalQuote;
+
 import javax.transaction.Transactional;
 import javax.websocket.server.PathParam;
 import java.util.List;
@@ -69,5 +72,15 @@ public class TStockController extends StockExceptionHandling {
     @Transactional
     public void refreshStockOfPrice(){
         tStockService.refreshPriceOfStocks();
+    }
+
+    @GetMapping(value = {"/histquotes/{symbol:.+}/{month}"})
+    public ResponseEntity<List<HistoricalQuote>> queryHistoricalQuotes(
+            @PathVariable("symbol") String symbol,
+            @PathVariable("month") Integer month)
+            throws ConnectErrorException {
+       var historicalQuotes = tStockService.getHistoricalQuotes(symbol, month);
+
+        return new ResponseEntity<>(historicalQuotes, HttpStatus.OK);
     }
 }

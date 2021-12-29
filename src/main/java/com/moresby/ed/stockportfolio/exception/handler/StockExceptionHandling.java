@@ -1,6 +1,7 @@
 package com.moresby.ed.stockportfolio.exception.handler;
 
 import com.moresby.ed.stockportfolio.domain.HttpResponse;
+import com.moresby.ed.stockportfolio.exception.domain.stock.ConnectErrorException;
 import com.moresby.ed.stockportfolio.exception.domain.stock.StockExistException;
 import com.moresby.ed.stockportfolio.exception.domain.stock.StockNotfoundException;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,16 @@ public class StockExceptionHandling extends CommonExceptionHandling{
 
     @ExceptionHandler(StockNotfoundException.class)
     public ResponseEntity<HttpResponse> stockNotFoundException(Exception exception) {
+        return createHttpResponse(BAD_REQUEST, exception.getMessage());
+    }
+
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<HttpResponse> inputEmptyException(NullPointerException exception) {
+        return createHttpResponse(BAD_REQUEST, exception.getMessage());
+    }
+
+    @ExceptionHandler(ConnectErrorException.class)
+    public ResponseEntity<HttpResponse> connectErrorException(ConnectErrorException exception) {
         return createHttpResponse(BAD_REQUEST, exception.getMessage());
     }
 }
