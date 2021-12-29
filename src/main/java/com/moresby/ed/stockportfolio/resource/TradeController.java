@@ -63,7 +63,7 @@ public class TradeController extends TradeExceptionHandling {
         return new ResponseEntity<>(trades, HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping(consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<Trade> executeTrade(@RequestBody TradePOJO tradePOJO)
             throws
             InterruptedException,
