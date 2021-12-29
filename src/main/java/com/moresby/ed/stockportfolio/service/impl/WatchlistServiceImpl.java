@@ -4,7 +4,7 @@ import com.moresby.ed.stockportfolio.domain.TStock;
 import com.moresby.ed.stockportfolio.domain.Watchlist;
 import com.moresby.ed.stockportfolio.exception.domain.stock.StockNotfoundException;
 import com.moresby.ed.stockportfolio.exception.domain.user.UserNotFoundException;
-import com.moresby.ed.stockportfolio.exception.domain.watchlist.WachlistNotFoundException;
+import com.moresby.ed.stockportfolio.exception.domain.watchlist.WatchlistNotFoundException;
 import com.moresby.ed.stockportfolio.repository.WatchlistRepository;
 import com.moresby.ed.stockportfolio.service.TStockService;
 import com.moresby.ed.stockportfolio.service.UserService;
@@ -31,20 +31,22 @@ public class WatchlistServiceImpl implements WatchlistService {
     private final UserService userService;
 
     @Override
-    public Watchlist findExistWatchlistById(Long watchlistId) throws WachlistNotFoundException {
+    public Watchlist findExistWatchlistById(Long watchlistId) throws WatchlistNotFoundException {
         return watchlistRepository.findById(watchlistId)
                 .orElseThrow(
                         () -> {
                             var errorMsg = String.format(NO_WATCHLIST_FOUND_BY_ID, watchlistId);
                             log.error(errorMsg);
-                            return new WachlistNotFoundException(errorMsg);
+                            return new WatchlistNotFoundException(errorMsg);
                         }
                 );
     }
 
     @Override
-    public List<Watchlist> findAllByUserId(Long userId) {
-        return watchlistRepository.findAllByUserId(userId);
+    public List<Watchlist> findAllByUserNumber(String userNumber) throws UserNotFoundException {
+        var user = userService.findExistingUserByUserNumber(userNumber);
+
+        return watchlistRepository.findAllByUserId(user.getId());
     }
 
     @Override
@@ -71,7 +73,7 @@ public class WatchlistServiceImpl implements WatchlistService {
     }
 
     @Override
-    public Watchlist updateWatchlistName(Long watchlistId, String watchlistName) throws WachlistNotFoundException {
+    public Watchlist updateWatchlistName(Long watchlistId, String watchlistName) throws WatchlistNotFoundException {
         var originWatch = findExistWatchlistById(watchlistId);
         originWatch.setName(watchlistName);
 
@@ -79,10 +81,10 @@ public class WatchlistServiceImpl implements WatchlistService {
     }
 
     @Override
-    public Watchlist addStockToWatchlist(Long stockId, Long watchlistId)
-            throws StockNotfoundException, WachlistNotFoundException {
+    public Watchlist addStockToWatchlist(String symbol, Long watchlistId)
+            throws StockNotfoundException, WatchlistNotFoundException {
         var watchlist = findExistWatchlistById(watchlistId);
-        var stock = tStockService.findExistingStockById(stockId);
+        var stock = tStockService.findExistingStockBySymbol(symbol);
         var stocks = watchlist.getTStocks();
         Set<TStock> setOfStocks = new HashSet<>(stocks);
         setOfStocks.add(stock);
@@ -93,7 +95,7 @@ public class WatchlistServiceImpl implements WatchlistService {
     }
 
     @Override
-    public void deleteById(Long watchlistId) throws WachlistNotFoundException {
+    public void deleteById(Long watchlistId) throws WatchlistNotFoundException {
         var watchlist = findExistWatchlistById(watchlistId);
         watchlistRepository.delete(watchlist);
     }

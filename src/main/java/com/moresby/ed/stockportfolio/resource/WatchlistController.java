@@ -4,9 +4,8 @@ import com.moresby.ed.stockportfolio.domain.HttpResponse;
 import com.moresby.ed.stockportfolio.domain.Watchlist;
 import com.moresby.ed.stockportfolio.exception.domain.stock.StockNotfoundException;
 import com.moresby.ed.stockportfolio.exception.domain.user.UserNotFoundException;
-import com.moresby.ed.stockportfolio.exception.domain.watchlist.WachlistNotFoundException;
-import com.moresby.ed.stockportfolio.exception.handler.ClassifyExceptionHandling;
-import com.moresby.ed.stockportfolio.service.UserService;
+import com.moresby.ed.stockportfolio.exception.domain.watchlist.WatchlistNotFoundException;
+import com.moresby.ed.stockportfolio.exception.handler.WatchlistExceptionHandling;
 import com.moresby.ed.stockportfolio.service.WatchlistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,10 +20,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
 @RequestMapping(path = "/api/v1/watchlist")
 @RequiredArgsConstructor
-public class WatchlistController extends ClassifyExceptionHandling {
+public class WatchlistController extends WatchlistExceptionHandling {
 
     private final WatchlistService watchlistService;
-    private final UserService userService;
 
     @GetMapping(path = "/findAll", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Watchlist>> findAll(){
@@ -33,11 +31,10 @@ public class WatchlistController extends ClassifyExceptionHandling {
         return new ResponseEntity<>(watchlists, HttpStatus.OK);
     }
 
-    @GetMapping(path = "/{userNumber}", produces = APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/findAll/{userNumber}", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Watchlist>> findAllByUserNumber(@PathVariable("userNumber") String userNumber)
             throws UserNotFoundException {
-        var user = userService.findExistingUserByUserNumber(userNumber);
-        var watchlists = watchlistService.findAllByUserId(user.getId());
+        var watchlists = watchlistService.findAllByUserNumber(userNumber);
 
         return new ResponseEntity<>(watchlists, HttpStatus.OK);
     }
@@ -57,7 +54,7 @@ public class WatchlistController extends ClassifyExceptionHandling {
     public ResponseEntity<Watchlist> updateWatchlistName(
             @RequestParam("watchlistId") Long watchlistId,
             @RequestParam("watchlistName") String watchlistName)
-            throws WachlistNotFoundException {
+            throws WatchlistNotFoundException {
         var updateWatchlist = watchlistService.updateWatchlistName(watchlistId, watchlistName);
 
         return new ResponseEntity<>(updateWatchlist, HttpStatus.OK);
@@ -65,18 +62,17 @@ public class WatchlistController extends ClassifyExceptionHandling {
 
     @PostMapping(path = "/add")
     public ResponseEntity<Watchlist> addStockToWatchlist(
-            @RequestParam("stockId") String stockId,
+            @RequestParam("symbol") String symbol,
             @RequestParam("watchlistId") String watchlistId)
-            throws WachlistNotFoundException, StockNotfoundException {
-        var watchlist = watchlistService.addStockToWatchlist(Long.valueOf(stockId), Long.valueOf(watchlistId));
-        System.out.println("here");
+            throws WatchlistNotFoundException, StockNotfoundException {
+        var watchlist = watchlistService.addStockToWatchlist(symbol, Long.valueOf(watchlistId));
 
         return new ResponseEntity<>(watchlist, HttpStatus.OK);
     }
 
     @DeleteMapping(path = "/{watchlistId}")
     public ResponseEntity<HttpResponse> deleteById(@PathVariable("watchlistId") Long watchlistId)
-            throws WachlistNotFoundException {
+            throws WatchlistNotFoundException {
         watchlistService.deleteById(watchlistId);
 
         return response(HttpStatus.NO_CONTENT, WATCHLIST_DELETED_SUCCESSFULLY);

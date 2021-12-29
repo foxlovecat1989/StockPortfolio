@@ -17,7 +17,6 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-@JsonIgnoreProperties(value = {"user"})
 public class Watchlist {
     @Id
     @SequenceGenerator(

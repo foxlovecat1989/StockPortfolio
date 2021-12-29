@@ -13,7 +13,7 @@ import java.util.*;
 @Entity(name = "User")
 @Table(name = "app_user")
 @NoArgsConstructor
-@JsonIgnoreProperties(value = {"isEnabled", "isAccountNonLocked"})
+@JsonIgnoreProperties(value = {"isEnabled", "isAccountNonLocked", "watchlists"})
 public class User implements Serializable {
     @Id
     @SequenceGenerator(
@@ -106,7 +106,8 @@ public class User implements Serializable {
     @OneToMany(
             cascade = CascadeType.ALL,
             mappedBy = "user",
-            orphanRemoval = true
+            orphanRemoval = true,
+            fetch = FetchType.EAGER
     )
     private List<Watchlist> watchlists;
 
