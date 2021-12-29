@@ -24,13 +24,6 @@ public class WatchlistController extends WatchlistExceptionHandling {
 
     private final WatchlistService watchlistService;
 
-    @GetMapping(path = "/findAll", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Watchlist>> findAll(){
-        var watchlists =  watchlistService.findAll();
-
-        return new ResponseEntity<>(watchlists, HttpStatus.OK);
-    }
-
     @GetMapping(path = "/findAll/{userNumber}", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Watchlist>> findAllByUserNumber(@PathVariable("userNumber") String userNumber)
             throws UserNotFoundException {
