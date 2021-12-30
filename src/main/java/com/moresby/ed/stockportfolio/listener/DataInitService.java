@@ -39,7 +39,7 @@ public class DataInitService {
 //        } catch (Exception e) {
 //            e.getMessage();
 //        }
-//        generateWatchlistAndAddRandomStock();
+//       generateWatchlistAndAddRandomStock();
     }
 
     private void generateUsers(int times){

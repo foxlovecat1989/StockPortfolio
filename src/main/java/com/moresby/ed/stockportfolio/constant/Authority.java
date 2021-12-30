@@ -2,7 +2,7 @@ package com.moresby.ed.stockportfolio.constant;
 
 public class Authority {
     public static final String[] USER_AUTHORITIES = {
-            "user:read",
+            // "user:read",
             "trade:read",
             "stock:read",
             "watchlist:read"
