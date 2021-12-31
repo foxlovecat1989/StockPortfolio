@@ -12,8 +12,10 @@ import com.moresby.ed.stockportfolio.service.UserService;
 import com.moresby.ed.stockportfolio.service.WatchlistService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -104,8 +106,9 @@ public class WatchlistServiceImpl implements WatchlistService {
     }
 
     @Override
+    @Transactional
     public void deleteById(Long watchlistId) throws WatchlistNotFoundException {
         var watchlist = findExistWatchlistById(watchlistId);
-        watchlistRepository.delete(watchlist);
+        watchlistRepository.deleteById(watchlist.getId());
     }
 }
