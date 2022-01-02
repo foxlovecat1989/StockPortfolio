@@ -26,8 +26,7 @@ public class TStockController extends StockExceptionHandling {
     private final TStockService tStockService;
 
     @GetMapping(path = "/findAll", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<TStock>> findAllStocks() throws InterruptedException {
-        Thread.sleep(3000); // TODO: remove this line when production
+    public ResponseEntity<List<TStock>> findAllStocks() {
         List<TStock> tStocks = tStockService.findAllStocks();
 
         return new ResponseEntity<>(tStocks, HttpStatus.OK);
@@ -35,8 +34,7 @@ public class TStockController extends StockExceptionHandling {
 
     @GetMapping(path = "/{symbol}", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<TStock> findStockBySymbol(@PathVariable("symbol") String symbol)
-            throws InterruptedException, StockNotfoundException {
-        Thread.sleep(3000); // TODO: remove this line when production
+            throws StockNotfoundException {
         TStock stock = tStockService.findExistingStockBySymbol(symbol);
 
         return new ResponseEntity<>(stock, HttpStatus.OK);
@@ -44,8 +42,7 @@ public class TStockController extends StockExceptionHandling {
 
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<TStock> findStockByName(@PathParam("stockName") String stockName)
-            throws InterruptedException, StockNotfoundException {
-        Thread.sleep(3000); // TODO: remove this line when production
+            throws StockNotfoundException {
         TStock stock = tStockService.findExistingStockByName(stockName);
 
         return new ResponseEntity<>(stock, HttpStatus.OK);
@@ -53,8 +50,7 @@ public class TStockController extends StockExceptionHandling {
 
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<TStock> createStock(@RequestBody TStock tStock)
-            throws InterruptedException, StockExistException {
-        Thread.sleep(3000); // TODO: remove this line when production
+            throws StockExistException {
         var newStock = tStockService.createStock(tStock);
 
         return new ResponseEntity<>(newStock, HttpStatus.CREATED);
@@ -62,8 +58,7 @@ public class TStockController extends StockExceptionHandling {
 
     @PatchMapping(consumes = APPLICATION_JSON_VALUE)
     public TStock updateStock(@RequestBody TStock TStock)
-            throws InterruptedException, StockNotfoundException, StockExistException {
-        Thread.sleep(3000); // TODO: remove this line when production
+            throws StockNotfoundException, StockExistException {
 
         return tStockService.updateStock(TStock);
     }
