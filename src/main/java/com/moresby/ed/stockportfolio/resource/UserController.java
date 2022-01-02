@@ -69,9 +69,9 @@ public class UserController extends UserExceptionHandling {
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
 
-    @PostMapping("/updateProfileImage")
+    @PostMapping("/updateProfileImage/{userNumber}")
     public ResponseEntity<User> updateProfileImage(
-            @RequestParam("username") String username,
+            @PathVariable("userNumber") String userNumber,
             @RequestParam(value = "profileImage") MultipartFile profileImage
     )
             throws
@@ -79,7 +79,7 @@ public class UserController extends UserExceptionHandling {
             EmailExistException,
             IOException,
             NotAnImageFileException, UserNotFoundException {
-        User user = userService.updateProfileImage(username, profileImage);
+        User user = userService.updateProfileImage(userNumber, profileImage);
 
         return new ResponseEntity<>(user, HttpStatus.OK);
     }

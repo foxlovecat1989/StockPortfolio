@@ -225,9 +225,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateProfileImage(String username, MultipartFile multipartFile)
+    public User updateProfileImage(String userNumber, MultipartFile multipartFile)
             throws IOException, NotAnImageFileException, UserNotFoundException {
-        var user = findExistingUserByUsername(username);
+        var user = findExistingUserByUserNumber(userNumber);
         saveProfileImage(user, multipartFile);
 
         return user;

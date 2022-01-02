@@ -42,7 +42,7 @@ public class RestSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable().cors().and()
                 .sessionManagement().sessionCreationPolicy(STATELESS)
                 .and().authorizeRequests().antMatchers(PUBLIC_URLS).permitAll()
-                .antMatchers("/api/v1/user/findAll").hasAuthority("user:read")
+                // .antMatchers("/api/v1/user/findAll").hasAuthority("user:read")
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().accessDeniedHandler(jwtAccessDeniedHandler)

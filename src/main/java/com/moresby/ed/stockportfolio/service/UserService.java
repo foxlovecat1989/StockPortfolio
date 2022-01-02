@@ -25,6 +25,6 @@ public interface UserService extends UserDetailsService {
     boolean isUserNumberTaken(String userNumber);
     void enableUser(String email) throws UserNotFoundException;
     void resetPassword(String email) throws UserNotFoundException;
-    User updateProfileImage(String username, MultipartFile multipartFile)
+    User updateProfileImage(String userNumber, MultipartFile multipartFile)
             throws EmailExistException, UsernameExistException, IOException, NotAnImageFileException, UserNotFoundException;
 }
