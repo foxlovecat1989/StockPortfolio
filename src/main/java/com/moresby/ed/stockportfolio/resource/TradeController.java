@@ -63,7 +63,7 @@ public class TradeController extends TradeExceptionHandling {
             InSufficientBalanceException,
             InSufficientAmountInInventoryException,
             InputNumberNegativeException,
-            InventoryNotFoundException {
+            InventoryNotFoundException, UserNotFoundException {
         var trade = tradeService.executeTrade(tradePOJO);
 
         return new ResponseEntity<>(trade, HttpStatus.CREATED);

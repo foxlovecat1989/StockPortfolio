@@ -1,6 +1,7 @@
 package com.moresby.ed.stockportfolio.resource;
 
 import com.moresby.ed.stockportfolio.exception.domain.trade.BankAccountNotFoundException;
+import com.moresby.ed.stockportfolio.exception.domain.user.UserNotFoundException;
 import com.moresby.ed.stockportfolio.exception.handler.TradeExceptionHandling;
 import com.moresby.ed.stockportfolio.service.AccountService;
 import com.moresby.ed.stockportfolio.domain.Account;
@@ -25,7 +26,7 @@ public class AccountController extends TradeExceptionHandling {
     @GetMapping(path = "/{userNumber}", produces = APPLICATION_JSON_VALUE)
     @PreAuthorize(value = "hasAnyAuthority('account:read')")
     public ResponseEntity<Account> findAccountByUserNumber(@PathVariable("userNumber") String userNumber)
-            throws BankAccountNotFoundException {
+            throws BankAccountNotFoundException, UserNotFoundException {
         var account =  accountService.findExistingAccountByUserNumber(userNumber);
 
         return new ResponseEntity<>(account, HttpStatus.OK);

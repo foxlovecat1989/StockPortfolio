@@ -6,7 +6,6 @@ import com.moresby.ed.stockportfolio.repository.TradeRepository;
 import com.moresby.ed.stockportfolio.service.AccountService;
 import com.moresby.ed.stockportfolio.service.InventoryService;
 import com.moresby.ed.stockportfolio.domain.Trade;
-import com.moresby.ed.stockportfolio.enumeration.TradeType;
 import com.moresby.ed.stockportfolio.domain.TradePOJO;
 import com.moresby.ed.stockportfolio.service.TradeService;
 import com.moresby.ed.stockportfolio.service.UserService;
@@ -63,17 +62,14 @@ public class TradeServiceImpl implements TradeService {
             InSufficientBalanceException,
             BankAccountNotFoundException,
             InSufficientAmountInInventoryException,
-            InputNumberNegativeException, InventoryNotFoundException {
+            InputNumberNegativeException, InventoryNotFoundException, UserNotFoundException {
 
         inventoryService.updateInventory(tradePOJO);
 
         var tradeAmount =
                 Math.round(tradePOJO.getTStock().getPrice().doubleValue() * tradePOJO.getAmount());
 
-        if (tradePOJO.getTradeType() == TradeType.BUY)
-            accountService.withdrawal(tradePOJO.getUser(), tradeAmount);
-        else
-            accountService.deposit(tradePOJO.getUser(), tradeAmount);
+       accountService.executeTrade(tradePOJO, tradeAmount);
 
 
         return createTrade(tradePOJO);

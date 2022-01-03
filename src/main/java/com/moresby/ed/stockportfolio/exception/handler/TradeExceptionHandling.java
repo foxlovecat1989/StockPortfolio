@@ -21,11 +21,6 @@ public class TradeExceptionHandling extends CommonExceptionHandling{
         return createHttpResponse(BAD_REQUEST, exception.getMessage());
     }
 
-    @ExceptionHandler(InSufficientBalanceException.class)
-    public ResponseEntity<HttpResponse> inSufficientAmountException(InSufficientBalanceException exception) {
-        return createHttpResponse(BAD_REQUEST, exception.getMessage());
-    }
-
     @ExceptionHandler(InSufficientAmountInInventoryException.class)
     public ResponseEntity<HttpResponse> inSufficientAmountInInventoryException(
             InSufficientAmountInInventoryException exception) {
@@ -41,6 +36,12 @@ public class TradeExceptionHandling extends CommonExceptionHandling{
     @ExceptionHandler(TradeNotFoundException.class)
     public ResponseEntity<HttpResponse> tradeNotFoundException(
             TradeNotFoundException exception) {
+        return createHttpResponse(BAD_REQUEST, exception.getMessage());
+    }
+
+    @ExceptionHandler(InSufficientBalanceException.class)
+    public ResponseEntity<HttpResponse> inSufficientBalanceException(
+            InSufficientBalanceException exception) {
         return createHttpResponse(BAD_REQUEST, exception.getMessage());
     }
 }

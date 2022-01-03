@@ -33,23 +33,18 @@ public class InventoryServiceImpl implements InventoryService {
         return inventoryRepository.save(inventory);
     }
 
-    @Override
-    public Optional<Inventory> findByInventoryId(Long id) {
-        return inventoryRepository.findById(id);
-    }
 
     @Override
     public List<Inventory> findAllByUserNumber(String userNumber) throws UserNotFoundException {
         var user = userService.findExistingUserByUserNumber(userNumber);
 
-        return inventoryRepository.findAllByUserNumber(userNumber);
+        return inventoryRepository.findAllByUserNumber(user.getUserNumber());
     }
 
     @Override
-    public double calculateAvgPriceInInventory(TradePOJO tradePOJO) {
+    public double calculateAvgPriceInInventory(TradePOJO tradePOJO, Optional<Inventory> optInventory) {
         var stock = tradePOJO.getTStock();
         var amount = tradePOJO.getAmount();
-        Optional<Inventory> optInventory = findInventoryByUserNumberAndStockId(tradePOJO.getUser().getUserNumber(), tradePOJO.getTStock().getId());
 
         return (optInventory.isEmpty() ?
                         stock.getPrice().doubleValue() :
@@ -60,7 +55,7 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public Inventory updateInventory(TradePOJO tradePOJO)
+    public void updateInventory(TradePOJO tradePOJO)
             throws InSufficientAmountInInventoryException, InputNumberNegativeException, InventoryNotFoundException {
 
         if(tradePOJO.getAmount() < 0)
@@ -72,13 +67,13 @@ public class InventoryServiceImpl implements InventoryService {
                         tradePOJO.getTStock().getId());
         Inventory inventory;
         if(tradePOJO.getTradeType() == TradeType.BUY){      // under buy mode
-            inventory = new Inventory();
+            inventory = optInventory.orElseGet(Inventory::new);
             inventory.setUser(tradePOJO.getUser());
             inventory.setTStock(tradePOJO.getTStock());
             inventory.setAmount(
                     tradePOJO.getAmount() + (optInventory.isPresent() ? optInventory.get().getAmount() : 0)
             );
-            double avgPrice = calculateAvgPriceInInventory(tradePOJO);
+            double avgPrice = calculateAvgPriceInInventory(tradePOJO, optInventory);
             inventory.setAvgPrice(BigDecimal.valueOf(avgPrice));
         }else {                                             // under sell mode
             inventory = optInventory.orElseThrow(
@@ -93,7 +88,8 @@ public class InventoryServiceImpl implements InventoryService {
             inventory.setUser(tradePOJO.getUser());
             inventory.setTStock(tradePOJO.getTStock());
 
-           if(inventory.getAmount() - tradePOJO.getAmount() < 0){
+            var isRemainAmountSufficient = inventory.getAmount() - tradePOJO.getAmount() > 0;
+           if(!isRemainAmountSufficient){
                var errorMsg = String.format(INSUFFICIENT_AMOUNT_IN_INVENTORY, inventory.getAmount());
                log.warn(errorMsg);
                throw new InSufficientAmountInInventoryException(errorMsg);
@@ -105,26 +101,5 @@ public class InventoryServiceImpl implements InventoryService {
         }
 
         inventoryRepository.save(inventory);
-
-        return inventory;
-    }
-
-    @Override
-    public Optional<Inventory> findInventoryByUserNumberAndStockId(String userNumber, Long stockId){
-        return inventoryRepository.findInventoryByUserNumberAndStockId(userNumber, stockId);
-    }
-
-    @Override
-    public Inventory findExistingInventoryByUserNumberAndStockId(String userNumber, Long stockId)
-            throws InventoryNotFoundException {
-        return inventoryRepository.findInventoryByUserNumberAndStockId(userNumber, stockId)
-                .orElseThrow(
-                        () -> {
-                            var errorMsg =
-                                    String.format(NO_INVENTORY_FOUND_BY_USER_NUMBER_AND_STOCK_ID, userNumber, stockId);
-                            log.error(errorMsg);
-                            return new InventoryNotFoundException(errorMsg);
-                        }
-                );
     }
 }

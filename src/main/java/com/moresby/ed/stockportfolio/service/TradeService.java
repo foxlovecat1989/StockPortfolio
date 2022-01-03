@@ -18,5 +18,5 @@ public interface TradeService {
             InSufficientBalanceException,
             BankAccountNotFoundException,
             InSufficientAmountInInventoryException,
-            InputNumberNegativeException, InventoryNotFoundException;
+            InputNumberNegativeException, InventoryNotFoundException, UserNotFoundException;
 }
