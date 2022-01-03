@@ -31,8 +31,6 @@ public class TradeServiceImpl implements TradeService {
     private final InventoryService inventoryService;
     private final AccountService accountService;
     private final UserService userService;
-    private static final int MILLISECONDS_IN_ONE_DAY = 86_400_000;
-    private static final int SEVEN_DAYS = 7;
 
     @Override
     public Trade findExistingTradeByTradeId(Long tradeId) throws TradeNotFoundException {
@@ -47,20 +45,10 @@ public class TradeServiceImpl implements TradeService {
     }
 
     @Override
-    public List<Trade> findOneByUserIdAndTradeDate(Long userId, Date tradeDate) {
-        return tradeRepository.findAllByUserIdAndTradeDateEquals(userId, tradeDate);
-    }
-
-    @Override
-    public List<Trade> findRecentTrade(String userNumber) throws UserNotFoundException {
+    public List<Trade> findAllByUserNumberAndTradeDate(String userNumber, Date tradeDate) throws UserNotFoundException {
         var user = userService.findExistingUserByUserNumber(userNumber);
 
-        return tradeRepository
-                .findAllTradesByUserIdAndTradeDateBetween(
-                        user.getId(),
-                        new Date(new java.util.Date().getTime() - MILLISECONDS_IN_ONE_DAY * SEVEN_DAYS),
-                        new Date(new java.util.Date().getTime())
-                );
+        return tradeRepository.findAllByUserNumberAndTradeDateEquals(user.getUserNumber(), tradeDate);
     }
 
     @Override

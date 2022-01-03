@@ -35,26 +35,18 @@ public class TradeController extends TradeExceptionHandling {
 
 
     @GetMapping(path = "/findAll", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Trade>> findAll() throws InterruptedException {
+    public ResponseEntity<List<Trade>> findAll() {
         var trades = tradeService.findAll();
 
         return new ResponseEntity<>(trades, HttpStatus.OK);
     }
 
-    @GetMapping(path = "/findAll/{userId}/{tradeDate}", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Trade>> findAllByUserIdAndTradeDate(
-            @PathVariable("userId") Long userId,
+    @GetMapping(path = "/findAll/{userNumber}/{tradeDate}", produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Trade>> findAllByUserNumberAndTradeDate(
+            @PathVariable("userNumber") String userNumber,
             @PathVariable("tradeDate") Date tradeDate
-            ){
-        var trades = tradeService.findOneByUserIdAndTradeDate(userId, tradeDate);
-
-        return new ResponseEntity<>(trades, HttpStatus.OK);
-    }
-
-    @GetMapping(path = "/recentTrade/findAll/{userNumber}", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Trade>> findAllByUserIdAndTradeDate(@PathVariable("userNumber") String userNumber)
-            throws UserNotFoundException {
-        var trades = tradeService.findRecentTrade(userNumber);
+            ) throws UserNotFoundException {
+        var trades = tradeService.findAllByUserNumberAndTradeDate(userNumber, tradeDate);
 
         return new ResponseEntity<>(trades, HttpStatus.OK);
     }

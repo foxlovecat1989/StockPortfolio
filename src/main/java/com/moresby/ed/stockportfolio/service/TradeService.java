@@ -11,8 +11,7 @@ import java.util.List;
 public interface TradeService {
 
     Trade findExistingTradeByTradeId(Long tradeId) throws TradeNotFoundException;
-    List<Trade> findOneByUserIdAndTradeDate(Long userId, Date tradeDate);
-    List<Trade> findRecentTrade(String userNumber) throws UserNotFoundException;
+    List<Trade> findAllByUserNumberAndTradeDate(String userNumber, Date tradeDate) throws UserNotFoundException;
     List<Trade> findAll();
     Trade executeTrade(TradePOJO tradePOJO)
             throws
