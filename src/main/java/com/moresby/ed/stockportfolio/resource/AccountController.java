@@ -7,6 +7,7 @@ import com.moresby.ed.stockportfolio.domain.Account;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +23,7 @@ public class AccountController extends TradeExceptionHandling {
     private final AccountService accountService;
 
     @GetMapping(path = "/{userNumber}", produces = APPLICATION_JSON_VALUE)
+    @PreAuthorize(value = "hasAnyAuthority('account:read')")
     public ResponseEntity<Account> findAccountByUserNumber(@PathVariable("userNumber") String userNumber)
             throws BankAccountNotFoundException {
         var account =  accountService.findExistingAccountByUserNumber(userNumber);

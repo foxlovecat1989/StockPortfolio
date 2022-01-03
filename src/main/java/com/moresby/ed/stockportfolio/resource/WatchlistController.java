@@ -11,6 +11,7 @@ import com.moresby.ed.stockportfolio.service.WatchlistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public class WatchlistController extends WatchlistExceptionHandling {
     private final WatchlistService watchlistService;
 
     @GetMapping(path = "/findAll/{userNumber}", produces = APPLICATION_JSON_VALUE)
+    @PreAuthorize(value = "hasAnyAuthority('watchlist:read')")
     public ResponseEntity<List<Watchlist>> findAllByUserNumber(@PathVariable("userNumber") String userNumber)
             throws UserNotFoundException {
         var watchlists = watchlistService.findAllByUserNumber(userNumber);
@@ -34,6 +36,7 @@ public class WatchlistController extends WatchlistExceptionHandling {
     }
 
     @PostMapping(path = "/create/{userNumber}", consumes = APPLICATION_JSON_VALUE)
+    @PreAuthorize(value = "hasAnyAuthority('watchlist:create')")
     public ResponseEntity<Watchlist> createWatch(
             @PathVariable("userNumber") String userNumber,
             @RequestBody Watchlist watchlist)
@@ -44,6 +47,7 @@ public class WatchlistController extends WatchlistExceptionHandling {
         return new ResponseEntity<>(newWatchlist, HttpStatus.OK);
     }
 
+    @PreAuthorize(value = "hasAnyAuthority('watchlist:create')")
     @PostMapping(path = "/add/{symbol}", consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<Watchlist> addStockToWatchlist(
             @PathVariable("symbol") String symbol,
@@ -54,6 +58,7 @@ public class WatchlistController extends WatchlistExceptionHandling {
         return new ResponseEntity<>(resultWatchlist, HttpStatus.OK);
     }
 
+    @PreAuthorize(value = "hasAnyAuthority('watchlist:update')")
     @PatchMapping(consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<Watchlist> updateWatchlistName(@RequestBody Watchlist watchlist)
             throws WatchlistNotFoundException {
@@ -62,6 +67,7 @@ public class WatchlistController extends WatchlistExceptionHandling {
         return new ResponseEntity<>(updateWatchlist, HttpStatus.OK);
     }
 
+    @PreAuthorize(value = "hasAnyAuthority('watchlist:delete')")
     @DeleteMapping(path = "/{watchlistId}")
     public ResponseEntity<HttpResponse> deleteById(@PathVariable("watchlistId") Long watchlistId)
             throws WatchlistNotFoundException {

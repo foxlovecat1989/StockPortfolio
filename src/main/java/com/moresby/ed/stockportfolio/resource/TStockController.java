@@ -9,6 +9,7 @@ import com.moresby.ed.stockportfolio.service.TStockService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import yahoofinance.histquotes.HistoricalQuote;
 
@@ -26,6 +27,7 @@ public class TStockController extends StockExceptionHandling {
     private final TStockService tStockService;
 
     @GetMapping(path = "/findAll", produces = APPLICATION_JSON_VALUE)
+    @PreAuthorize(value = "hasAnyAuthority('stock:read')")
     public ResponseEntity<List<TStock>> findAllStocks() {
         List<TStock> tStocks = tStockService.findAllStocks();
 
@@ -33,6 +35,7 @@ public class TStockController extends StockExceptionHandling {
     }
 
     @GetMapping(path = "/{symbol}", produces = APPLICATION_JSON_VALUE)
+    @PreAuthorize(value = "hasAnyAuthority('stock:read')")
     public ResponseEntity<TStock> findStockBySymbol(@PathVariable("symbol") String symbol)
             throws StockNotfoundException {
         TStock stock = tStockService.findExistingStockBySymbol(symbol);
@@ -41,6 +44,7 @@ public class TStockController extends StockExceptionHandling {
     }
 
     @GetMapping(produces = APPLICATION_JSON_VALUE)
+    @PreAuthorize(value = "hasAnyAuthority('stock:read')")
     public ResponseEntity<TStock> findStockByName(@PathParam("stockName") String stockName)
             throws StockNotfoundException {
         TStock stock = tStockService.findExistingStockByName(stockName);
@@ -49,6 +53,7 @@ public class TStockController extends StockExceptionHandling {
     }
 
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
+    @PreAuthorize(value = "hasAnyAuthority('manage:create', 'admin:create')")
     public ResponseEntity<TStock> createStock(@RequestBody TStock tStock)
             throws StockExistException {
         var newStock = tStockService.createStock(tStock);
@@ -57,6 +62,7 @@ public class TStockController extends StockExceptionHandling {
     }
 
     @PatchMapping(consumes = APPLICATION_JSON_VALUE)
+    @PreAuthorize(value = "hasAnyAuthority('manage:update', 'admin:update')")
     public TStock updateStock(@RequestBody TStock TStock)
             throws StockNotfoundException, StockExistException {
 
@@ -65,11 +71,13 @@ public class TStockController extends StockExceptionHandling {
 
     @GetMapping(path = "/refresh")
     @Transactional
+    @PreAuthorize(value = "hasAnyAuthority('stock:read')")
     public void refreshStockOfPrice(){
         tStockService.refreshPriceOfStocks();
     }
 
-    @GetMapping(value = {"/histquotes/{symbol:.+}/{month}"})
+    @GetMapping(value = {"/histquotes/{symbol:.+}/{month}"}, produces = APPLICATION_JSON_VALUE)
+    @PreAuthorize(value = "hasAnyAuthority('stock:read')")
     public ResponseEntity<List<HistoricalQuote>> queryHistoricalQuotes(
             @PathVariable("symbol") String symbol,
             @PathVariable("month") Integer month)

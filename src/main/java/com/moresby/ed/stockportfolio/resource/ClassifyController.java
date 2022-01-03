@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -25,42 +26,41 @@ public class ClassifyController extends ClassifyExceptionHandling {
     private final ClassifyService classifyService;
 
     @GetMapping(path = "/findAll", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Classify>> findAllClassify() throws InterruptedException {
-        Thread.sleep(3000); // TODO: remove this line when production
+    @PreAuthorize(value = "hasAnyAuthority('admin:create', 'manage:create')")
+    public ResponseEntity<List<Classify>> findAllClassify() {
         var classifies = classifyService.findAllClassify();
 
         return new ResponseEntity<>(classifies, HttpStatus.OK);
     }
 
     @GetMapping(path = "/{classifyName}", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<TStock>> findStocksByClassifyName(@PathVariable("classifyName") String classifyName)
-            throws InterruptedException {
-        Thread.sleep(3000); // TODO: remove this line when production
+    @PreAuthorize(value = "hasAnyAuthority('admin:read', 'manage:read')")
+    public ResponseEntity<List<TStock>> findStocksByClassifyName(@PathVariable("classifyName") String classifyName) {
         var stocks = classifyService.findStocksByClassifyName(classifyName);
 
         return new ResponseEntity<>(stocks, HttpStatus.OK);
     }
 
-
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
+    @PreAuthorize(value = "hasAnyAuthority('admin:create', 'manage:create')")
     public ResponseEntity<Classify> createClassify(@RequestBody Classify classify)
             throws InterruptedException, ClassifyNameExistException {
-        Thread.sleep(3000); // TODO: remove this line when production
         var newClassify =  classifyService.createClassify(classify);
 
          return new ResponseEntity<>(newClassify, HttpStatus.CREATED);
     }
 
     @PatchMapping
+    @PreAuthorize(value = "hasAnyAuthority('admin:update', 'manage:update')")
     public ResponseEntity<Classify> updateClassify(@RequestBody Classify classify)
-            throws InterruptedException, ClassifyNotFoundException {
-        Thread.sleep(3000); // TODO: remove this line when production
+            throws ClassifyNotFoundException {
         var updateClassify = classifyService.updateClassifyName(classify);
 
         return new ResponseEntity<>(updateClassify, HttpStatus.OK);
     }
 
     @DeleteMapping(path = "/{classifyName}")
+    @PreAuthorize(value = "hasAnyAuthority('admin:delete')")
     public ResponseEntity<HttpResponse> deleteByName(@PathVariable("classifyName") String classifyName)
             throws ClassifyNotFoundException {
         classifyService.deleteByName(classifyName);

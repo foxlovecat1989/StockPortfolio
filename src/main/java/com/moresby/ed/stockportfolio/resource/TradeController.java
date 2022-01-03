@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
@@ -26,6 +27,7 @@ public class TradeController extends TradeExceptionHandling {
     private final TradeService tradeService;
 
     @GetMapping(path = "/{tradeId}", produces = APPLICATION_JSON_VALUE)
+    @PreAuthorize(value = "hasAnyAuthority('trade:read')")
     public ResponseEntity<Trade> findByTradeId(@PathVariable("tradeId") Long tradeId)
             throws TradeNotFoundException {
         Trade trade = tradeService.findExistingTradeByTradeId(tradeId);
@@ -35,6 +37,7 @@ public class TradeController extends TradeExceptionHandling {
 
 
     @GetMapping(path = "/findAll", produces = APPLICATION_JSON_VALUE)
+    @PreAuthorize(value = "hasAnyAuthority('manage:read', 'admin:read')")
     public ResponseEntity<List<Trade>> findAll() {
         var trades = tradeService.findAll();
 
@@ -42,6 +45,7 @@ public class TradeController extends TradeExceptionHandling {
     }
 
     @GetMapping(path = "/findAll/{userNumber}/{tradeDate}", produces = APPLICATION_JSON_VALUE)
+    @PreAuthorize(value = "hasAnyAuthority('trade:read')")
     public ResponseEntity<List<Trade>> findAllByUserNumberAndTradeDate (
             @PathVariable("userNumber") String userNumber,
             @PathVariable("tradeDate") Date tradeDate
@@ -52,6 +56,7 @@ public class TradeController extends TradeExceptionHandling {
     }
 
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
+    @PreAuthorize(value = "hasAnyAuthority('trade:create')")
     public ResponseEntity<Trade> executeTrade(@RequestBody TradePOJO tradePOJO)
             throws
             BankAccountNotFoundException,
