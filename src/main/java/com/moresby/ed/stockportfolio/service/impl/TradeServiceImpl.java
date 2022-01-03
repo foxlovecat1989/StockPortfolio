@@ -75,7 +75,7 @@ public class TradeServiceImpl implements TradeService {
             InSufficientBalanceException,
             BankAccountNotFoundException,
             InSufficientAmountInInventoryException,
-            InputNumberNegativeException {
+            InputNumberNegativeException, InventoryNotFoundException {
 
         inventoryService.updateInventory(tradePOJO);
 

@@ -56,7 +56,7 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Override
     public Inventory updateInventory(TradePOJO tradePOJO)
-            throws InSufficientAmountInInventoryException, InputNumberNegativeException {
+            throws InSufficientAmountInInventoryException, InputNumberNegativeException, InventoryNotFoundException {
 
         if(tradePOJO.getAmount() < 0)
             throw new InputNumberNegativeException(String.format(INPUT_AMOUNT_CANNOT_BE_NEGATIVE, tradePOJO.getAmount()));
@@ -65,18 +65,29 @@ public class InventoryServiceImpl implements InventoryService {
                 inventoryRepository.findInventoryByUserNumberAndStockId(
                         tradePOJO.getUser().getUserNumber(),
                         tradePOJO.getTStock().getId());
-        Inventory inventory =
-                optInventory.orElseGet(Inventory::new);
-        inventory.setUser(tradePOJO.getUser());
-        inventory.setTStock(tradePOJO.getTStock());
-
+        Inventory inventory;
         if(tradePOJO.getTradeType() == TradeType.BUY){      // under buy mode
+            inventory = new Inventory();
+            inventory.setUser(tradePOJO.getUser());
+            inventory.setTStock(tradePOJO.getTStock());
             inventory.setAmount(
                     tradePOJO.getAmount() + (optInventory.isPresent() ? optInventory.get().getAmount() : 0)
             );
             double avgPrice = calculateAvgPriceInInventory(tradePOJO);
             inventory.setAvgPrice(BigDecimal.valueOf(avgPrice));
         }else {                                             // under sell mode
+            inventory = optInventory.orElseThrow(
+                    () -> {
+                        var errorMsg =
+                                String.format(ZERO_AMOUNT_OF_STOCK_IN_INVENTORY, tradePOJO.getTStock().getSymbol());
+                        log.warn(errorMsg);
+                        return new InventoryNotFoundException(errorMsg);
+                    }
+            );
+
+            inventory.setUser(tradePOJO.getUser());
+            inventory.setTStock(tradePOJO.getTStock());
+
            if(inventory.getAmount() - tradePOJO.getAmount() < 0){
                var errorMsg = String.format(INSUFFICIENT_AMOUNT_IN_INVENTORY, inventory.getAmount());
                log.warn(errorMsg);
