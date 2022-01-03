@@ -4,10 +4,12 @@ import com.moresby.ed.stockportfolio.domain.Inventory;
 import com.moresby.ed.stockportfolio.exception.domain.trade.InSufficientAmountInInventoryException;
 import com.moresby.ed.stockportfolio.exception.domain.trade.InputNumberNegativeException;
 import com.moresby.ed.stockportfolio.exception.domain.trade.InventoryNotFoundException;
+import com.moresby.ed.stockportfolio.exception.domain.user.UserNotFoundException;
 import com.moresby.ed.stockportfolio.repository.InventoryRepository;
 import com.moresby.ed.stockportfolio.service.InventoryService;
 import com.moresby.ed.stockportfolio.enumeration.TradeType;
 import com.moresby.ed.stockportfolio.domain.TradePOJO;
+import com.moresby.ed.stockportfolio.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,7 @@ import static com.moresby.ed.stockportfolio.constant.TradeImplConstant.*;
 public class InventoryServiceImpl implements InventoryService {
 
     private final InventoryRepository inventoryRepository;
+    private final UserService userService;
 
     @Override
     public Inventory add(Inventory inventory) {
@@ -36,7 +39,9 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public List<Inventory> findAllByUserNumber(String userNumber) {
+    public List<Inventory> findAllByUserNumber(String userNumber) throws UserNotFoundException {
+        var user = userService.findExistingUserByUserNumber(userNumber);
+
         return inventoryRepository.findAllByUserNumber(userNumber);
     }
 

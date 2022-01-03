@@ -1,6 +1,7 @@
 package com.moresby.ed.stockportfolio.resource;
 
 import com.moresby.ed.stockportfolio.domain.Inventory;
+import com.moresby.ed.stockportfolio.exception.domain.user.UserNotFoundException;
 import com.moresby.ed.stockportfolio.exception.handler.TradeExceptionHandling;
 import com.moresby.ed.stockportfolio.service.InventoryService;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,8 @@ public class InventoryController extends TradeExceptionHandling {
     private final InventoryService inventoryService;
 
     @GetMapping(value = "/findAll/{userNumber}", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Inventory>> findAllByUserNumber(@PathVariable("userNumber") String userNumber){
+    public ResponseEntity<List<Inventory>> findAllByUserNumber(@PathVariable("userNumber") String userNumber)
+            throws UserNotFoundException {
         var inventories =  inventoryService.findAllByUserNumber(userNumber);
 
         return new ResponseEntity<>(inventories, HttpStatus.OK);
