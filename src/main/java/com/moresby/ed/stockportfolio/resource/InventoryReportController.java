@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 @RestController
 @RequestMapping(path = "/api/v1/report")
 @RequiredArgsConstructor
@@ -21,7 +23,7 @@ public class InventoryReportController extends InventoryExceptionHandling {
 
     private final InventoryReportService inventoryReportService;
 
-    @GetMapping(path = "/{userNumber}")
+    @GetMapping(path = "/{userNumber}", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<List<InventoryReport>> report(@PathVariable("userNumber") String userNumber)
             throws UserNotFoundException {
         var inventoryReports =  inventoryReportService.getReportsByUserNumber(userNumber);
