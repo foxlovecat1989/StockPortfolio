@@ -1,6 +1,5 @@
 package com.moresby.ed.stockportfolio.service.impl;
 
-import com.github.javafaker.Faker;
 import com.moresby.ed.stockportfolio.exception.domain.trade.*;
 import com.moresby.ed.stockportfolio.exception.domain.user.UserNotFoundException;
 import com.moresby.ed.stockportfolio.repository.TradeRepository;
@@ -19,10 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Time;
-import java.time.LocalDate;
 import java.util.List;
 
-import static com.moresby.ed.stockportfolio.constant.TradeImplConstant.INPUT_AMOUNT_CANNOT_BE_NEGATIVE;
 import static com.moresby.ed.stockportfolio.constant.TradeImplConstant.NO_TRADE_FOUND_BY_TRADE_ID;
 
 @Service
@@ -34,7 +31,6 @@ public class TradeServiceImpl implements TradeService {
     private final InventoryService inventoryService;
     private final AccountService accountService;
     private final UserService userService;
-    private final Faker faker;
     private static final int MILLISECONDS_IN_ONE_DAY = 86_400_000;
     private static final int SEVEN_DAYS = 7;
 
@@ -73,7 +69,7 @@ public class TradeServiceImpl implements TradeService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {Throwable.class})
     public Trade executeTrade(TradePOJO tradePOJO)
             throws
             InSufficientBalanceException,
@@ -102,23 +98,12 @@ public class TradeServiceImpl implements TradeService {
         trade.setPrice(tradePOJO.getTStock().getPrice());
         trade.setAmount(BigDecimal.valueOf(tradePOJO.getAmount()));
         trade.setTradeType(tradePOJO.getTradeType());
-//        trade.setTradeDate(
-//                new java.sql.Date(
-//                        new java.util.Date().getTime())
-//        );
-//        trade.setTradeTime(new Time(new java.util.Date().getTime()));
-        // TODO: CHANGE THESE FAKER DATE AND TIME WHEN PRODUCTION
-        int fakeTime = MILLISECONDS_IN_ONE_DAY * faker.number().numberBetween(1, 10);
-        Date tradeDate =
-                new Date(
-                        new java.util.Date().getTime()
-                                + (tradePOJO.getTradeType() == TradeType.BUY ? fakeTime : -fakeTime));
+        trade.setTradeDate(
+                new java.sql.Date(
+                        new java.util.Date().getTime())
+        );
+        trade.setTradeTime(new Time(new java.util.Date().getTime()));
 
-        trade.setTradeDate(tradeDate);
-        trade.setTradeTime(Time.valueOf(String.format("%d:00:00", faker.number().numberBetween(9, 12))));
-        tradeRepository.save(trade);
-
-
-        return trade;
+        return tradeRepository.save(trade);
     }
 }
