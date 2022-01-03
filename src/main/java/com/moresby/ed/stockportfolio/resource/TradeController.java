@@ -42,7 +42,7 @@ public class TradeController extends TradeExceptionHandling {
     }
 
     @GetMapping(path = "/findAll/{userNumber}/{tradeDate}", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Trade>> findAllByUserNumberAndTradeDate(
+    public ResponseEntity<List<Trade>> findAllByUserNumberAndTradeDate (
             @PathVariable("userNumber") String userNumber,
             @PathVariable("tradeDate") Date tradeDate
             ) throws UserNotFoundException {
