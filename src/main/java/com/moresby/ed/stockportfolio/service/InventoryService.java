@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface InventoryService {
     Inventory add(Inventory inventory);
     List<Inventory> findAllByUserNumber(String userNumber);
-    Inventory updateInventory(TradePOJO tradePOJO) throws InSufficientAmountInInventoryException, InputNumberNegativeException;
+    Inventory updateInventory(TradePOJO tradePOJO) throws InSufficientAmountInInventoryException, InputNumberNegativeException, InventoryNotFoundException;
     Optional<Inventory> findByInventoryId(Long id);
     double calculateAvgPriceInInventory(TradePOJO tradePOJO);
     Optional<Inventory> findInventoryByUserNumberAndStockId(String userNumber, Long stockId);

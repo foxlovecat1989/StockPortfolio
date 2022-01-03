@@ -27,8 +27,7 @@ public class TradeController extends TradeExceptionHandling {
 
     @GetMapping(path = "/{tradeId}", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<Trade> findByTradeId(@PathVariable("tradeId") Long tradeId)
-            throws InterruptedException, TradeNotFoundException {
-        Thread.sleep(3000); // TODO: remove this line when production
+            throws TradeNotFoundException {
         Trade trade = tradeService.findExistingTradeByTradeId(tradeId);
 
         return new ResponseEntity<>(trade, HttpStatus.OK);
@@ -37,7 +36,6 @@ public class TradeController extends TradeExceptionHandling {
 
     @GetMapping(path = "/findAll", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Trade>> findAll() throws InterruptedException {
-        Thread.sleep(3000); // TODO: remove this line when production
         var trades = tradeService.findAll();
 
         return new ResponseEntity<>(trades, HttpStatus.OK);
@@ -47,8 +45,7 @@ public class TradeController extends TradeExceptionHandling {
     public ResponseEntity<List<Trade>> findAllByUserIdAndTradeDate(
             @PathVariable("userId") Long userId,
             @PathVariable("tradeDate") Date tradeDate
-            ) throws InterruptedException {
-        Thread.sleep(3000); // TODO: remove this line when production
+            ){
         var trades = tradeService.findOneByUserIdAndTradeDate(userId, tradeDate);
 
         return new ResponseEntity<>(trades, HttpStatus.OK);
@@ -56,8 +53,7 @@ public class TradeController extends TradeExceptionHandling {
 
     @GetMapping(path = "/recentTrade/findAll/{userNumber}", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Trade>> findAllByUserIdAndTradeDate(@PathVariable("userNumber") String userNumber)
-            throws InterruptedException, UserNotFoundException {
-        Thread.sleep(3000); // TODO: remove this line when production
+            throws UserNotFoundException {
         var trades = tradeService.findRecentTrade(userNumber);
 
         return new ResponseEntity<>(trades, HttpStatus.OK);
@@ -66,12 +62,11 @@ public class TradeController extends TradeExceptionHandling {
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<Trade> executeTrade(@RequestBody TradePOJO tradePOJO)
             throws
-            InterruptedException,
             BankAccountNotFoundException,
             InSufficientBalanceException,
             InSufficientAmountInInventoryException,
-            InputNumberNegativeException {
-        Thread.sleep(3000); // TODO: remove this line when production
+            InputNumberNegativeException,
+            InventoryNotFoundException {
         var trade = tradeService.executeTrade(tradePOJO);
 
         return new ResponseEntity<>(trade, HttpStatus.CREATED);
