@@ -9,6 +9,6 @@ public class EmailConstant {
     public static final String GMAIL_SMTP_SERVER = "smtp.gmail.com";
     public static final int DEFAULT_PORT = 587;
 
-    public static final String CONFIRM_TOKEN_API_PATH = "http://localhost:8080/api/v1/confirmToken";
+    public static final String CONFIRM_TOKEN_API_PATH = "http://44.201.251.32:5000/api/v1/confirmToken";
     public static final String GMAIL_ACCOUNT = "foxlovecat1989@gmail.com";
 }

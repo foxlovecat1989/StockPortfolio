@@ -1,12 +1,12 @@
 jwt:
   secret: "'[a-zA-Z0-9._]^+$Guidelines89797987forAlphabeticalArraNumeralsandOtherSymbo$'"
 server:
-  port: 8080
+  port: 5000
 spring:
   datasource:
     username: 'postgres'
     password: 'qaz147ujm'
-    url: jdbc:postgresql://localhost:5432/MyStock
+    url: jdbc:postgresql://localhost:5432/mystock
   jpa:
     hibernate:
       ddl-auto: update
