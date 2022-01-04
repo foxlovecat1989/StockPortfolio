@@ -33,7 +33,7 @@ public class DataInitService {
     @EventListener(ApplicationReadyEvent.class)
     public void initData() {
 //        generateUsers(TEN_TIMES);
-//        generateStocks();
+        generateStocks();
 //        try {
 //            generateExecuteTrades(HUNDRED_TIMES);
 //        } catch (Exception e) {

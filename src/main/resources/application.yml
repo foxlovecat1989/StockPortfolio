@@ -4,9 +4,9 @@ server:
   port: 8080
 spring:
   datasource:
-    password: ''
-    url: jdbc:postgresql://localhost:5432/mystock
-    username: ''
+    username: 'postgres'
+    password: 'qaz147ujm'
+    url: jdbc:postgresql://localhost:5432/MyStock
   jpa:
     hibernate:
       ddl-auto: update
