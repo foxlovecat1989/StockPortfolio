@@ -4,6 +4,7 @@ import com.moresby.ed.stockportfolio.domain.TStock;
 import com.moresby.ed.stockportfolio.domain.Watchlist;
 import com.moresby.ed.stockportfolio.exception.domain.stock.StockNotfoundException;
 import com.moresby.ed.stockportfolio.exception.domain.user.UserNotFoundException;
+import com.moresby.ed.stockportfolio.exception.domain.watchlist.DuplicatedItemException;
 import com.moresby.ed.stockportfolio.exception.domain.watchlist.StockAlreadyExistInTheWatchlistException;
 import com.moresby.ed.stockportfolio.exception.domain.watchlist.WatchlistNotFoundException;
 import com.moresby.ed.stockportfolio.repository.WatchlistRepository;
@@ -12,7 +13,6 @@ import com.moresby.ed.stockportfolio.service.UserService;
 import com.moresby.ed.stockportfolio.service.WatchlistService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -22,8 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.moresby.ed.stockportfolio.constant.WatchlistImplConstant.NO_WATCHLIST_FOUND_BY_ID;
-import static com.moresby.ed.stockportfolio.constant.WatchlistImplConstant.STOCK_IS_ALREADY_IN_THE_WATCHLIST;
+import static com.moresby.ed.stockportfolio.constant.WatchlistImplConstant.*;
 
 @Service
 @RequiredArgsConstructor
@@ -59,8 +58,13 @@ public class WatchlistServiceImpl implements WatchlistService {
     }
 
     @Override
-    public Watchlist createWatch(String name, String userNumber) throws UserNotFoundException {
+    public Watchlist createWatch(String name, String userNumber) throws UserNotFoundException, DuplicatedItemException {
         var user = userService.findExistingUserByUserNumber(userNumber);
+        boolean  isDuplicatedName =
+                watchlistRepository.findAllByUserId(user.getId()).stream()
+                        .anyMatch(next -> next.getName().equals(name));
+        if(isDuplicatedName)
+            throw new DuplicatedItemException(String.format(DUPLICATED_WATCHLIST_NAME, name));
         var watchlist =
                 Watchlist.builder()
                         .name(name)
@@ -91,7 +95,7 @@ public class WatchlistServiceImpl implements WatchlistService {
         var stock = tStockService.findExistingStockBySymbol(symbol);
         var stocks = watchlist.getTStocks();
         boolean isDuplicated =
-                stocks.stream().filter(next -> stock.getSymbol().equals(next.getSymbol())).findAny().isPresent();
+                stocks.stream().anyMatch(next -> stock.getSymbol().equals(next.getSymbol()));
 
         if(isDuplicated)
             throw new StockAlreadyExistInTheWatchlistException(

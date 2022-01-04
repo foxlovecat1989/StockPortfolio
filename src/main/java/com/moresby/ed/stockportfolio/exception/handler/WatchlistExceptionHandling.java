@@ -1,6 +1,7 @@
 package com.moresby.ed.stockportfolio.exception.handler;
 
 import com.moresby.ed.stockportfolio.domain.HttpResponse;
+import com.moresby.ed.stockportfolio.exception.domain.watchlist.DuplicatedItemException;
 import com.moresby.ed.stockportfolio.exception.domain.watchlist.StockAlreadyExistInTheWatchlistException;
 import com.moresby.ed.stockportfolio.exception.domain.watchlist.WatchlistNotFoundException;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,12 @@ public class WatchlistExceptionHandling extends CommonExceptionHandling{
     @ExceptionHandler(StockAlreadyExistInTheWatchlistException.class)
     public ResponseEntity<HttpResponse> stockAlreadyExistInTheWatchlistException(
             StockAlreadyExistInTheWatchlistException exception) {
+        return createHttpResponse(BAD_REQUEST, exception.getMessage());
+    }
+
+    @ExceptionHandler(DuplicatedItemException.class)
+    public ResponseEntity<HttpResponse> duplicatedItemException(
+            DuplicatedItemException exception) {
         return createHttpResponse(BAD_REQUEST, exception.getMessage());
     }
 }
