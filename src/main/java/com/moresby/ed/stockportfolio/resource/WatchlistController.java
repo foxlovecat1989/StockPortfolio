@@ -4,6 +4,7 @@ import com.moresby.ed.stockportfolio.domain.HttpResponse;
 import com.moresby.ed.stockportfolio.domain.Watchlist;
 import com.moresby.ed.stockportfolio.exception.domain.stock.StockNotfoundException;
 import com.moresby.ed.stockportfolio.exception.domain.user.UserNotFoundException;
+import com.moresby.ed.stockportfolio.exception.domain.watchlist.DuplicatedItemException;
 import com.moresby.ed.stockportfolio.exception.domain.watchlist.StockAlreadyExistInTheWatchlistException;
 import com.moresby.ed.stockportfolio.exception.domain.watchlist.WatchlistNotFoundException;
 import com.moresby.ed.stockportfolio.exception.handler.WatchlistExceptionHandling;
@@ -40,7 +41,7 @@ public class WatchlistController extends WatchlistExceptionHandling {
     public ResponseEntity<Watchlist> createWatch(
             @PathVariable("userNumber") String userNumber,
             @RequestBody Watchlist watchlist)
-            throws UserNotFoundException {
+            throws UserNotFoundException, DuplicatedItemException {
 
         var newWatchlist = watchlistService.createWatch(watchlist.getName(), userNumber);
 
