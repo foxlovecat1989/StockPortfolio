@@ -2,7 +2,6 @@ package com.moresby.ed.stockportfolio.service;
 
 import com.moresby.ed.stockportfolio.domain.Account;
 import com.moresby.ed.stockportfolio.domain.TradePOJO;
-import com.moresby.ed.stockportfolio.domain.User;
 import com.moresby.ed.stockportfolio.exception.domain.trade.BankAccountNotFoundException;
 import com.moresby.ed.stockportfolio.exception.domain.trade.InSufficientBalanceException;
 import com.moresby.ed.stockportfolio.exception.domain.trade.InputNumberNegativeException;
@@ -15,7 +14,13 @@ public interface AccountService {
             InputNumberNegativeException;
 
     void deposit(Account account, Long amount);
+
     Account findExistingAccountByUserNumber(String userNumber) throws BankAccountNotFoundException, UserNotFoundException;
+
     void  executeTrade(TradePOJO tradePOJO, Long amount)
-            throws BankAccountNotFoundException, InSufficientBalanceException, InputNumberNegativeException, UserNotFoundException;
+            throws
+            BankAccountNotFoundException,
+            InSufficientBalanceException,
+            InputNumberNegativeException,
+            UserNotFoundException;
 }
