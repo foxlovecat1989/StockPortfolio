@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.moresby.ed.stockportfolio.constant.WatchlistImplConstant.*;
 
@@ -105,6 +106,20 @@ public class WatchlistServiceImpl implements WatchlistService {
         setOfStocks.add(stock);
         stocks = new ArrayList<>(setOfStocks);
         watchlist.setTStocks(stocks);
+
+        return watchlistRepository.save(watchlist);
+    }
+
+    @Override
+    public Watchlist removeStockToWatchlist(String symbol, Long watchlistId)
+            throws WatchlistNotFoundException, StockNotfoundException {
+        var watchlist = findExistWatchlistById(watchlistId);
+        var stock = tStockService.findExistingStockBySymbol(symbol);
+        var newStocks =
+                watchlist.getTStocks().stream()
+                        .filter(next -> !(next.getSymbol().equals(stock.getSymbol())))
+                        .collect(Collectors.toList());
+        watchlist.setTStocks(newStocks);
 
         return watchlistRepository.save(watchlist);
     }

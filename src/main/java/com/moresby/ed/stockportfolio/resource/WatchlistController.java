@@ -60,6 +60,17 @@ public class WatchlistController extends WatchlistExceptionHandling {
     }
 
     @PreAuthorize(value = "hasAnyAuthority('watchlist:update')")
+    @PostMapping(path = "/remove/item/{symbol}", consumes = APPLICATION_JSON_VALUE)
+    public ResponseEntity<Watchlist> removeStockToWatchlist(
+            @PathVariable("symbol") String symbol,
+            @RequestBody Watchlist watchlist)
+            throws WatchlistNotFoundException, StockNotfoundException {
+        var resultWatchlist = watchlistService.removeStockToWatchlist(symbol, watchlist.getId());
+
+        return new ResponseEntity<>(resultWatchlist, HttpStatus.OK);
+    }
+
+    @PreAuthorize(value = "hasAnyAuthority('watchlist:update')")
     @PatchMapping(consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<Watchlist> updateWatchlistName(@RequestBody Watchlist watchlist)
             throws WatchlistNotFoundException {
