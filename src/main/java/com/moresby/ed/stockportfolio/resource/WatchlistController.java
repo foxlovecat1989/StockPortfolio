@@ -48,7 +48,7 @@ public class WatchlistController extends WatchlistExceptionHandling {
         return new ResponseEntity<>(newWatchlist, HttpStatus.OK);
     }
 
-    @PreAuthorize(value = "hasAnyAuthority('watchlist:create')")
+    @PreAuthorize(value = "hasAnyAuthority('watchlist:update')")
     @PostMapping(path = "/add/{symbol}", consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<Watchlist> addStockToWatchlist(
             @PathVariable("symbol") String symbol,
