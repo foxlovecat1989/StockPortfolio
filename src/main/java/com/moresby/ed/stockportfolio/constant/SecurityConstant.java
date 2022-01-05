@@ -15,5 +15,7 @@ public class SecurityConstant {
             "/api/v*/registration",
             "/api/v*/user/reset/password/*",
             "/api/v*/user/image/**",
-            "/api/v*/confirmToken*"};
+            "/api/v*/confirmToken*",
+            "/api/v*/stock/findAll"
+    };
 }

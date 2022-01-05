@@ -27,7 +27,6 @@ public class TStockController extends StockExceptionHandling {
     private final TStockService tStockService;
 
     @GetMapping(path = "/findAll", produces = APPLICATION_JSON_VALUE)
-    @PreAuthorize(value = "hasAnyAuthority('stock:read')")
     public ResponseEntity<List<TStock>> findAllStocks() {
         List<TStock> tStocks = tStockService.findAllStocks();
 
