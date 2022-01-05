@@ -88,7 +88,7 @@ public class InventoryServiceImpl implements InventoryService {
             inventory.setUser(tradePOJO.getUser());
             inventory.setTStock(tradePOJO.getTStock());
 
-            var isRemainAmountSufficient = inventory.getAmount() - tradePOJO.getAmount() > 0;
+            var isRemainAmountSufficient = inventory.getAmount() - tradePOJO.getAmount() >= 0;
            if(!isRemainAmountSufficient){
                var errorMsg = String.format(INSUFFICIENT_AMOUNT_IN_INVENTORY, inventory.getAmount());
                log.warn(errorMsg);
