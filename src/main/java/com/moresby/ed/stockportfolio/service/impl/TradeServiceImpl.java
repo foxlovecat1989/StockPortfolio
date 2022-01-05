@@ -20,6 +20,7 @@ import java.sql.Time;
 import java.util.List;
 
 import static com.moresby.ed.stockportfolio.constant.TradeImplConstant.NO_TRADE_FOUND_BY_TRADE_ID;
+import static com.moresby.ed.stockportfolio.constant.CommonConstant.TIME_DIFF_PLUS_EIGHT_HOURS_IN_MILLISECONDS;
 
 @Service
 @RequiredArgsConstructor
@@ -82,11 +83,9 @@ public class TradeServiceImpl implements TradeService {
         trade.setPrice(tradePOJO.getTStock().getPrice());
         trade.setAmount(BigDecimal.valueOf(tradePOJO.getAmount()));
         trade.setTradeType(tradePOJO.getTradeType());
-        trade.setTradeDate(
-                new java.sql.Date(
-                        new java.util.Date().getTime())
-        );
-        trade.setTradeTime(new Time(new java.util.Date().getTime()));
+        var currentDateTime = new java.util.Date().getTime() + TIME_DIFF_PLUS_EIGHT_HOURS_IN_MILLISECONDS;
+        trade.setTradeDate(new java.sql.Date(currentDateTime));
+        trade.setTradeTime(new Time(currentDateTime));
 
         return tradeRepository.save(trade);
     }

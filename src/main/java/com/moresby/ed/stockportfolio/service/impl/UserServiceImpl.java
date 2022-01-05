@@ -27,6 +27,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
+import static com.moresby.ed.stockportfolio.constant.CommonConstant.TIME_DIFF_PLUS_EIGHT_HOURS_IN_MILLISECONDS;
 import static com.moresby.ed.stockportfolio.constant.FileConstant.*;
 import static com.moresby.ed.stockportfolio.constant.UserImplConstant.*;
 import static com.moresby.ed.stockportfolio.constant.UserImplConstant.EMAIL_ALREADY_EXISTS;
@@ -174,7 +175,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = null;
+        User user;
         try {
             user = findExistingUserByUsername(username);
         } catch (UserNotFoundException e) {
@@ -247,7 +248,10 @@ public class UserServiceImpl implements UserService {
                         .password(passwordEncoder.encode(user.getPassword()))
                         .email(user.getEmail())
                         .userRole(UserRole.ROLE_USER)
-                        .joinDate(new Date())
+                        .joinDate(
+                                new java.sql.Date(
+                                        new java.util.Date().getTime() + TIME_DIFF_PLUS_EIGHT_HOURS_IN_MILLISECONDS)
+                        )
                         .profileImageUrl(
                                 user.getProfileImageUrl() != null ?
                                         user.getProfileImageUrl() : getTemporaryProfileImageUrl(user.getUsername())
