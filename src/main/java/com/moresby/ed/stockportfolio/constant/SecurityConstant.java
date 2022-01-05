@@ -13,7 +13,7 @@ public class SecurityConstant {
     public static final String[] PUBLIC_URLS = {
             "/api/v*/user/login",
             "/api/v*/registration",
-            "/api/v*/user/reset/password/*",
+            "/api/v*/user/reset/password/**",
             "/api/v*/user/image/**",
             "/api/v*/confirmToken*",
             "/api/v*/stock/findAll"
